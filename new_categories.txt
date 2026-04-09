@@ -1,0 +1,111 @@
+  {
+    name: "Arremesso",
+    weapons: [
+      { name: "Valaris", baseWeight: 0.1, weightStep: 0.01, prog: ["1d3 × 1","1d6 × 1","1d6 × 2","1d6 × 3","1d6 × 4","1d6 × 5","1d6 × 6","1d6 × 7","1d6 × 8","1d6 × 9","1d6 × 10"] },
+      { name: "Trumbashs", baseWeight: 0.5, weightStep: 0.05, prog: ["1d5 × 1","1d10 × 1","1d10 × 2","1d10 × 3","1d10 × 4","1d10 × 5","1d10 × 6","1d10 × 7","1d10 × 8","1d10 × 9","1d10 × 10"] },
+      { name: "Shurikens", baseWeight: 0.05, weightStep: 0.005, prog: ["1d2 × 1","1d4 × 1","1d4 × 2","1d4 × 3","1d4 × 4","1d4 × 5","1d4 × 6","1d4 × 7","1d4 × 8","1d4 × 9","1d4 × 10"] },
+      { name: "Arpões", baseWeight: 1.5, weightStep: 0.15, prog: ["1d10","1d20","2d20","3d20","4d20","5d20","6d20","7d20","8d20","9d20","10d20"] },
+      { name: "Iklwas", baseWeight: 0.5, weightStep: 0.05, prog: ["1d5","1d10","2d10","3d10","4d10","5d10","6d10","7d10","8d10","9d10","10d10"] },
+      { name: "Chakrams", baseWeight: 0.25, weightStep: 0.025, prog: ["1d4 × 1","1d8 × 1","1d8 × 2","1d8 × 3","1d8 × 4","1d8 × 5","1d8 × 6","1d8 × 7","1d8 × 8","1d8 × 9","1d8 × 10"] },
+      { name: "Franquisques", baseWeight: 1.5, weightStep: 0.15, prog: ["1d10 × 1","1d20 × 1","1d20 × 2","1d20 × 3","1d20 × 4","1d20 × 5","1d20 × 6","1d20 × 7","1d20 × 8","1d20 × 9","1d20 × 10"] },
+      { name: "Kunais", baseWeight: 0.1, weightStep: 0.01, prog: ["1d3","1d6","2d6","3d6","4d6","5d6","6d6","7d6","8d6","9d6","10d6"] },
+      { name: "Mambeles", baseWeight: 0.75, weightStep: 0.075, prog: ["1d6","1d12","2d12","3d12","4d12","5d12","6d12","7d12","8d12","9d12","10d12"] },
+      { name: "Pilos", baseWeight: 0.75, weightStep: 0.075, prog: ["1d6 × 1","1d12 × 1","1d12 × 2","1d12 × 3","1d12 × 4","1d12 × 5","1d12 × 6","1d12 × 7","1d12 × 8","1d12 × 9","1d12 × 10"] },
+      { name: "Saunions", baseWeight: 0.25, weightStep: 0.025, prog: ["1d4","1d8","2d8","3d8","4d8","5d8","6d8","7d8","8d8","9d8","10d8"] },
+      { name: "Senbons", baseWeight: 0.05, weightStep: 0.005, prog: ["1d2","1d4","2d4","3d4","4d4","5d4","6d4","7d4","8d4","9d4","10d4"] }
+    ].map(w => ({
+      name: w.name,
+      baseWeight: w.baseWeight,
+      weightStep: w.weightStep,
+      getBonus: (t: number, type: "metal" | "wood" | "crystal") => {
+        const bonusType = type === "metal" ? "Físico" : type === "wood" ? "Mágico" : "Místico";
+        const attackType = (w as any).attackType || "Armado";
+        const suffix = (w as any).suffix || "";
+        return `Ataque ${bonusType} ${attackType} + ${w.prog[t - 1] || w.prog[0]}${suffix}`;
+      }
+    }))
+  },
+  {
+    name: "Artilharia Civil",
+    weapons: [
+      { name: "Canudos", baseWeight: 0.25, weightStep: 0.025, prog: ["1d2 × 1","1d4 × 1","1d4 × 2","1d4 × 3","1d4 × 4","1d4 × 5","1d4 × 6","1d4 × 7","1d4 × 8","1d4 × 9","1d4 × 10"] },
+      { name: "Bodoques", baseWeight: 0.25, weightStep: 0.025, prog: ["1d2","1d4","2d4","3d4","4d4","5d4","6d4","7d4","8d4","9d4","10d4"] },
+      { name: "Estilingues", baseWeight: 0.5, weightStep: 0.05, prog: ["1d3","1d6","2d6","3d6","4d6","5d6","6d6","7d6","8d6","9d6","10d6"] },
+      { name: "Zarabatanas", baseWeight: 0.5, weightStep: 0.05, prog: ["1d3 × 1","1d6 × 1","1d6 × 2","1d6 × 3","1d6 × 4","1d6 × 5","1d6 × 6","1d6 × 7","1d6 × 8","1d6 × 9","1d6 × 10"] }
+    ].map(w => ({
+      name: w.name,
+      baseWeight: w.baseWeight,
+      weightStep: w.weightStep,
+      getBonus: (t: number, type: "metal" | "wood" | "crystal") => {
+        const bonusType = type === "metal" ? "Físico" : type === "wood" ? "Mágico" : "Místico";
+        const attackType = (w as any).attackType || "Armado";
+        const suffix = (w as any).suffix || "";
+        return `Ataque ${bonusType} ${attackType} + ${w.prog[t - 1] || w.prog[0]}${suffix}`;
+      }
+    }))
+  },
+  {
+    name: "Artilharia Marcial",
+    weapons: [
+      { name: "Fundas", baseWeight: 0.75, weightStep: 0.075, prog: ["1d4","1d8","2d8","3d8","4d8","5d8","6d8","7d8","8d8","9d8","10d8"] },
+      { name: "Fustíbalos", baseWeight: 1.5, weightStep: 0.15, prog: ["1d5","1d10","2d10","3d10","4d10","5d10","6d10","7d10","8d10","9d10","10d10"] },
+      { name: "Kotahas", baseWeight: 1.5, weightStep: 0.15, prog: ["1d5 × 1","1d10 × 1","1d10 × 2","1d10 × 3","1d10 × 4","1d10 × 5","1d10 × 6","1d10 × 7","1d10 × 8","1d10 × 9","1d10 × 10"] },
+      { name: "Norsaqs", baseWeight: 0.75, weightStep: 0.075, prog: ["1d4 × 1","1d8 × 1","1d8 × 2","1d8 × 3","1d8 × 4","1d8 × 5","1d8 × 6","1d8 × 7","1d8 × 8","1d8 × 9","1d8 × 10"] }
+    ].map(w => ({
+      name: w.name,
+      baseWeight: w.baseWeight,
+      weightStep: w.weightStep,
+      getBonus: (t: number, type: "metal" | "wood" | "crystal") => {
+        const bonusType = type === "metal" ? "Físico" : type === "wood" ? "Mágico" : "Místico";
+        const attackType = (w as any).attackType || "Armado";
+        const suffix = (w as any).suffix || "";
+        return `Ataque ${bonusType} ${attackType} + ${w.prog[t - 1] || w.prog[0]}${suffix}`;
+      }
+    }))
+  },
+  {
+    name: "Artilharia Militar",
+    weapons: [
+      { name: "Arbalestas", baseWeight: 5, weightStep: 0.5, attackType: "Propulsivo", prog: ["1d10","1d20","2d20","3d20","4d20","5d20","6d20","7d20","8d20","9d20","10d20"] },
+      { name: "Arcos", baseWeight: 2.5, weightStep: 0.25, attackType: "Armado", prog: ["1d6","1d12","2d12","3d12","4d12","5d12","6d12","7d12","8d12","9d12","10d12"] },
+      { name: "Bestas", baseWeight: 2.5, weightStep: 0.25, attackType: "Propulsivo", prog: ["1d6","1d12","2d12","3d12","4d12","5d12","6d12","7d12","8d12","9d12","10d12"] },
+      { name: "Yumis", baseWeight: 5, weightStep: 0.5, attackType: "Armado", prog: ["1d10","1d20","2d20","3d20","4d20","5d20","6d20","7d20","8d20","9d20","10d20"] }
+    ].map(w => ({
+      name: w.name,
+      baseWeight: w.baseWeight,
+      weightStep: w.weightStep,
+      getBonus: (t: number, type: "metal" | "wood" | "crystal") => {
+        const bonusType = type === "metal" ? "Físico" : type === "wood" ? "Mágico" : "Místico";
+        const attackType = (w as any).attackType || "Armado";
+        const suffix = (w as any).suffix || "";
+        return `Ataque ${bonusType} ${attackType} + ${w.prog[t - 1] || w.prog[0]}${suffix}`;
+      }
+    }))
+  },
+  {
+    name: "Armas de Fogo",
+    weapons: [
+      { name: "Garruchas", baseWeight: 1.5, weightStep: 0.15, attackType: "Propulsivo", suffix: " Por Projétil Disparado", prog: ["1d5","1d10","2d10","3d10","4d10","5d10","6d10","7d10","8d10","9d10","10d10"] },
+      { name: "Revólvers", baseWeight: 1.5, weightStep: 0.15, attackType: "Propulsivo", suffix: " Por Projétil Disparado", prog: ["1d5","1d10","2d10","3d10","4d10","5d10","6d10","7d10","8d10","9d10","10d10"] },
+      { name: "Pistolas", baseWeight: 1.5, weightStep: 0.15, attackType: "Propulsivo", suffix: " Por Projétil Disparado", prog: ["1d5","1d10","2d10","3d10","4d10","5d10","6d10","7d10","8d10","9d10","10d10"] },
+      { name: "Submetralhadoras", baseWeight: 1.5, weightStep: 0.15, attackType: "Propulsivo", suffix: " Por Projétil Disparado", prog: ["1d5","1d10","2d10","3d10","4d10","5d10","6d10","7d10","8d10","9d10","10d10"] },
+      { name: "Bacamartes", baseWeight: 2.5, weightStep: 0.25, attackType: "Propulsivo", suffix: " Por Projétil Disparado", prog: ["1d5","1d10","2d10","3d10","4d10","5d10","6d10","7d10","8d10","9d10","10d10"] },
+      { name: "Luparas", baseWeight: 2.5, weightStep: 0.25, attackType: "Propulsivo", suffix: " Por Projétil Disparado", prog: ["1d5","1d10","2d10","3d10","4d10","5d10","6d10","7d10","8d10","9d10","10d10"] },
+      { name: "Espingardas", baseWeight: 2.5, weightStep: 0.25, attackType: "Propulsivo", suffix: " Por Projétil Disparado", prog: ["1d5","1d10","2d10","3d10","4d10","5d10","6d10","7d10","8d10","9d10","10d10"] },
+      { name: "Escopetas", baseWeight: 2.5, weightStep: 0.25, attackType: "Propulsivo", suffix: " Por Projétil Disparado", prog: ["1d5","1d10","2d10","3d10","4d10","5d10","6d10","7d10","8d10","9d10","10d10"] },
+      { name: "Mosquetes", baseWeight: 5, weightStep: 0.5, attackType: "Propulsivo", suffix: " Por Projétil Disparado", prog: ["1d5","1d10","2d10","3d10","4d10","5d10","6d10","7d10","8d10","9d10","10d10"] },
+      { name: "Carabinas", baseWeight: 5, weightStep: 0.5, attackType: "Propulsivo", suffix: " Por Projétil Disparado", prog: ["1d5","1d10","2d10","3d10","4d10","5d10","6d10","7d10","8d10","9d10","10d10"] },
+      { name: "Fuzis", baseWeight: 5, weightStep: 0.5, attackType: "Propulsivo", suffix: " Por Projétil Disparado", prog: ["1d5","1d10","2d10","3d10","4d10","5d10","6d10","7d10","8d10","9d10","10d10"] },
+      { name: "Rifles", baseWeight: 5, weightStep: 0.5, attackType: "Propulsivo", suffix: " Por Projétil Disparado", prog: ["1d5","1d10","2d10","3d10","4d10","5d10","6d10","7d10","8d10","9d10","10d10"] }
+    ].map(w => ({
+      name: w.name,
+      baseWeight: w.baseWeight,
+      weightStep: w.weightStep,
+      getBonus: (t: number, type: "metal" | "wood" | "crystal") => {
+        const bonusType = type === "metal" ? "Físico" : type === "wood" ? "Mágico" : "Místico";
+        const attackType = (w as any).attackType || "Armado";
+        const suffix = (w as any).suffix || "";
+        return `Ataque ${bonusType} ${attackType} + ${w.prog[t - 1] || w.prog[0]}${suffix}`;
+      }
+    }))
+  }

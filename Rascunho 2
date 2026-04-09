@@ -1,0 +1,264 @@
+GEMAS
+Nota: existem gemas para bônus em atributo(Atributos: Carisma, Consciência, Constituição, Destreza, Força, Inteligência, Intuição, Sorte e Vontade)
+existem gemas para bônus em derivado (Derivado: Vitalidade, introspecção e Destino) , 
+existem gemas para bônus em Status (Estômago, Fígado, Estudo, Prática, Treino e Extrapolar ),
+
+NOTA 1: vou utilizar  “X” para representar as variáveis de cada tipo de Gema.
+
+Gemas Ampliadoras (Atributos)
+Ranque	Característica		Potencial
+F		Atributo “X”+ 1		0 Runas
+E		Atributo “X”+ 2		1 Runa
+D		Atributo “X”+ 3		1 Runa
+C		Atributo “X”+ 4		2 Runas
+B		Atributo “X”+ 5		2 Runas
+A		Atributo “X”+ 6		3 Runas
+S		Atributo “X”+ 7		3 Runas
+☆		Atributo “X”+ 8		4 Runas
+☆☆		Atributo “X”+ 9		4 Runas
+☆☆☆		Atributo “X”+ 10		5 Runas
+
+Gemas Ampliadoras (Derivados)
+Ranque	Característica		Potencial
+F		Derivado “X” + 2		0 Runas
+E		Derivado “X” + 5		1 Runa
+D		Derivado “X” + 7		1 Runa
+C		Derivado “X” + 10		2 Runas
+B		Derivado “X” + 12		2 Runas
+A		Derivado “X” + 15		3 Runas
+S		Derivado “X” + 17		3 Runas
+☆		Derivado “X” + 20		4 Runas
+☆☆		Derivado “X” + 22		4 Runas
+☆☆☆		Derivado “X” + 25		5 Runas
+
+Gemas Ampliadoras (Status)
+Ranque	Característica 		Potencial
+F		Status “X” Máximo + 1	0 Runas
+E		Status “X” Máximo + 2	1 Runa
+D		Status “X” Máximo + 3	1 Runa
+C		Status “X” Máximo + 4	2 Runas
+B		Status “X” Máximo + 5	2 Runas
+A		Status “X” Máximo + 6	3 Runas
+S		Status “X” Máximo + 7	3 Runas
+☆		Status “X” Máximo + 8	4 Runas
+☆☆		Status “X” Máximo + 9	4 Runas
+☆☆☆		Status “X” Máximo + 10	5 Runas
+
+Nota 2: Existem Gemas DOMINANTES, concedem bônus em “Redutor Físico”,  “Redutor Mágico” e “Redutor Místico”(redutores são como “descontos” para ativar habilidades ou reduzirem o custo de uma ação).
+Gema Agressoras concedem bônus em “Ataques Místicos”, ”Ataques físicos” e “Ataques Mágico”.
+
+Uma gema não pode ter mais de um efeito, mas o jogador pode comprar ou portar quantas quemas ele quiser, as gemas obrigatoriamente devem ser equipadas em um acessório ou item, para ter o efeito acionado. 
+
+Gemas Dominantes 
+Ranque	Característica		Potencial
+F		Redutor “X” + 2		0 Runas
+E		Redutor “X” + 5		1 Runa
+D		Redutor “X” + 7		1 Runa
+C		Redutor “X” + 10	2 Runas
+B		Redutor “X”  + 12	2 Runas
+A		Redutor “X” + 15	3 Runas
+S		Redutor “X”  + 17	3 Runas
+☆		Redutor “X” + 20	4 Runas
+☆☆		Redutor “X” + 22	4 Runas
+☆☆☆		Redutor “X” + 25	5 Runas
+
+Gema Agressoras
+Ranque	Característica		Potencial
+F		Ataques “X” + 2		0 Runas
+E		Ataques “X” + 5		1 Runa
+D		Ataques “X”+ 7		1 Runa
+C		Ataques “X” + 10	2 Runas
+B		Ataques “X” + 12	2 Runas
+A		Ataques “X” + 15	3 Runas
+S		Ataques “X” + 17	3 Runas
+☆		Ataques “X”+ 20	4 Runas
+☆☆		Ataques “X” + 22	4 Runas
+☆☆☆		Ataques “X” + 25	5 Runas
+
+NOTA 3: Gemas INDUTORAS concedem bônus em Regeneração “Vital”, “Sanica” “Física ”. “Mágica” e “Mística ”( a regeneração está ligada a recuperação de (vida para vital, sanidade para sanica, física para vigor, mana para mágica  e poder para mística).
+
+Gemas Indutoras
+Ranque		Característica		Potencial
+F		Regeneração “X” + 5		0 Runas
+E		Regeneração “X” + 10		1 Runa
+D		Regeneração “X”+ 15		1 Runa
+C		Regeneração “X” + 20		2 Runas
+B		Regeneração “X”+ 25		2 Runas
+A		Regeneração “X”+ 30		3 Runas
+S		Regeneração “X” + 35		3 Runas
+☆		Regeneração “X” + 40		4 Runas
+☆☆		Regeneração “X” + 45		4 Runas
+☆☆☆		Regeneração “X” + 50		5 Runas
+
+Gemas Protetoras
+Gemas Protetora, aumentam a determinado tipo de defesa, podendo ser Física, Mágica,Mental ou Universal.
+Ranque	Característica			Potencial
+F		Defesa “X” + 2		0 Runas
+E		Defesa “X” + 5		1 Runa
+D		Defesa “X” + 7		1 Runa
+C		Defesa “X” + 10		2 Runas
+B		Defesa “X”+ 12		2 Runas
+A		Defesa “X”+ 15		3 Runas
+S		Defesa “X” + 17		3 Runas
+☆		Defesa “X”+ 20		4 Runas
+☆☆		Defesa “X”+ 22		4 Runas
+☆☆☆		Defesa “X”+ 25		5 Runas
+
+Gemas Tanque
+NOTA 4: concedem aumento de vida, sanidade, vigor, mana ou poder, 
+Ranque	Característica	Potencial
+F		“X” + 5		0 Runas
+E		“X”+ 10		1 Runa
+D		“X” + 15		1 Runa
+C		“X” + 20		2 Runas
+B		“X” + 25		2 Runas
+A		“X” + 30		3 Runas
+S		“X” + 35		3 Runas
+☆		“X”+ 40		4 Runas
+☆☆		“X” + 45		4 Runas
+☆☆☆		“X” + 50		5 Runas
+
+
+
+Acessórios: podem ser utilizados juntos das armaduras ou em contato direto com o corpo
+Tiaras Ocupam O Espaço "Cabeça".
+Coroas Ocupam O Espaço "Cabeça".
+Colares Ocupam O Espaço "Garganta".
+Brincos Ocupam O Espaço "Ouvido".
+Braceletes Ocupam O Espaço "Antebraço".
+Manoplas Ocupam O Espaço "Mão".
+Pulseiras Ocupam O Espaço "Pulso".
+Anéis Ocupam O Espaço "Dedo".
+Cinturões Ocupam O Espaço "Cintura".
+Tornozeleiras Ocupam O Espaço "Tornozelo".
+
+Tiaras
+Metal			Característica			Potencial	Peso
+Latão, Suporta Três Gemas De Ranque (F) A (E)	1 Runa		250 g
+Bronze, Suporta Três Gemas De Ranque (F) A (C)	2 Runa		250 g
+Prata, Suporta Três Gemas De Ranque (F) A (A)	3 Runa		250 g
+Ouro, Suporta Três Gemas De Ranque (F) A (☆)	4 Runa		250 g
+Platina, Suporta Três Gemas De Ranque (F) A (☆☆☆)	5 Runa		250 g
+
+Coroas
+Metal			Característica			Potencial	Peso
+Latão, Suporta Cinco Gemas De Ranque (F) A (E)	1 Runa		500 g
+Bronze, Suporta Cinco Gemas De Ranque (F) A(C)	2 Runa		500 g
+Prata, Suporta Cinco Gemas De Ranque (F) A (A)	3 Runa		500 g
+Ouro, Suporta Cinco Gemas De Ranque (F) A (☆)	4 Runa		500 g
+Platina, Suporta Cinco Gemas De Ranque (F) A (☆☆☆) 5 Runa	500 g
+
+Colares
+Metal			Característica			Potencial	Peso
+Latão, Suporta Uma Gemas De Ranque (F) A (E)	1 Runa		50 g
+Bronze, Suporta Uma Gemas De Ranque (F) A(C)	2 Runa		50 g
+Prata, Suporta Uma Gemas De Ranque (F) A (A)	3 Runa		50 g
+Ouro, Suporta Umas Gemas De Ranque (F) A (☆)	4 Runa		50 g
+Platina, Suporta Uma Gemas De Ranque (F) A (☆☆☆)	5 Runa		50 g
+
+Brincos
+Metal			Característica			Potencial	Peso
+Latão, Suporta Uma Gemas De Ranque (F) A (E)	1 Runa		25 g
+Bronze, Suporta Uma Gemas De Ranque (F) A(C)	2 Runa		25 g
+Prata, Suporta Uma Gemas De Ranque (F) A (A)	3 Runa		25 g
+Ouro, Suporta Uma Gemas De Ranque (F) A (☆)	4 Runa		25 g
+Platina, Suporta Uma Gemas De Ranque (F) A (☆☆☆)	5 Runa		25 g
+
+Braceletes
+Metal			Característica			Potencial	Peso
+Latão, Suporta Três Gemas De Ranque (F) A (E)	1 Runa		250 g
+Bronze, Suporta Três Gemas De Ranque (F) A (C)	2 Runa		250 g
+Prata, Suporta Três Gemas De Ranque (F) A (A)	3 Runa		250 g
+Ouro, Suporta Três Gemas De Ranque (F) A (☆)	4 Runa		250 g
+Platina, Suporta Três Gemas De Ranque (F) A (☆☆☆)	5 Runa		250 g
+
+
+
+
+Manoplas
+Metal			Característica			Potencial	Peso
+Latão, Suporta Cinco Gemas De Ranque (F) A (E)	1 Runa		500 g
+Bronze, Suporta Cinco Gemas De Ranque (F) A(C)	2 Runa		500 g
+Prata, Suporta Cinco Gemas De Ranque (F) A (A)	3 Runa		500 g
+Ouro, Suporta Cinco Gemas De Ranque (F) A (☆)	4 Runa		500 g
+Platina, Suporta Cinco Gemas De Ranque (F) A (☆☆☆) 5 Runa	500 g
+
+Pulseiras
+Metal			Característica			Potencial	Peso
+Latão, Suporta Uma Gemas De Ranque (F) A (E)	1 Runa		100 g
+Bronze, Suporta Uma Gemas De Ranque (F) A(C)	2 Runa		100 g
+Prata, Suporta Uma Gemas De Ranque (F) A (A)	3 Runa		100 g
+Ouro, Suporta Uma Gemas De Ranque (F) A (☆)	4 Runa		100 g
+Platina, Suporta Uma Gemas De Ranque (F) A (☆☆☆)	5 Runa		100 g
+
+Anéis
+Metal			Característica			Potencial	Peso
+Latão, Suporta Uma Gemas De Ranque (F) A (E)	1 Runa		25 g
+Bronze, Suporta Uma Gemas  De Ranque (F) A (C)	2 Runa		25 g
+Prata, Suporta Uma Gemas  De Ranque (F) A (A)	3 Runa		25 g
+Ouro, Suporta Uma Gemas  De Ranque (F) A (☆)	4 Runa		25 g
+Platina, Suporta Uma Gemas  De Ranque (F) A (☆☆☆)5 Runa		25 g
+
+Cinturões
+Metal			Característica			Potencial	Peso
+Latão, Suporta Dez Gemas De Ranque (F) A (E)	1 Runa		2 kg
+Bronze, Suporta Dez Gemas De Ranque (F) A (C)	2 Runa		2 kg
+Prata, Suporta Dez Gemas De Ranque (F) A (A)	3 Runa		2 kg
+Ouro, Suporta Dez Gemas De Ranque (F) A (☆)	4 Runa		2 kg
+Platina, Suporta Dez Gemas De Ranque (F) A (☆☆☆)	5 Runa		2 kg
+
+Tornozeleiras
+Metal			Característica			Potencial	Peso
+Latão, Suporta Uma Gemas De Ranque (F) A (E)	1 Runa		100 g
+Bronze, Suporta Uma Gemas De Ranque (F) A(C)	2 Runa		100 g
+Prata, Suporta Uma Gemas De Ranque (F) A (A)	3 Runa		100 g
+Ouro, Suporta Uma Gemas De Ranque (F) A (☆)	4 Runa		100 g
+Platina, Suporta Uma Gemas De Ranque (F) A (☆☆☆)	5 Runa		100 g
+
+Bolsas
+
+Pequenas
+
+
+Material			Característica			Potencial	Peso
+Sintético			Bolsos Suportam 2.5 Kg		0 Runas	500 g
+Animal Bestial			Bolsos Suportam 5 Kg		0 Runas	550 g
+Animal Humanoide		Bolsos Suportam 10 Kg		1 Runa		600 g
+Monstro Bestial		Bolsos Suportam 15 Kg		1 Runa		650 g
+Monstro Humanoide		Bolsos Suportam 20 Kg		2 Runa		700 g
+Elemental Material		Bolsos Suportam 25 Kg		2 Runa		750 g
+Elemental Energético		Bolsos Suportam 30 Kg		3 Runa		800 g
+Aberração Bestial		Bolsos Suportam 35 Kg		3 Runa		850 g
+Aberração Humanoide		Bolsos Suportam 40 Kg		4 Runa		900 g
+Criatura Bestial		Bolsos Suportam 45 Kg		4 Runa		950 g
+Criatura Humanoide		Bolsos Suportam 50 Kg		5 Runas	1k g
+
+
+
+Médios
+Material			Característica			Potencial	Peso
+Sintético			Bolsos Suportam 2.5 Kg		0 Runas	1kg
+Animal Bestial			Bolsos Suportam 5 Kg		0 Runas	1.1kg
+Animal Humanoide		Bolsos Suportam 10 Kg		1 Runa		1.2kg
+Monstro Bestial		Bolsos Suportam 15 Kg		1 Runa		1.3kg
+Monstro Humanoide		Bolsos Suportam 20 Kg		2 Runa		1.4kg
+Elemental Material		Bolsos Suportam 25 Kg		2 Runa		1.5kg
+Elemental Energético		Bolsos Suportam 30 Kg		3 Runa		1.6kg
+Aberração Bestial		Bolsos Suportam 35 Kg		3 Runa		1.7kg
+Aberração Humanoide		Bolsos Suportam 40 Kg		4 Runa		1.8kg
+Criatura Bestial		Bolsos Suportam 45 Kg		4 Runa		1.9kg
+Criatura Humanoide		Bolsos Suportam 50 Kg		5 Runas	2kg
+
+Grandes
+Material			Característica			Potencial	Peso
+Sintético			Bolsos Suportam 2.5 Kg		0 Runas	2.5kg
+Animal Bestial			Bolsos Suportam 5 Kg		0 Runas	2.75kg
+Animal Humanoide		Bolsos Suportam 10 Kg		1 Runa		3kg
+Monstro Bestial		Bolsos Suportam 15 Kg		1 Runa		3.25kg
+Monstro Humanoide		Bolsos Suportam 20 Kg		2 Runa		3.5kg
+Elemental Material		Bolsos Suportam 25 Kg		2 Runa		3.75kg
+Elemental Energético		Bolsos Suportam 30 Kg		3 Runa		4kg
+Aberração Bestial		Bolsos Suportam 35 Kg		3 Runa		4.25kg
+Aberração Humanoide		Bolsos Suportam 40 Kg		4 Runa		4.5kg
+Criatura Bestial		Bolsos Suportam 45 Kg		4 Runa		4.75kg
+Criatura Humanoide		Bolsos Suportam 50 Kg		5 Runas	5kg			

@@ -1,0 +1,848 @@
+Nivel de Proficiência e conhecimento
+
+Leigo		De 1 a 9 de Proficiência Em Uma Aptidão 
+Novato	10 De Proficiência Em Uma Aptidão.
+Aprendiz	20 De Proficiência Em Uma Aptidão.
+Iniciado	30 De Proficiência Em Uma Aptidão.
+Adepto	40 De Proficiência Em Uma Aptidão.
+Veterano	50 De Proficiência Em Uma Aptidão.
+Expert	60 De Proficiência Em Uma Aptidão.
+Virtuoso	70 De Proficiência Em Uma Aptidão.
+Sábio		80 De Proficiência Em Uma Aptidão.
+Mestre	90 De Proficiência Em Uma Aptidão 
+Grão Mestre	100 De Proficiência Em Uma Aptidão.
+
+
+1-Aptidões de combate: Armadura Natural, Armadura Leve, Armadura Media, Armadura Pesada, Arremesso, Artilharia Civil, Artilharia Marcial, Artilharia Militar, Escuderia, Esgrima Civil, Esgrima Marcial, Esgrima Militar, Manejo Arcano, Manejo Astral, Pancrácio e Pugilismo
+
+2-Aptidões de extração:ESPOLIO e Lenhado
+
+
+3-Aptidões de exploração: Administração, Análise, Antropologia, Apreciação, Arqueologia, Arrombamento, Astronomia, Avulsão, Cirurgia Comércio Direção Direito, Domesticação,Enfermagem, Escalada,Fuga ,Furtividade,Furto,História ,Interrogação,Leitura ,Licenciatura ,Medicina ,Meditação,Montaria ,Natação
+,Navegação ,Pilotagem ,Política,Psicologia,Rastreamento,Teologia ,Ventriloquia e Zoologia
+
+
+Aptidões
+
+1-Aptidões de combate
+
+Armadura Natural
+Ranque					Privilégio						Tipo
+Novato		Aumenta Sua Evasão Em Sua Destreza ÷ 10		Passivo
+Aprendiz	Aumenta Sua Evasão Em Sua Destreza ÷ 9		Passivo
+Iniciado	Aumenta Sua Evasão Em Sua Destreza ÷ 8		Passivo
+Adepto		Aumenta Sua Evasão Em Sua Destreza ÷ 7		Passivo
+Veterano	Aumenta Sua Evasão Em Sua Destreza ÷ 6		Passivo
+Expert		Aumenta Sua Evasão Em Sua Destreza ÷ 5		Passivo
+Virtuoso	Aumenta Sua Evasão Em Sua Destreza ÷ 4		Passivo
+Sábio		Aumenta Sua Evasão Em Sua Destreza ÷ 3		Passivo
+Mestre		Aumenta Sua Evasão Em Sua Destreza ÷ 2		Passivo
+Grão Mestre	Aumenta Sua Evasão Em Sua Destreza			Passivo
+
+Armadura Leve 
+Ranque			Privilégio										Tipo
+Novato		Usar Armaduras De Couro De Animais Bestiais			Passivo
+Aprendiz	Usar Armaduras De Couro De Animais Humanoides		Passivo
+Iniciado	Usar Armaduras De Couro De Monstros Bestiais		Passivo
+Adepto		Usar Armaduras De Couro De Monstros Humanoides		Passivo
+Veterano	Usar Armaduras De Couro De Elementais Materiais		Passivo
+Expert		Usar Armaduras De Couro De Elementais Energéticos	Passivo
+Virtuoso	Usar Armaduras De Couro De Aberrações Bestiais		Passivo
+Sábio		Usar Armaduras De Couro De Aberrações Humanoides	Passivo
+Mestre		Usar Armaduras De Couro De Criaturas Bestiais		Passivo
+Grão Mestre	Usar Armaduras De Couro De Criaturas Humanoides		Passivo
+
+Armadura Media
+Ranque				Privilégio											Tipo
+Novato		Usar Armaduras De Malha De Cobre, Ónix & Eucalipto			Passivo
+Aprendiz	Usar Armaduras De Malha De Ferro, Granada & Pinheiro		Passivo
+Iniciado	Usar Armaduras De Malha De Níquel, Peridoto & Freixo		Passivo
+Adepto		Usar Armaduras De Malha De Vanádio, Turmalina & Bétula		Passivo
+Veterano	Usar Armaduras De Malha De Titânio, Topázio & Cedro			Passivo
+Expert		Usar Armaduras De Malha De Cromo, Ametista & Mogno			Passivo
+Virtuoso	Usar Armaduras De Malha De Cobalto, Esmeralda & Figueira	Passivo
+Sábio		Usar Armaduras De Malha De Irídio, Safira & Carvalho		Passivo
+Mestre		Usar Armaduras De Malha De Rênio, Rubi & Álamo				Passivo
+Grão Mestre	Usar Armaduras De Malha De Volfrâmio, Diamante & Sequoia	Passivo
+
+Armadura Pesada
+Ranque					Privilégio											Tipo
+Novato		Usar Armaduras De Placa De Cobre, Ónix & Eucalipto			Passivo
+Aprendiz	Usar Armaduras De Placa De Ferro, Granada & Pinheiro		Passivo
+Iniciado	Usar Armaduras De Placa De Níquel, Peridoto & Freixo		Passivo
+Adepto		Usar Armaduras De Placa De Vanádio, Turmalina & Bétula		Passivo
+Veterano	Usar Armaduras De Placa De Titânio, Topázio & Cedro			Passivo
+Expert		Usar Armaduras De Placa De Cromo, Ametista & Mogno			Passivo
+Virtuoso	Usar Armaduras De Placa De Cobalto, Esmeralda & Figueira	Passivo
+Sábio		Usar Armaduras De Placa De Irídio, Safira & Carvalho		Passivo
+Mestre		Usar Armaduras De Placa De Rênio, Rubi & Álamo				Passivo
+Grão Mestre	Usar Armaduras De Placa De Volfrâmio, Diamante & Sequoia	Passivo
+
+Arremesso
+Ranque																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											
+Virtuoso		Usar Armas De Arremesso De Cobalto, Esmeralda & Figueira	Passivo
+Sábio			Usar Armas De Arremesso De Irídio, Safira & Carvalho		Passivo
+Mestre			Usar Armas De Arremesso De Rênio, Rubi & Álamo				Passivo
+Grão Mestre		Usar Armas De Arremesso De Volfrâmio, Diamante & Sequoia	Passivo
+
+Artilharia Civil
+Ranque						Privilégio											Tipo
+Novato			Usar Armas De Artilharia Civil De Cobre, Ónix & Eucalipto			Passivo
+Aprendiz		Usar Armas De Artilharia Civil De Ferro, Granada & Pinheiro			Passivo
+Iniciado		Usar Armas De Artilharia Civil De Níquel, Peridoto & Freixo			Passivo
+Adepto			Usar Armas De Artilharia Civil De Vanádio, Turmalina & Bétula		Passivo
+Veterano		Usar Armas De Artilharia Civil De Titânio, Topázio & Cedro			Passivo
+Expert			Usar Armas De Artilharia Civil De Cromo, Ametista & Mogno			Passivo
+Virtuoso		Usar Armas De Artilharia Civil De Cobalto, Esmeralda & Figueira		Passivo
+Sábio			Usar Armas De Artilharia Civil De Irídio, Safira & Carvalho			Passivo
+Mestre			Usar Armas De Artilharia Civil De Rênio, Rubi & Álamo				Passivo
+Grão Mestre		Usar Armas De Artilharia Civil De Volfrâmio, Diamante & Sequoia		Passivo
+
+Artilharia Marcial
+Ranque						Privilégio												Tipo
+Novato			Usar Armas De Artilharia Marcial De Cobre, Ónix & Eucalipto					Passivo
+Aprendiz		Usar Armas De Artilharia Marcial De Ferro, Granada & Pinheiro				Passivo
+Iniciado		Usar Armas De Artilharia Marcial De Níquel, Peridoto & Freixo				Passivo
+Adepto			Usar Armas De Artilharia Marcial De Vanádio, Turmalina & Bétula				Passivo
+Veterano		Usar Armas De Artilharia Marcial De Titânio, Topázio & Cedro				Passivo
+Expert			Usar Armas De Artilharia Marcial De Cromo, Ametista & Mogno	  				Passivo
+Virtuoso		Usar Armas De Artilharia Marcial De Cobalto, Esmeralda & Figueira 			Passivo
+Sábio			Usar Armas De Artilharia Marcial De Irídio, Safira & Carvalho	 			Passivo
+Mestre			Usar Armas De Artilharia Marcial De Rênio, Rubi & Álamo						Passivo
+Grão Mestre		Usar Armas De Artilharia Marcial De Volfrâmio, Diamante & Sequoia			Passivo
+
+Artilharia Militar
+Ranque								Privilégio									Tipo
+Novato		Usar Armas De Artilharia Militar De Cobre, Ónix & Eucalipto			Passivo
+Aprendiz	Usar Armas De Artilharia Militar De Ferro, Granada & Pinheiro		Passivo
+Iniciado	Usar Armas De Artilharia Militar De Níquel, Peridoto & Freixo		Passivo
+Adepto		Usar Armas De Artilharia Militar De Vanádio, Turmalina & Bétula		Passivo
+Veterano	Usar Armas De Artilharia Militar De Titânio, Topázio & Cedro		Passivo
+Expert		Usar Armas De Artilharia Militar De Cromo, Ametista & Mogno			Passivo
+Virtuoso	Usar Armas De Artilharia Militar De Cobalto, Esmeralda & Figueira	Passivo
+Sábio		Usar Armas De Artilharia Militar De Irídio, Safira & Carvalho		Passivo
+Mestre		Usar Armas De Artilharia Militar De Rênio, Rubi & Álamo				Passivo
+Grão Mestre	Usar Armas De Artilharia Militar De Volfrâmio, Diamante & Sequoia	Passivo
+
+Escuderia
+Ranque							Privilégio								Tipo
+Novato	Usar Escudos De Cobre, Ónix & Eucalipto							Passivo
+Aprendiz	Usar Escudos De Ferro, Granada & Pinheiro					Passivo
+Iniciado	Usar Escudos De Níquel, Peridoto & Freixo					Passivo
+Adepto	Usar Escudos De Vanádio, Turmalina & Bétula						Passivo
+Veterano	Usar Escudos De Titânio, Topázio & Cedro					Passivo
+Expert	Usar Escudos De Cromo, Ametista & Mogno							Passivo
+Virtuoso	Usar Escudos De Cobalto, Esmeralda & Figueira				Passivo
+Sábio		Usar Escudos De Irídio, Safira & Carvalho					Passivo
+Mestre	Usar Escudos De Rênio, Rubi & Álamo								Passivo
+Grão Mestre	Usar Escudos De Volfrâmio, Diamante & Sequoia				Passivo
+
+
+Esgrima Civil
+Ranque			Privilégio					Tipo
+Novato	Usar Armas De Esgrima Civil De Cobre, Ónix & Eucalipto					Passivo
+Aprendiz	Usar Armas De Esgrima Civil De Ferro, Granada & Pinheiro			Passivo
+Iniciado	Usar Armas De Esgrima Civil De Níquel, Peridoto & Freixo			Passivo
+Adepto	Usar Armas De Esgrima Civil De Vanádio, Turmalina & Bétula				Passivo
+Veterano	Usar Armas De Esgrima Civil De Titânio, Topázio & Cedro				Passivo
+Expert	Usar Armas De Esgrima Civil De Cromo, Ametista & Mogno					Passivo
+Virtuoso	Usar Armas De Esgrima Civil De Cobalto, Esmeralda & Figueira		Passivo
+Sábio		Usar Armas De Esgrima Civil De Irídio, Safira & Carvalho			Passivo
+Mestre	Usar Armas De Esgrima Civil De Rênio, Rubi & Álamo						Passivo
+Grão Mestre	Usar Armas De Esgrima Civil De Volfrâmio, Diamante & Sequoia		Passivo
+
+
+Esgrima Marcial
+Ranque					Privilégio				Tipo
+Novato	Usar Armas De Esgrima Marcial De Cobre, Ónix & Eucalipto			Passivo
+Aprendiz	Usar Armas De Esgrima Marcial De Ferro, Granada & Pinheiro		Passivo
+Iniciado	Usar Armas De Esgrima Marcial De Níquel, Peridoto & Freixo		Passivo
+Adepto	Usar Armas De Esgrima Marcial De Vanádio, Turmalina & Bétula		Passivo
+Veterano	Usar Armas De Esgrima Marcial De Titânio, Topázio & Cedro		Passivo
+Expert	Usar Armas De Esgrima Marcial De Cromo, Ametista & Mogno			Passivo
+Virtuoso	Usar Armas De Esgrima Marcial De Cobalto, Esmeralda & Figueira	Passivo
+Sábio		Usar Armas De Esgrima Marcial De Irídio, Safira & Carvalho		Passivo
+Mestre	Usar Armas De Esgrima Marcial De Rênio, Rubi & Álamo				Passivo
+Grão Mestre	Usar Armas De Esgrima Marcial De Volfrâmio, Diamante & Sequoia	Passivo
+
+
+Esgrima Militar
+Ranque			Privilégio						Tipo
+Novato	Usar Armas De Esgrima Militar De Cobre, Ónix & Eucalipto			Passivo
+Aprendiz	Usar Armas De Esgrima Militar De Ferro, Granada & Pinheiro		Passivo
+Iniciado	Usar Armas De Esgrima Militar De Níquel, Peridoto & Freixo		Passivo
+Adepto	Usar Armas De Esgrima Militar De Vanádio, Turmalina & Bétula		Passivo
+Veterano	Usar Armas De Esgrima Militar De Titânio, Topázio & Cedro		Passivo
+Expert	Usar Armas De Esgrima Militar De Cromo, Ametista & Mogno			Passivo
+Virtuoso	Usar Armas De Esgrima Militar De Cobalto, Esmeralda & Figueira	Passivo
+Sábio		Usar Armas De Esgrima Militar De Irídio, Safira & Carvalho		Passivo
+Mestre	Usar Armas De Esgrima Militar De Rênio, Rubi & Álamo				Passivo
+Grão Mestre	Usar Armas De Esgrima Militar De Volfrâmio, Diamante & Sequoia	Passivo
+
+
+Manejo Arcano
+Ranque			Privilégio			Tipo
+Novato	Usar Focos De Eucalipto		Passivo
+Aprendiz	Usar Focos De Pinheiro	Passivo
+Iniciado	Usar Focos De Freixo	Passivo
+Adepto	Usar Focos De Bétula		Passivo
+Veterano	Usar Focos De Cedro		Passivo
+Expert	Usar Focos De Mogno			Passivo
+Virtuoso	Usar Focos De Figueira	Passivo
+Sábio		Usar Focos De Carvalho	Passivo
+Mestre	Usar Focos De Álamo			Passivo
+Grão Mestre	Usar Focos De Sequoia	Passivo
+
+
+Manejo Astral
+Ranque				Privilégio			Tipo
+Novato			Usar Focos De Ónix			Passivo
+Aprendiz		Usar Focos De Granada		Passivo
+Iniciado		Usar Focos De Peridoto		Passivo
+Adepto			Usar Focos De Turmalina		Passivo
+Veterano		Usar Focos De Topázio		Passivo
+Expert			Usar Focos De Ametista		Passivo
+Virtuoso		Usar Focos De Esmeralda		Passivo
+Sábio			Usar Focos De Safira		Passivo
+Mestre			Usar Focos De Rubi		Passivo
+Grão Mestre		Usar Focos De Diamante		Passivo
+
+
+Pancrácio
+Ranque	Privilégio		Tipo		Privilégio		Tipo	Privilégio	Tipo
+
+Novato	
+Aumenta Seu Ataque Físico 		Desarmado Em Sua Força ÷ 10		Passivo		
+Aumenta Seu Ataque Místico 	Desarmado Em Seu Carisma ÷ 10		Passivo		
+Aumenta Seu Ataque Mágico 	Desarmado Em Sua Inteligência ÷ 10	Passivo
+
+Aprendiz
+Aumenta Seu Ataque Físico 		Desarmado Em Sua Força ÷ 9		Passivo		
+Aumenta Seu Ataque Místico 	Desarmado Em Seu Carisma ÷ 9		Passivo		
+Aumenta Seu Ataque Mágico 	Desarmado Em Sua Inteligência ÷ 9		Passivo
+
+Iniciado
+Aumenta Seu Ataque Físico	Desarmado Em Sua Força ÷ 8		Passivo	
+Aumenta Seu Ataque Místico 	Desarmado Em Seu Carisma ÷ 8		Passivo	
+Aumenta Seu Ataque Mágico	 Desarmado Em Sua Inteligência ÷ 8		Passivo
+
+Adepto	
+Aumenta Seu Ataque Físico 	Desarmado Em Sua Força ÷ 7		Passivo	
+Aumenta Seu Ataque Místico 	Desarmado Em Seu Carisma ÷ 7		Passivo	
+Aumenta Seu Ataque Mágico 	Desarmado Em Sua Inteligência ÷ 7		Passivo
+
+Veterano	
+Aumenta Seu Ataque Físico 	Desarmado Em Sua Força ÷ 6		Passivo	
+Aumenta Seu Ataque Místico 	Desarmado Em Seu Carisma ÷ 6		Passivo	
+Aumenta Seu Ataque Mágico 	Desarmado Em Sua Inteligência ÷ 6		Passivo
+
+Expert	
+Aumenta Seu Ataque Físico 	Desarmado Em Sua Força ÷ 5		Passivo	
+Aumenta Seu Ataque Místico 	Desarmado Em Seu Carisma ÷ 5		Passivo	
+Aumenta Seu Ataque Mágico 	Desarmado Em Sua Inteligência ÷ 5		Passivo
+
+Virtuoso	
+Aumenta Seu Ataque Físico 	Desarmado Em Sua Força ÷ 4		Passivo	
+Aumenta Seu Ataque Místico	 Desarmado Em Seu Carisma ÷ 4		Passivo	
+Aumenta Seu Ataque Mágico 	Desarmado Em Sua Inteligência ÷ 4		Passivo
+
+Sábio	
+Aumenta Seu Ataque Físico 	Desarmado Em Sua Força ÷ 3		Passivo	
+Aumenta Seu Ataque Místico 	Desarmado Em Seu Carisma ÷ 3		Passivo	
+Aumenta Seu Ataque Mágico 	Desarmado Em Sua Inteligência ÷ 3		Passivo
+
+Mestre	
+Aumenta Seu Ataque Físico 	Desarmado Em Sua Força ÷ 2		Passivo	
+Aumenta Seu Ataque Místico 	Desarmado Em Seu Carisma ÷ 2		Passivo	
+Aumenta Seu Ataque Mágico	 Desarmado Em Sua Inteligência ÷ 2		Passivo
+
+Grão Mestre	
+Aumenta Seu Ataque Físico 	Desarmado Em Sua Força			Passivo	
+Aumenta Seu Ataque Místico 	Desarmado Em Seu Carisma			Passivo	
+Aumenta Seu Ataque Mágico 	Desarmado Em Sua Inteligência		Passivo
+
+
+Pugilismo
+Ranque		Privilégio		Tipo
+Novato		Usar Luvas De Cobre, Ónix & Eucalipto		Passivo
+Aprendiz		Usar Luvas De Ferro, Granada & Pinheiro		Passivo
+Iniciado		Usar Luvas De Níquel, Peridoto & Freixo		Passivo
+Adepto		Usar Luvas De Vanádio, Turmalina & Bétula		Passivo
+Veterano		Usar Luvas De Titânio, Topázio & Cedro		Passivo
+Expert		Usar Luvas De Cromo, Ametista & Mogno		Passivo
+Virtuoso		Usar Luvas De Cobalto, Esmeralda & Figueira	Passivo
+Sábio			Usar Luvas De Irídio, Safira & Carvalho		Passivo
+Mestre		Usar Luvas De Rênio, Rubi & Álamo			Passivo
+Grão Mestre		Usar Luvas De Volfrâmio, Diamante & Sequoia	Passivo
+
+
+2-Aptidão de Extração 
+
+Lenhado
+
+Ranque Tipo Privilégio
+
+Novato	
+Híbrido	Derrubar Árvores Comuns, Pinheiros & Sequoias				
+Híbrido	Torrar Madeira Comum, De Pinheiro & De Sequoia				
+Híbrido	Lenhar Madeira Comum, De Pinheiro & De Sequoia	
+
+Aprendiz	
+Híbrido	Derrubar Cedros								
+Híbrido	Torrar Madeira De Cedro							
+Híbrido	Lenhar Madeira De Cedro	
+
+Iniciado	
+Híbrido	Derrubar Freixos	
+Híbrido	Torrar Madeira De Freixo							
+Híbrido	Lenhar Madeira De Freixo	
+
+Adepto	
+Híbrido	Derrubar Bétulas	
+Híbrido	Torrar Madeira De Bétula	
+Híbrido	Lenhar Madeira De Bétula	
+
+Veterano
+Híbrido	Derrubar Mognos
+Híbrido	Torrar Madeira De Mogno	
+Híbrido	Lenhar Madeira De Mogno	 
+
+Expert	
+Híbrido	Derrubar Carvalhos
+Híbrido	Torrar Madeira De Carvalho
+Híbrido	Lenhar Madeira De Carvalho	
+
+Virtuoso	
+Híbrido	Derrubar Ipês	
+Híbrido	Torrar Madeira De Ipê
+Híbrido	Lenhar Madeira De Ipê
+
+Sábio  
+Híbrido	Derrubar Acácias	
+Híbrido	Torrar Madeira De Acácia
+Híbrido	Lenhar Madeira De Acácia
+
+Mestre	
+Híbrido	Derrubar Sândalos	
+Híbrido	Torrar Madeira De Sândalo
+Híbrido	Lenhar Madeira De Sândalo 
+
+Grão Mestre	
+Híbrido	Derrubar Ébanos	
+Híbrido	Torrar Madeira De Ébano
+Híbrido	Lenhar Madeira De Ébano	 
+
+ESPOLIO 
+Ranque			Privilégio										Tipo
+Novato			Extrair Materiais De Animais Bestiais			Híbrido
+Aprendiz		Extrair Materiais De Animais Humanoides			Híbrido
+Iniciado		Extrair Materiais De Monstros Bestiais			Híbrido
+Adepto			Extrair Materiais De Monstros Humanoides		Híbrido
+Veterano		Extrair Materiais De Elementais Bestiais		Híbrido
+Expert			Extrair Materiais De Elementais Humanoides		Híbrido
+Virtuoso		Extrair Materiais De Aberrações Bestiais		Híbrido
+Sábio			Extrair Materiais De Aberrações Humanoides		Híbrido
+Mestre			Extrair Materiais De Criaturas Bestiais			Híbrido
+Grão Mestre		Extrair Materiais De Criaturas Humanoides		Híbrido
+
+
+
+
+Explotação 
+
+Administração 
+Ranque						Privilégio						Tipo
+Novato		Reduz Em 10% Os Tributos Sobre Suas Propriedades				Passivo
+Aprendiz		Reduz Em 10% Os Tributos Sobre Seus Negócios				Passivo
+Iniciado		Reduz Em 10% Os Custos Manutencionais De Suas Propriedades	Passivo
+Adepto			Reduz Em 10% Os Custos Operacionais De Seus Negócios		Passivo
+Veterano		Aumenta Em 25% O Lucro Líquido De Suas Fontes De Receita	Passivo
+Expert			Reduz Em 25% Os Tributos Sobre Suas Propriedades			Passivo
+Virtuoso		Reduz Em 25% Os Tributos Sobre Seus Negócios				Passivo
+Sábio			Reduz Em 25% Os Custos Manutencionais De Suas Propriedades	Passivo
+Mestre			Reduz Em 25% Os Custos Operacionais De Seus Negócios		Passivo
+Grão Mestre		Aumenta Em 50% O Lucro Líquido De Suas Fontes De Receita	Passivo
+
+
+Análise 
+Ranque		Privilégio		Tipo		Privilégio		Tipo		Privilégio		Tipo		Privilégio		Tipo
+Novato	Analisar Animais Bestiais	Ativo	Analisar Aptidões De Novatos	Ativo	Analisar Classes Comuns	Ativo	Analisar Habilidades De 1º Classe	Ativo
+Aprendiz	Analisar Animais Humanoides	Ativo	Analisar Aptidões De Aprendizes	Ativo	Analisar Classes Incomuns	Ativo	Analisar Habilidades De 2º Classe	Ativo
+Iniciado	Analisar Monstros Bestiais	Ativo	Analisar Aptidões De Iniciados	Ativo	Analisar Classes Raras	Ativo	Analisar Habilidades De 3º Classe	Ativo
+Adepto	Analisar Monstros Humanoides	Ativo	Analisar Aptidões De Adeptos	Ativo	Analisar Classes Exóticas	Ativo	Analisar Habilidades De 4º Classe	Ativo
+Veterano	Analisar Elementais Materiais	Ativo	Analisar Aptidões De Veteranos	Ativo	Analisar Classes Fabulosas	Ativo	Analisar Habilidades De 5º Classe	Ativo
+Expert	Analisar Elementais Energéticos	Ativo	Analisar Aptidões De Experts	Ativo	Analisar Classes Fantásticas	Ativo	Analisar Habilidades De 6º Classe	Ativo
+Virtuoso	Analisar Aberrações Bestiais	Ativo	Analisar Aptidões De Virtuoses	Ativo	Analisar Classes Lendárias	Ativo	Analisar Habilidades De 7º Classe	Ativo
+Sábio	Analisar Aberrações Humanoides	Ativo	Analisar Aptidões De Sábios	Ativo	Analisar Classes Míticas	Ativo	Analisar Habilidades De 8º Classe	Ativo
+Mestre	Analisar Criaturas Bestiais	Ativo	Analisar Aptidões De Mestres	Ativo	Analisar Classes Eonicas	Ativo	Analisar Habilidades De 9º Classe	Ativo
+Grão Mestre	Analisar Criaturas Humanoides	Ativo	Analisar Aptidões De Grão Mestres	Ativo	Analisar Iconoclasses	Ativo	Analisar Habilidades De 10º Classe	Ativo
+
+
+Antropologia 
+Ranque	Privilégio	Tipo
+Novato	Conhecimento Sobre Culturas & Sociedades Exotéricas & Exógenas Que Ainda Existem	Híbrido
+Aprendiz	Conhecimento Sobre Culturas & Sociedades Exotéricas & Endógenas Que Ainda Existem	Híbrido
+Iniciado	Conhecimento Sobre Culturas & Sociedades Liminares Que Ainda Existem	Híbrido
+Adepto	Conhecimento Sobre Culturas & Sociedades Esotéricas & Exógenas Que Ainda Existem	Híbrido
+Veterano	Conhecimento Sobre Culturas & Sociedades Esotéricas & Endógenas Que Ainda Existem	Híbrido
+Expert	Conhecimento Sobre Culturas & Sociedades Exotéricas & Exógenas Que Já Não Existem Mais	Híbrido
+Virtuoso	Conhecimento Sobre Culturas & Sociedades Exotéricas & Endógenas Que Já Não Existem Mais	Híbrido
+Sábio	Conhecimento Sobre Culturas & Sociedades Liminares Que Já Não Existem Mais	Híbrido
+Mestre	Conhecimento Sobre Culturas & Sociedades Esotéricas & Exógenas Que Já Não Existem Mais	Híbrido
+Grão Mestre	Conhecimento Sobre Culturas & Sociedades Esotéricas & Endógenas Que Já Não Existem Mais	Híbrido
+
+
+Apreciação 
+Ranque	Privilégio	Tipo
+Novato	Identificar Itens Cujo Valor Não Exceda 1 Bronze	Híbrido
+Aprendiz	Identificar Itens Cujo Valor Não Exceda 10 Bronzes	Híbrido
+Iniciado	Identificar Itens Cujo Valor Não Exceda 1 Prata	Híbrido
+Adepto	Identificar Itens Cujo Valor Não Exceda 10 Pratas	Híbrido
+Veterano	Identificar Itens Cujo Valor Não Exceda 1 Ouro	Híbrido
+Expert	Identificar Itens Cujo Valor Não Exceda 10 Ouros	Híbrido
+Virtuoso	Identificar Itens Cujo Valor Não Exceda 1 Platina	Híbrido
+Sábio	Identificar Itens Cujo Valor Não Exceda 10 Platinas	Híbrido
+Mestre	Identificar Itens Cujo Valor Exceda 10 Platinas	Híbrido
+Grão Mestre	Identificar Itens De Valor Inestimável	Híbrido
+
+
+
+
+
+Arqueologia 
+Ranque	Privilégio	Tipo
+Novato	Conhecimento Sobre Monumentos & Objetos Pertencentes A Sociedades Que Deixaram De Existir A No Máximo 100 Anos	Híbrido
+Aprendiz	Conhecimento Sobre Monumentos & Objetos Pertencentes A Sociedades Que Deixaram De Existir A No Máximo 250 Anos	Híbrido
+Iniciado	Conhecimento Sobre Monumentos & Objetos Pertencentes A Sociedades Que Deixaram De Existir A No Máximo 500 Anos	Híbrido
+Adepto	Conhecimento Sobre Monumentos & Objetos Pertencentes A Sociedades Que Deixaram De Existir A No Máximo 1.000 Anos	Híbrido
+Veterano	Conhecimento Sobre Monumentos & Objetos Pertencentes A Sociedades Que Deixaram De Existir A No Máximo 2.500 Anos	Híbrido
+Expert	Conhecimento Sobre Monumentos & Objetos Pertencentes A Sociedades Que Deixaram De Existir A No Máximo 5.000 Anos	Híbrido
+Virtuoso	Conhecimento Sobre Monumentos & Objetos Pertencentes A Sociedades Que Deixaram De Existir A No Máximo 10.000 Anos	Híbrido
+Sábio	Conhecimento Sobre Monumentos & Objetos Pertencentes A Sociedades Que Deixaram De Existir A No Máximo 25.000 Anos	Híbrido
+Mestre	Conhecimento Sobre Monumentos & Objetos Pertencentes A Sociedades Que Deixaram De Existir A No Máximo 50.000 Anos	Híbrido
+Grão Mestre	Conhecimento Sobre Monumentos & Objetos Pertencentes A Sociedades Que Deixaram De Existir A No Máximo 100.000 Anos	Híbrido
+
+
+Arrombamento 
+Ranque	Privilégio	Tipo	Privilégio	Tipo
+Novato	Trancar & Destrancar Mecanismos De Placas Fixas	Ativo	A Dificuldade De Perceber As Marcas De Arrombamento Que Você Deixa Se Torna Consciência Vs 1d10	Passivo
+Aprendiz	Trancar & Destrancar Mecanismos De Placas Móveis	Ativo	A Dificuldade De Perceber As Marcas De Arrombamento Que Você Deixa Se Torna Consciência Vs 2d10	Passivo
+Iniciado	Trancar & Destrancar Mecanismos De Pinos Cilíndricos	Ativo	A Dificuldade De Perceber As Marcas De Arrombamento Que Você Deixa Se Torna Consciência Vs 3d10	Passivo
+Adepto	Trancar & Destrancar Mecanismos De Pinos Carretel	Ativo	A Dificuldade De Perceber As Marcas De Arrombamento Que Você Deixa Se Torna Consciência Vs 4d10	Passivo
+Veterano	Trancar & Destrancar Mecanismos De Pinos Cogumelo	Ativo	A Dificuldade De Perceber As Marcas De Arrombamento Que Você Deixa Se Torna Consciência Vs 5d10	Passivo
+Expert	Trancar & Destrancar Mecanismos De Pinos Serrilhados	Ativo	A Dificuldade De Perceber As Marcas De Arrombamento Que Você Deixa Se Torna Consciência Vs 6d10	Passivo
+Virtuoso	Trancar & Destrancar Mecanismos De Pinos Cavitados	Ativo	A Dificuldade De Perceber As Marcas De Arrombamento Que Você Deixa Se Torna Consciência Vs 7d10	Passivo
+Sábio	Trancar & Destrancar Mecanismos De Pinos Tubulares	Ativo	A Dificuldade De Perceber As Marcas De Arrombamento Que Você Deixa Se Torna Consciência Vs 8d10	Passivo
+Mestre	Trancar & Destrancar Mecanismos De Pinos Tetraédricos	Ativo	A Dificuldade De Perceber As Marcas De Arrombamento Que Você Deixa Se Torna Consciência Vs 9d10	Passivo
+Grão Mestre	Trancar & Destrancar Mecanismos De Discos Rotativos	Ativo	A Dificuldade De Perceber As Marcas De Arrombamento Que Você Deixa Se Torna Consciência Vs 10d10	Passivo
+
+
+
+
+
+Astronomia 
+Ranque	Privilégio	Tipo
+Novato	Identificar Referências Geodésicas	Híbrido
+Aprendiz	Identificar O Horário Atual Em Sua Localização	Híbrido
+Iniciado	Identificar O Estação Atual Em Sua Localização	Híbrido
+Adepto	Identificar O Data Atual Em Sua Localização	Híbrido
+Veterano	Identificar Sua Localização Em Mapas Celestiais	Híbrido
+Expert	Prever Fenómenos Astronómicos	Ativo
+Virtuoso	Prever Fenômenos Oceanográficos	Ativo
+Sábio	Prever Fenómenos Meteorológicos	Ativo
+Mestre	Prever Fenómenos Geológicos	Ativo
+Grão Mestre	Prever O Local De Descanso De Constelações	Ativo
+
+
+Avulsão 
+Ranque	Privilégio	Tipo	Privilégio	Tipo
+Novato	Extrair Mana De Cernes	Ativo	A Dificuldade De Resistir A Sua Avulsão Se Torna Vontade Vs 1d10	Passivo
+Aprendiz	Extrair Mana De Vegetais	Ativo	A Dificuldade De Resistir A Sua Avulsão Se Torna Vontade Vs 2d10	Passivo
+Iniciado	Extrair Mana De Mortos	Ativo	A Dificuldade De Resistir A Sua Avulsão Se Torna Vontade Vs 3d10	Passivo
+Adepto	Extrair Mana De Minerais	Ativo	A Dificuldade De Resistir A Sua Avulsão Se Torna Vontade Vs 4d10	Passivo
+Veterano	Extrair Mana De Energias	Ativo	A Dificuldade De Resistir A Sua Avulsão Se Torna Vontade Vs 5d10	Passivo
+Expert	Extrair Mana De Animais	Ativo	A Dificuldade De Resistir A Sua Avulsão Se Torna Vontade Vs 6d10	Passivo
+Virtuoso	Extrair Mana De Monstros	Ativo	A Dificuldade De Resistir A Sua Avulsão Se Torna Vontade Vs 7d10	Passivo
+Sábio	Extrair Mana De Elementais	Ativo	A Dificuldade De Resistir A Sua Avulsão Se Torna Vontade Vs 8d10	Passivo
+Mestre	Extrair Mana De Aberrações	Ativo	A Dificuldade De Resistir A Sua Avulsão Se Torna Vontade Vs 9d10	Passivo
+Grão Mestre	Extrair Mana De Criaturas	Ativo	A Dificuldade De Resistir A Sua Avulsão Se Torna Vontade Vs 10d10	Passivo
+
+
+Cirurgia 
+Ranque	Privilégio	Tipo
+Novato	Operar Órgãos Do Sistema Tegumentar	Ativo
+Aprendiz	Operar Órgãos Do Sistema Muscular	Ativo
+Iniciado	Operar Órgãos Do Sistema Esquelético	Ativo
+Adepto	Operar Órgãos Do Sistema Linfático	Ativo
+Veterano	Operar Órgãos Do Sistema Reprodutor	Ativo
+Expert	Operar Órgãos Do Sistema Urinário	Ativo
+Virtuoso	Operar Órgãos Do Sistema Digestivo	Ativo
+Sábio	Operar Órgãos Do Sistema Respiratório	Ativo
+Mestre	Operar Órgãos Do Sistema Cardiovascular	Ativo
+Grão Mestre	Operar Órgãos Do Sistema Nervoso	Ativo
+
+
+Comércio 
+Ranque	Privilégio	Tipo
+Novato	Seu Desconto Aumenta Em 10% Quando O Preço Calculado For Para Uma Compra Em Massa	Passivo
+Aprendiz	O Preço Que Consumidores Aceitam Pagar Por Seus Produtos & Serviços Aumenta Em 20%	Passivo
+Iniciado	Seu Desconto Aumenta Em 20% Quando O Preço Calculado For Para Uma Compra Em Massa	Passivo
+Adepto	O Preço Que Consumidores Aceitam Pagar Por Seus Produtos & Serviços Aumenta Em 40%	Passivo
+Veterano	Seu Desconto Aumenta Em 30% Quando O Preço Calculado For Para Uma Compra Em Massa	Passivo
+Expert	O Preço Que Consumidores Aceitam Pagar Por Seus Produtos & Serviços Aumenta Em 60%	Passivo
+Virtuoso	Seu Desconto Aumenta Em 40% Quando O Preço Calculado For Para Uma Compra Em Massa	Passivo
+Sábio	O Preço Que Consumidores Aceitam Pagar Por Seus Produtos & Serviços Aumenta Em 80%	Passivo
+Mestre	Seu Desconto Aumenta Em 50% Quando O Preço Calculado For Para Uma Compra Em Massa	Passivo
+Grão Mestre	O Preço Que Consumidores Aceitam Pagar Por Seus Produtos & Serviços Aumenta Em 100%	Passivo
+
+
+Direção
+Ranque	Privilégio	Tipo
+Novato	Dirigir Carruagens	Híbrido
+Aprendiz	Dirigir Motos	Híbrido
+Iniciado	Dirigir Carros	Híbrido
+Adepto	Dirigir Ônibus	Híbrido
+Veterano	Dirigir Caminhões	Híbrido
+Expert	Dirigir Carretas	Híbrido
+Virtuoso	Dirigir Tratores	Híbrido
+Sábio	Dirigir Tanques	Híbrido
+Mestre	Dirigir Trens	Híbrido
+Grão Mestre	Dirigir Mechas	Híbrido
+
+
+
+Direito
+Ranque	Privilégio	Tipo
+Novato	Conhecimento De Códigos Civis	Híbrido
+Aprendiz	Conhecimento De Códigos Penais	Híbrido
+Iniciado	Conhecimento De Códigos Tributários	Híbrido
+Adepto	Conhecimento De Códigos Administrativos	Híbrido
+Veterano	Conhecimento De Códigos Processuais	Híbrido
+Expert	Conhecimento De Códigos Corporativos	Híbrido
+Virtuoso	Conhecimento De Códigos Comerciais	Híbrido
+Sábio	Conhecimento De Códigos Militares	Híbrido
+Mestre	Conhecimento De Códigos Aristocráticos	Híbrido
+Grão Mestre	Conhecimento De Códigos Diplomáticos	Híbrido
+
+
+Domesticação
+Ranque	Privilégio	Tipo	Privilégio	Tipo
+Novato	Interagir Com Animais Bestiais Filhotes	Ativo	Domesticar Animais Bestiais Filhotes	Híbrido
+Aprendiz	Interagir Com Animais Bestiais Adultos	Ativo	Domesticar Animais Bestiais Adultos	Híbrido
+Iniciado	Interagir Com Monstros Bestiais Filhotes	Ativo	Domesticar Monstros Bestiais Filhotes	Híbrido
+Adepto	Interagir Com Monstros Bestiais Adultos	Ativo	Domesticar Monstros Bestiais Adultos	Híbrido
+Veterano	Interagir Com Elementais Bestiais Filhotes	Ativo	Domesticar Elementais Bestiais Filhotes	Híbrido
+Expert	Interagir Com Elementais Bestiais Adultos	Ativo	Domesticar Elementais Bestiais Adultos	Híbrido
+Virtuoso	Interagir Com Aberrações Bestiais Filhotes	Ativo	Domesticar Aberrações Bestiais Filhotes	Híbrido
+Sábio	Interagir Com Aberrações Bestiais Adultas	Ativo	Domesticar Aberrações Bestiais Adultas	Híbrido
+Mestre	Interagir Com Criaturas Bestiais Filhotes	Ativo	Domesticar Criaturas Bestiais Filhotes	Híbrido
+Grão Mestre	Interagir Com Criaturas Bestiais Adultas	Ativo	Domesticar Criaturas Bestiais Adultas	Híbrido
+
+
+Enfermagem
+Ranque	Privilégio	Tipo	Privilégio	Tipo	Privilégio	Tipo	Privilégio	Tipo
+Novato	Tratar Lesões Leves	Híbrido	Estancar Sangramentos Digitais & Faciais	Híbrido	Reanimar Seres Mortos Há Até 10 Segundos	Ativo	Auxiliar Em Operações Aos Órgãos Do Sistema Tegumentar	Ativo
+Aprendiz	Tratar Lesões Moderadas	Híbrido	Estancar Sangramentos Manuais & Pedais	Híbrido	Reanimar Seres Mortos Há Até 20 Segundos	Ativo	Auxiliar Em Operações Aos Órgãos Do Sistema Muscular	Ativo
+Iniciado	Tratar Lesões Severas	Híbrido	Estancar Sangramentos Antebraquiais & Crurais	Híbrido	Reanimar Seres Mortos Há Até 30 Segundos	Ativo	Auxiliar Em Operações Aos Órgãos Do Sistema Esquelético	Ativo
+Adepto	Tratar Lesões Extremas	Híbrido	Estancar Sangramentos Cubitais & Geniculares	Híbrido	Reanimar Seres Mortos Há Até 40 Segundos	Ativo	Auxiliar Em Operações Aos Órgãos Do Sistema Linfático	Ativo
+Veterano	Tratar Mutilações	Híbrido	Estancar Sangramentos Braquiais & Merais	Híbrido	Reanimar Seres Mortos Há Até 50 Segundos	Ativo	Auxiliar Em Operações Aos Órgãos Do Sistema Reprodutor	Ativo
+Expert	Tratar Explorações	Híbrido	Estancar Sangramentos Omalais & Pélvicos	Híbrido	Reanimar Seres Mortos Há Até 60 Segundos	Ativo	Auxiliar Em Operações Aos Órgãos Do Sistema Urinário	Ativo
+Virtuoso	Tratar Remoções	Híbrido	Estancar Sangramentos Abdominais & Lombares	Híbrido	Reanimar Seres Mortos Há Até 70 Segundos	Ativo	Auxiliar Em Operações Aos Órgãos Do Sistema Digestivo	Ativo
+Sábio	Tratar Reparações	Híbrido	Estancar Sangramentos Torácicos & Dorsais	Híbrido	Reanimar Seres Mortos Há Até 80 Segundos	Ativo	Auxiliar Em Operações Aos Órgãos Do Sistema Respiratório	Ativo
+Mestre	Tratar Reconstruções	Híbrido	Estancar Sangramentos Viscero Faciais	Híbrido	Reanimar Seres Mortos Há Até 90 Segundos	Ativo	Auxiliar Em Operações Aos Órgãos Do Sistema Cardiovascular	Ativo
+Grão Mestre	Tratar Substituições	Híbrido	Estancar Sangramentos Cervicais & Cefálicos	Híbrido	Reanimar Seres Mortos Há Até 100 Segundos	Ativo	Auxiliar Em Operações Aos Órgãos Do Sistema Nervoso	Ativo
+
+
+Escalada
+Ranque	Privilégio	Tipo
+Novato	Escalar Superfícies Irregulares Cujo Ângulo De Inclinação Não Exceda 60°	Híbrido
+Aprendiz	Escalar Superfícies Regulares Cujo Ângulo De Inclinação Não Exceda 60°	Híbrido
+Iniciado	Escalar Superfícies Irregulares Cujo Ângulo De Inclinação Não Exceda 90°	Híbrido
+Adepto	Escalar Superfícies Regulares Cujo Ângulo De Inclinação Não Exceda 90°	Híbrido
+Veterano	Escalar Superfícies Irregulares Cujo Ângulo De Inclinação Não Exceda 120°	Híbrido
+Expert	Escalar Superfícies Regulares Cujo Ângulo De Inclinação Não Exceda 120°	Híbrido
+Virtuoso	Escalar Superfícies Irregulares Cujo Ângulo De Inclinação  Não Exceda 150°	Híbrido
+Sábio	Escalar Superfícies Regulares Cujo Ângulo De Inclinação Não Exceda 150°	Híbrido
+Mestre	Escalar Superfícies Irregulares Cujo Ângulo De Inclinação Não Exceda 180°	Híbrido
+Grão Mestre	Escalar Superfícies Regulares Cujo Ângulo De Inclinação Não Exceda 180°	Híbrido
+
+
+Fuga
+Ranque	Privilégio	Tipo
+Novato	Fugir De Combates Envolvendo Animais Bestiais	Ativo
+Aprendiz	Fugir De Combates Envolvendo Animais Humanoides	Ativo
+Iniciado	Fugir De Combates Envolvendo Monstros Bestiais	Ativo
+Adepto	Fugir De Combates Envolvendo Monstros Humanoides	Ativo
+Veterano	Fugir De Combates Envolvendo Elementais Bestiais	Ativo
+Expert	Fugir De Combates Envolvendo Elementais Humanoides	Ativo
+Virtuoso	Fugir De Combates Envolvendo Aberrações Bestiais	Ativo
+Sábio	Fugir De Combates Envolvendo Aberrações Humanoides	Ativo
+Mestre	Fugir De Combates Envolvendo Criaturas Bestiais	Ativo
+Grão Mestre	Fugir De Combates Envolvendo Criaturas Humanoides	Ativo
+
+
+Furtividade
+Ranque	Privilégio	Tipo	Privilégio	Tipo
+Novato	Esconder-Se Em Ambientes Escuros Permanecendo Oculto	Ativo	A Dificuldade De Te Perceber Se Torna Consciência Vs 1d10	Passivo
+Aprendiz	Esconder-Se Em Ambientes Claros Permanecendo Oculto	Ativo	A Dificuldade De Te Perceber Se Torna Consciência Vs 2d10	Passivo
+Iniciado	Esconder-Se Em Ambientes Escuros Permanecendo Velado	Ativo	A Dificuldade De Te Perceber Se Torna Consciência Vs 3d10	Passivo
+Adepto	Esconder-Se Em Ambientes Claros Permanecendo Velado	Ativo	A Dificuldade De Te Perceber Se Torna Consciência Vs 4d10	Passivo
+Veterano	Esconder-Se Em Ambientes Escuros Permanecendo Aparente	Ativo	A Dificuldade De Te Perceber Se Torna Consciência Vs 5d10	Passivo
+Expert	Esconder-Se Em Ambientes Claros Permanecendo Aparente	Ativo	A Dificuldade De Te Perceber Se Torna Consciência Vs 6d10	Passivo
+Virtuoso	Esconder-Se Em Ambientes Escuros Permanecendo Evidente	Ativo	A Dificuldade De Te Perceber Se Torna Consciência Vs 7d10	Passivo
+Sábio	Esconder-Se Em Ambientes Claros Permanecendo Evidente	Ativo	A Dificuldade De Te Perceber Se Torna Consciência Vs 8d10	Passivo
+Mestre	Esconder-Se Em Ambientes Escuros Permanecendo Exposto	Ativo	A Dificuldade De Te Perceber Se Torna Consciência Vs 9d10	Passivo
+Grão Mestre	Esconder-Se Em Ambientes Claros Permanecendo Exposto	Ativo	A Dificuldade De Te Perceber Se Torna Consciência Vs 10d10	Passivo
+
+
+Furto
+Ranque	Privilégio	Tipo	Privilégio	Tipo
+Novato	Retirar & Colocar Itens No Inventário De Seres Totalmente Alheios A Sua Presença Sem Que Eles Percebam	Ativo	A Dificuldade De Perceber Seu Furto Se Torna Consciência Vs 1d10	Passivo
+Aprendiz	Retirar & Colocar Itens No Corpo De Seres Totalmente Alheios A Sua Presença Sem Que Eles Percebam	Ativo	A Dificuldade De Perceber Seu Furto Se Torna Consciência Vs 2d10	Passivo
+Iniciado	Retirar & Colocar Itens No Inventário De Seres Alheios A Sua Presença Mas Desconfiados Da Possibilidade Dela Sem Que Eles Percebam	Ativo	A Dificuldade De Perceber Seu Furto Se Torna Consciência Vs 3d10	Passivo
+Adepto	Retirar & Colocar Itens No Corpo De Seres Alheios A Sua Presença Mas Desconfiados Da Possibilidade Dela Sem Que Eles Percebam	Ativo	A Dificuldade De Perceber Seu Furto Se Torna Consciência Vs 4d10	Passivo
+Veterano	Retirar & Colocar Itens No Inventário De Seres Cientes De Sua Presença Mas Indiferentes A Suas Ações Sem Que Eles Percebam	Ativo	A Dificuldade De Perceber Seu Furto Se Torna Consciência Vs 5d10	Passivo
+Expert	Retirar & Colocar Itens No Corpo De Seres Cientes De Sua Presença Mas Indiferentes A Suas Ações Sem Que Eles Percebam	Ativo	A Dificuldade De Perceber Seu Furto Se Torna Consciência Vs 6d10	Passivo
+Virtuoso	Retirar & Colocar Itens No Inventário De Seres Cientes De Sua Presença & Atentos A Suas Ações Sem Que Eles Percebam	Ativo	A Dificuldade De Perceber Seu Furto Se Torna Consciência Vs 7d10	Passivo
+Sábio	Retirar & Colocar Itens No Corpo De Seres Cientes De Sua Presença & Atentos A Suas Ações Sem Que Eles Percebam	Ativo	A Dificuldade De Perceber Seu Furto Se Torna Consciência Vs 8d10	Passivo
+Mestre	Retirar & Colocar Itens No Inventário De Seres Cientes De Sua Presença & Hostis A Suas Ações Sem Que Eles Percebam	Ativo	A Dificuldade De Perceber Seu Furto Se Torna Consciência Vs 9d10	Passivo
+Grão Mestre	Retirar & Colocar Itens No Corpo De Seres Cientes De Sua Presença & Hostis A Suas Ações Sem Que Eles Percebam	Ativo	A Dificuldade De Perceber Seu Furto Se Torna Consciência Vs 10d10	Passivo
+
+
+História
+Ranque	Privilégio	Tipo
+Novato	Conhecimento Sobre Acontecimentos Dos Últimos 10 Anos	Híbrido
+Aprendiz	Conhecimento Sobre Acontecimentos Dos Últimos 25 Anos	Híbrido
+Iniciado	Conhecimento Sobre Acontecimentos Dos Últimos 50 Anos	Híbrido
+Adepto	Conhecimento Sobre Acontecimentos Dos Últimos 100 Anos	Híbrido
+Veterano	Conhecimento Sobre Acontecimentos Dos Últimos 250 Anos	Híbrido
+Expert	Conhecimento Sobre Acontecimentos Dos Últimos 500 Anos	Híbrido
+Virtuoso	Conhecimento Sobre Acontecimentos Dos Últimos 1.000 Anos	Híbrido
+Sábio	Conhecimento Sobre Acontecimentos Dos Últimos 2.500 Anos	Híbrido
+Mestre	Conhecimento Sobre Acontecimentos Dos Últimos 5.000 Anos	Híbrido
+Grão Mestre	Conhecimento Sobre Acontecimentos Dos Últimos 10.000 Anos	Híbrido
+
+
+Interrogação
+Ranque	Privilégio	Tipo	Privilégio	Tipo
+Novato	Interrogar Seres Desleais Através De Tortura	Ativo	A Dificuldade De Resistir Ao Seu Interrogatório Se Torna Vontade Vs 1d10	Passivo
+Aprendiz	Interrogar Seres Desleais Através De Coerção	Ativo	A Dificuldade De Resistir Ao Seu Interrogatório Se Torna Vontade Vs 2d10	Passivo
+Iniciado	Interrogar Seres Desleais Através De Negociação	Ativo	A Dificuldade De Resistir Ao Seu Interrogatório Se Torna Vontade Vs 3d10	Passivo
+Adepto	Interrogar Seres Desleais Através De Manipulação	Ativo	A Dificuldade De Resistir Ao Seu Interrogatório Se Torna Vontade Vs 4d10	Passivo
+Veterano	Interrogar Seres Desleais Através De Persuasão	Ativo	A Dificuldade De Resistir Ao Seu Interrogatório Se Torna Vontade Vs 5d10	Passivo
+Expert	Interrogar Seres Leais Através De Tortura	Ativo	A Dificuldade De Resistir Ao Seu Interrogatório Se Torna Vontade Vs 6d10	Passivo
+Virtuoso	Interrogar Seres Leais Através De Coerção	Ativo	A Dificuldade De Resistir Ao Seu Interrogatório Se Torna Vontade Vs 7d10	Passivo
+Sábio	Interrogar Seres Leais Através De Negociação	Ativo	A Dificuldade De Resistir Ao Seu Interrogatório Se Torna Vontade Vs 8d10	Passivo
+Mestre	Interrogar Seres Leais Através De Manipulação	Ativo	A Dificuldade De Resistir Ao Seu Interrogatório Se Torna Vontade Vs 9d10	Passivo
+Grão Mestre	Interrogar Seres Leais Através De Persuasão	Ativo	A Dificuldade De Resistir Ao Seu Interrogatório Se Torna Vontade Vs 10d10	Passivo
+
+
+Leitura
+Ranque	Privilégio	Tipo	Privilégio	Tipo
+Novato	Ler De Forma Elementar	Passivo	Sua Velocidade De Leitura É De 1 Capítulo Por Hora	Passivo
+Aprendiz	Ler De Forma Inferencial 	Passivo	Sua Velocidade De Leitura É De 2 Capítulos Por Hora	Passivo
+Iniciado	Ler De Forma Reflexiva	Passivo	Sua Velocidade De Leitura É De 3 Capítulos Por Hora	Passivo
+Adepto	Ler De Forma Interpretativa	Passivo	Sua Velocidade De Leitura É De 4 Capítulos Por Hora	Passivo
+Veterano	Ler De Forma Analítica	Passivo	Sua Velocidade De Leitura É De 5 Capítulos Por Hora	Passivo
+Expert	Ler De Forma Crítica	Passivo	Sua Velocidade De Leitura É De 6 Capítulos Por Hora	Passivo
+Virtuoso	Ler De Forma Sintética	Passivo	Sua Velocidade De Leitura É De 7 Capítulos Por Hora	Passivo
+Sábio	Ler De Forma Genética	Passivo	Sua Velocidade De Leitura É De 8 Capítulos Por Hora	Passivo
+Mestre	Ler De Forma Hermenêutica	Passivo	Sua Velocidade De Leitura É De 9 Capítulos Por Hora	Passivo
+Grão Mestre	Ler De Forma Epistêmica	Passivo	Sua Velocidade De Leitura É De 10 Capítulos Por Hora	Passivo
+
+
+Licenciatura
+Ranque	Privilégio	Tipo	Privilégio	Tipo	Privilégio	Tipo	Privilégio	Tipo	Privilégio	Tipo
+Novato	Ensinar Aptidões A Novatos	Híbrido	Ensinar Encantos & Runas De Ranque F	Híbrido	Ensinar Classes Comuns	Híbrido	Ensinar Habilidades De 1º Classe	Híbrido	Ensinar Idiomas	Híbrido
+Aprendiz	Ensinar Aptidões A Aprendizes	Híbrido	Ensinar Encantos & Runas De Ranque E	Híbrido	Ensinar Classes Incomuns	Híbrido	Ensinar Habilidades De 2º Classe	Híbrido		
+Iniciado	Ensinar Aptidões A Iniciados	Híbrido	Ensinar Encantos & Runas De Ranque D	Híbrido	Ensinar Classes Raras	Híbrido	Ensinar Habilidades De 3º Classe	Híbrido		
+Adepto	Ensinar Aptidões A Adeptos	Híbrido	Ensinar Encantos & Runas De Ranque C	Híbrido	Ensinar Classes Exóticas	Híbrido	Ensinar Habilidades De 4º Classe	Híbrido		
+Veterano	Ensinar Aptidões A Veteranos	Híbrido	Ensinar Encantos & Runas De Ranque B	Híbrido	Ensinar Classes Fabulosas	Híbrido	Ensinar Habilidades De 5º Classe	Híbrido		
+Expert	Ensinar Aptidões A Experts	Híbrido	Ensinar Encantos & Runas De Ranque A	Híbrido	Ensinar Classes Fantásticas	Híbrido	Ensinar Habilidades De 6º Classe	Híbrido		
+Virtuoso	Ensinar Aptidões A Virtuoses	Híbrido	Ensinar Encantos & Runas De Ranque S	Híbrido	Ensinar Classes Lendárias	Híbrido	Ensinar Habilidades De 7º Classe	Híbrido		
+Sábio	Ensinar Aptidões A Sábios	Híbrido	Ensinar Encantos & Runas De Ranque ☆	Híbrido	Ensinar Classes Míticas	Híbrido	Ensinar Habilidades De 8º Classe	Híbrido		
+Mestre	Ensinar Aptidões A Mestres	Híbrido	Ensinar Encantos & Runas De Ranque ☆☆	Híbrido	Ensinar Classes Eonicas	Híbrido	Ensinar Habilidades De 9º Classe	Híbrido		
+Grão Mestre	Ensinar Aptidões A Grão Mestres	Híbrido	Ensinar Encantos & Runas De Ranque ☆☆☆	Híbrido	Ensinar Iconoclasses	Híbrido	Ensinar Habilidades De 10º Classe	Híbrido		
+
+
+
+
+
+
+
+Medicina
+Ranque	Privilégio	Tipo	Privilégio	Tipo
+Novato	Diagnosticar Doenças Traumáticas	Ativo	Conhecimento Sobre Doenças Traumáticas	Híbrido
+Aprendiz	Diagnosticar Doenças Nutricionais	Ativo	Conhecimento Sobre Doenças Nutricionais	Híbrido
+Iniciado	Diagnosticar Doenças Ambientais	Ativo	Conhecimento Sobre Doenças Ambientais	Híbrido
+Adepto	Diagnosticar Doenças Bacterianas	Ativo	Conhecimento Sobre Doenças Bacterianas	Híbrido
+Veterano	Diagnosticar Doenças Virais	Ativo	Conhecimento Sobre Doenças Virais	Híbrido
+Expert	Diagnosticar Doenças Micóticas	Ativo	Conhecimento Sobre Doenças Micóticas	Híbrido
+Virtuoso	Diagnosticar Doenças Parasitárias	Ativo	Conhecimento Sobre Doenças Parasitárias	Híbrido
+Sábio	Diagnosticar Doenças Genéticas	Ativo	Conhecimento Sobre Doenças Genéticas	Híbrido
+Mestre	Diagnosticar Doenças Neoplásicas	Ativo	Conhecimento Sobre Doenças Neoplásicas	Híbrido
+Grão Mestre	Diagnosticar Doenças Idiopáticas	Ativo	Conhecimento Sobre Doenças Idiopáticas	Híbrido
+
+
+Meditação
+Ranque	Privilégio	Tipo
+Novato	Meditar Repousando Em Ambientes Serenos	Ativo
+Aprendiz	Meditar Repousando Em Ambientes Intensos	Ativo
+Iniciado	Meditar Realizando Atividades Estritamente Físicas Em Ambientes Serenos	Ativo
+Adepto	Meditar Realizando Atividades Estritamente Físicas Em Ambientes Intensos	Ativo
+Veterano	Meditar Realizando Atividades Estritamente Mentais Em Ambientes Serenos	Ativo
+Expert	Meditar Realizando Atividades Estritamente Mentais Em Ambientes Intensos	Ativo
+Virtuoso	Meditar Realizando Atividades Estritamente Sociais Em Ambientes Serenos	Ativo
+Sábio	Meditar Realizando Atividades Estritamente Sociais Em Ambientes Intensos	Ativo
+Mestre	Meditar Realizando Atividades Interdisciplinares Em Ambientes Serenos	Ativo
+Grão Mestre	Meditar Realizando Atividades Interdisciplinares Em Ambientes Intensos	Ativo
+
+
+Montaria
+Ranque	Privilégio	Tipo
+Novato	Montar Animais Domesticados	Híbrido
+Aprendiz	Montar Animais Selvagens	Híbrido
+Iniciado	Montar Monstros Domesticados	Híbrido
+Adepto	Montar Monstros Selvagens	Híbrido
+Veterano	Montar Elementais Domesticados	Híbrido
+Expert	Montar Elementais Selvagens	Híbrido
+Virtuoso	Montar Aberrações Domesticadas	Híbrido
+Sábio	Montar Aberrações Selvagens	Híbrido
+Mestre	Montar Criaturas Domesticadas	Híbrido
+Grão Mestre	Montar Criaturas Selvagens	Híbrido
+
+
+
+Natação
+Ranque	Privilégio	Tipo
+Novato	Nadar Em Líquidos Calmos Sem Correnteza	Híbrido
+Aprendiz	Nadar Em Líquidos Turbulentos Sem Correnteza	Híbrido
+Iniciado	Nadar Em Líquidos Calmos A Favor De Correntezas Lentas 	Híbrido
+Adepto	Nadar Em Líquidos Turbulentos A Favor De Correntezas Lentas	Híbrido
+Veterano	Nadar Em Líquidos Calmos A Favor De Correntezas Velozes	Híbrido
+Expert	Nadar Em Líquidos Turbulentos A Favor De Correntezas Velozes	Híbrido
+Virtuoso	Nadar Em Líquidos Calmos Contra Correntezas Lentas	Híbrido
+Sábio	Nadar Em Líquidos Turbulentos Contra Correntezas Lentas	Híbrido
+Mestre	Nadar Em Líquidos Calmos Contra Correntezas Velozes	Híbrido
+Grão Mestre	Nadar Em Líquidos Turbulentos Contra Correntezas Velozes	Híbrido
+
+
+Navegação
+Ranque	Privilégio	Tipo
+Novato	Navegar Canoas	Híbrido
+Aprendiz	Navegar Jangadas	Híbrido
+Iniciado	Navegar Lanchas	Híbrido
+Adepto	Navegar Galés	Híbrido
+Veterano	Navegar Veleiros	Híbrido
+Expert	Navegar Rebocadores	Híbrido
+Virtuoso	Navegar Cruzeiros	Híbrido
+Sábio	Navegar Cargueiros	Híbrido
+Mestre	Navegar Encouraçados	Híbrido
+Grão Mestre	Navegar Submarinos	Híbrido
+
+
+Pilotagem
+Ranque	Privilégio	Tipo
+Novato	Pilotar Balões	Híbrido
+Aprendiz	Pilotar Planadores	Híbrido
+Iniciado	Pilotar Dirigíveis	Híbrido
+Adepto	Pilotar Autogiros	Híbrido
+Veterano	Pilotar Aviões	Híbrido
+Expert	Pilotar Helicópteros	Híbrido
+Virtuoso	Pilotar Convertiplanos	Híbrido
+Sábio	Pilotar Ornitópteros	Híbrido
+Mestre	Pilotar Espaçonaves	Híbrido
+Grão Mestre	Pilotar Astronaves	Híbrido
+
+
+Política
+Ranque	Privilégio	Tipo
+Novato	Conhecimento Sobre Indivíduos & Grupos Reconhecidos Mundialmente 	Ativo
+Aprendiz	Conhecimento Sobre Indivíduos & Grupos Reconhecidos Intercontinentalmente 	Ativo
+Iniciado	Conhecimento Sobre Indivíduos & Grupos Reconhecidos Continentalmente 	Ativo
+Adepto	Conhecimento Sobre Indivíduos & Grupos Reconhecidos Internacionalmente 	Ativo
+Veterano	Conhecimento Sobre Indivíduos & Grupos Reconhecidos Nacionalmente 	Ativo
+Expert	Conhecimento Sobre Indivíduos & Grupos Reconhecidos Ducalmente 	Ativo
+Virtuoso	Conhecimento Sobre Indivíduos & Grupos Reconhecidos Condalmente 	Ativo
+Sábio	Conhecimento Sobre Indivíduos & Grupos Reconhecidos Baronalmente 	Ativo
+Mestre	Conhecimento Sobre Indivíduos & Grupos Reconhecidos Feudalmente 	Ativo
+Grão Mestre	Conhecimento Sobre Indivíduos & Grupos Reconhecidos Localmente	Ativo
+
+
+Psicologia
+Ranque	Privilégio	Tipo	Privilégio	Tipo	Privilégio	Tipo
+Novato	Diagnosticar Transtornos Traumáticos & Estressores	Ativo	Tratar Transtornos Traumáticos & Estressores	Ativo	Conhecimento Sobre Transtornos Traumáticos & Estressores	Híbrido
+Aprendiz	Diagnosticar Transtornos Depressivos & Ansiosos	Ativo	Tratar Transtornos Depressivos & Ansiosos	Ativo	Conhecimento Sobre Transtornos Depressivos & Ansiosos	Híbrido
+Iniciado	Diagnosticar Transtornos Obsessivos & Compulsivos	Ativo	Tratar Transtornos Obsessivos & Compulsivos	Ativo	Conhecimento Sobre Transtornos Obsessivos & Compulsivos	Híbrido
+Adepto	Diagnosticar Transtornos Alimentares & Eliminares	Ativo	Tratar Transtornos Alimentares & Eliminares	Ativo	Conhecimento Sobre Transtornos Alimentares & Eliminares	Híbrido
+Veterano	Diagnosticar Transtornos Somáticos & Hipnagógicos	Ativo	Tratar Transtornos Somáticos & Hipnagógicos	Ativo	Conhecimento Sobre Transtornos Somáticos & Hipnagógicos	Híbrido
+Expert	Diagnosticar Transtornos Desenvolvimentais & Cognitivos	Ativo	Tratar Transtornos Desenvolvimentais & Cognitivos	Ativo	Conhecimento Sobre Transtornos Desenvolvimentais & Cognitivos	Híbrido
+Virtuoso	Diagnosticar Transtornos Sexuais & Parafílicos	Ativo	Tratar Transtornos Sexuais & Parafílicos	Ativo	Conhecimento Sobre Transtornos Sexuais & Parafílicos	Híbrido
+Sábio	Diagnosticar Transtornos Disruptivos & Aditivos	Ativo	Tratar Transtornos Disruptivos & Aditivos	Ativo	Conhecimento Sobre Transtornos Disruptivos & Aditivos	Híbrido
+Mestre	Diagnosticar Transtornos Bipolares & Personológicos	Ativo	Tratar Transtornos Bipolares & Personológicos	Ativo	Conhecimento Sobre Transtornos Bipolares & Personológicos	Híbrido
+Grão Mestre	Diagnosticar Transtornos Psicóticos & Dissociativos	Ativo	Tratar Transtornos Psicóticos & Dissociativos	Ativo	Conhecimento Sobre Transtornos Psicóticos & Dissociativos	Híbrido
+
+
+Rastreamento
+Ranque	Privilégio	Tipo
+Novato	Identificar Rastros De Animais Bestiais	Ativo
+Aprendiz	Identificar Rastros De Animais Humanoides	Ativo
+Iniciado	Identificar Rastros De Monstros Bestiais	Ativo
+Adepto	Identificar Rastros De Monstros Humanoides	Ativo
+Veterano	Identificar Rastros De Elementais Bestiais	Ativo
+Expert	Identificar Rastros De Elementais Humanoides	Ativo
+Virtuose	Identificar Rastros De Aberrações Bestiais	Ativo
+Sábio	Identificar Rastros De Aberrações Humanoides	Ativo
+Mestre	Identificar Rastros De Criaturas Bestiais	Ativo
+Grão Mestre	Identificar Rastros De Criaturas Humanoides	Ativo
+
+
+
+Teologia
+Ranque	Privilégio	Tipo
+Novato	Conhecimento Sobre Patronos Exaltados Vivos	Ativo
+Aprendiz	Conhecimento Sobre Patronos Exaltados Mortos	Ativo
+Iniciado	Conhecimento Sobre Patronos Populares Vivos	Ativo
+Adepto	Conhecimento Sobre Patronos Populares Mortos	Ativo
+Veterano	Conhecimento Sobre Patronos Esotéricos Vivos	Ativo
+Expert	Conhecimento Sobre Patronos Esotéricos Mortos	Ativo
+Virtuoso	Conhecimento Sobre Patronos Esquecidos Vivos	Ativo
+Sábio	Conhecimento Sobre Patronos Esquecidos Mortos	Ativo
+Mestre	Conhecimento Sobre Patronos Ocultos Vivos	Ativo
+Grão Mestre	Conhecimento Sobre Patronos Ocultos Mortos	Ativo
+
+
+Ventriloquia
+Ranque	Privilégio	Tipo	Privilégio	Tipo
+Novato	Projetar Sua Voz Para Um Objeto Animado Como Se Ela Pertencesse A Ele Movendo Seus Lábios	Ativo	A Dificuldade De Perceber Sua Projeção Vocal Se Torna Consciência Vs 1d10	Passivo
+Aprendiz	Projetar Sua Voz Para Um Objeto Animado Como Se Ela Pertencesse A Ele Sem Mover Seus Lábios	Ativo	A Dificuldade De Perceber Sua Projeção Vocal Se Torna Consciência Vs 2d10	Passivo
+Iniciado	Projetar Sua Voz Para Um Objeto Inanimado Como Se Ela Pertencesse A Ele Movendo Seus Lábios	Ativo	A Dificuldade De Perceber Sua Projeção Vocal Se Torna Consciência Vs 3d10	Passivo
+Adepto	Projetar Sua Voz Para Um Objeto Inanimado Como Se Ela Pertencesse A Ele Sem Mover Seus Lábios	Ativo	A Dificuldade De Perceber Sua Projeção Vocal Se Torna Consciência Vs 4d10	Passivo
+Veterano	Projetar Sua Voz Para Um Ser Vivo Como Se Ela Pertencesse A Ele Movendo Seus Lábios	Ativo	A Dificuldade De Perceber Sua Projeção Vocal Se Torna Consciência Vs 5d10	Passivo
+Expert	Projetar Sua Voz Para Um Ser Vivo Como Se Ela Pertencesse A Ele Sem Mover Seus Lábios	Ativo	A Dificuldade De Perceber Sua Projeção Vocal Se Torna Consciência Vs 6d10	Passivo
+Virtuoso	Projetar Sua Voz Para Um Ser Morto Como Se Ela Pertencesse A Ele Movendo Seus Lábios	Ativo	A Dificuldade De Perceber Sua Projeção Vocal Se Torna Consciência Vs 7d10	Passivo
+Sábio	Projetar Sua Voz Para Um Ser Morto Como Se Ela Pertencesse A Ele Sem Mover Seus Lábios	Ativo	A Dificuldade De Perceber Sua Projeção Vocal Se Torna Consciência Vs 8d10	Passivo
+Mestre	Projetar Sua Voz Para Um Espaço Desocupado Como Se Ela Pertencesse A Ele Movendo Seus Lábios	Ativo	A Dificuldade De Perceber Sua Projeção Vocal Se Torna Consciência Vs 9d10	Passivo
+Grão Mestre	Projetar Sua Voz Para Um Espaço Desocupado Como Se Ela Pertencesse A Ele Sem Mover Seus Lábios	Ativo	A Dificuldade De Perceber Sua Projeção Vocal Se Torna Consciência Vs 10d10	Passivo
+
+
+
+
+
+
+Zoologia
+Ranque	Privilégio	Tipo
+Novato	Conhecimento Sobre Animais Bestiais	Híbrido
+Aprendiz	Conhecimento Sobre Animais Humanoides	Híbrido
+Iniciado	Conhecimento Sobre Monstros Bestiais	Híbrido
+Adepto	Conhecimento Sobre Monstros Humanoides	Híbrido
+Veterano	Conhecimento Sobre Elementais Materiais	Híbrido
+Expert	Conhecimento Sobre Elementais Energéticos	Híbrido
+Virtuoso	Conhecimento Sobre Aberrações Bestiais	Híbrido
+Sábio	Conhecimento Sobre Aberrações Humanoides	Híbrido
+Mestre	Conhecimento Sobre Criaturas Bestiais	Híbrido
+Grão Mestre	Conhecimento Sobre Criaturas Humanoides	Híbrido
+
+
+
+

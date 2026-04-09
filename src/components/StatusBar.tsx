@@ -1,15 +1,16 @@
 import { Minus, Plus } from "lucide-react";
+import React, { ReactNode } from "react";
 
-interface StatusBarProps {
+export interface StatusBarProps {
   label: string;
   current: number;
   max: number;
   color: "red" | "blue" | "orange" | "purple" | "indigo" | "yellow" | "cyan" | "emerald" | "teal";
-  icon: React.ReactNode;
+  icon: ReactNode;
   onChange: (newVal: number) => void;
 }
 
-export function StatusBar({ label, current, max, color, icon, onChange }: StatusBarProps) {
+export const StatusBar: React.FC<StatusBarProps> = ({ label, current, max, color, icon, onChange }) => {
   const percentage = Math.max(0, Math.min(100, (current / max) * 100));
   
   const colors = {

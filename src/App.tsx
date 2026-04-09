@@ -1,5 +1,5 @@
-import { useState, useMemo, useRef } from "react";
-import { Save, Shield, User, Edit3, Download, Upload, LayoutDashboard, Activity, List, Target, Brain, Dumbbell, Users, Package, Sword, Swords } from "lucide-react";
+import { useState, useMemo, useRef, ChangeEvent } from "react";
+import { Save, Shield, User, Edit3, Download, Upload, LayoutDashboard, Activity, List, Target, Brain, Dumbbell, Users, Package, Sword, Swords, BookOpen } from "lucide-react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { AttributeRow } from "./components/AttributeRow";
 import { Inventory } from "./components/Inventory";
@@ -12,6 +12,8 @@ import { StatusTab } from "./components/StatusTab";
 import { CombatSummary } from "./components/CombatSummary";
 import { AptidoesTab } from "./components/AptidoesTab";
 import { AuthGate } from "./components/AuthGate";
+import { LobbyScreen } from "./components/LobbyScreen";
+import { JournalTab } from "./components/JournalTab";
 import { calculateStats } from "./lib/calculations";
 import { CharacterInfo, Attributes, InventoryItem, EquippedArmor, EquippedWeapons, EquippedAccessories, AptidoesState } from "./types";
 
@@ -28,12 +30,12 @@ const initialAttributes: Attributes = {
 };
 
 const initialCharInfo: CharacterInfo = {
-  name: "Krassus",
+  name: "Novo Personagem",
   level: 0,
-  race: "Goblínica",
-  constellation: "Touro",
-  height: 120,
-  weight: 30,
+  race: "",
+  constellation: "",
+  height: 0,
+  weight: 0,
   physicalLevel: 0,
   physicalValue: 0,
   intellectualLevel: 0,
@@ -73,11 +75,14 @@ export default function App() {
   });
 
   const [aptidoes, setAptidoes] = useLocalStorage<AptidoesState>("rpg_aptidoes", {});
+  const [journalNotes, setJournalNotes] = useLocalStorage<string>("rpg_journal_notes", "");
+  const [hasCharacter, setHasCharacter] = useLocalStorage<boolean>("rpg_has_character", false);
 
-  const [activeTab, setActiveTab] = useState<"attributes" | "derived" | "status" | "inventory" | "arsenal" | "aptidoes">("attributes");
+  const [activeTab, setActiveTab] = useState<"attributes" | "derived" | "status" | "inventory" | "arsenal" | "aptidoes" | "journal">("attributes");
   const [isEditing, setIsEditing] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useLocalStorage<boolean>("rpg_is_auth", false);
+  const [showLobby, setShowLobby] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Calculate derived stats and max status dynamically
@@ -102,6 +107,8 @@ export default function App() {
       rpg_equipped_accessories: localStorage.getItem("rpg_equipped_accessories"),
       rpg_current_status: localStorage.getItem("rpg_current_status"),
       rpg_aptidoes: localStorage.getItem("rpg_aptidoes"),
+      rpg_journal_notes: localStorage.getItem("rpg_journal_notes"),
+      rpg_has_character: "true",
     };
     const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -112,7 +119,7 @@ export default function App() {
     URL.revokeObjectURL(url);
   };
 
-  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImport = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -139,17 +146,40 @@ export default function App() {
     return <AuthGate onUnlock={() => setIsAuthenticated(true)} />;
   }
 
+  if (showLobby) {
+    return (
+      <LobbyScreen 
+        hasExistingCharacter={hasCharacter}
+        characterName={charInfo.name === "Novo Personagem" ? "" : charInfo.name}
+        onContinue={() => setShowLobby(false)}
+        onNewCharacter={() => {
+          localStorage.clear();
+          localStorage.setItem("rpg_is_auth", "true");
+          localStorage.setItem("rpg_has_character", "true");
+          window.location.reload();
+        }}
+        onImport={handleImport}
+      />
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 p-4 md:p-8 font-sans selection:bg-indigo-500/30">
-      <div className="max-w-[1600px] w-full mx-auto space-y-6">
+    <div className="min-h-screen bg-[#070b14] text-slate-200 p-4 md:p-8 font-sans selection:bg-indigo-500/30 relative overflow-hidden">
+      {/* Mystic Ambient Background */}
+      <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-0 mix-blend-screen opacity-40">
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-indigo-900/30 rounded-full blur-[150px]" />
+        <div className="absolute top-[60%] right-[-10%] w-[50%] h-[50%] bg-purple-900/20 rounded-full blur-[150px]" />
+      </div>
+
+      <div className="max-w-[1600px] w-full mx-auto space-y-6 relative z-10">
         
         {/* Header */}
-        <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-xl relative overflow-hidden">
+        <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 p-6 rounded-3xl shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
           
-          <div className="flex items-center gap-4 z-10">
-            <div className="w-16 h-16 bg-slate-800 rounded-2xl flex items-center justify-center border border-slate-700 shadow-inner">
-              <User size={32} className="text-indigo-400" />
+          <div className="flex items-center gap-4 z-10 w-full md:w-auto">
+            <div className="w-16 h-16 min-w-[64px] bg-slate-800 rounded-2xl flex items-center justify-center border border-slate-700 shadow-[inset_0_4px_20px_rgba(0,0,0,0.5)]">
+              <User size={32} className="text-indigo-400 drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]" />
             </div>
             <div>
               <div className="flex items-center gap-3">
@@ -167,25 +197,35 @@ export default function App() {
                 <span>•</span>
                 <span>{charInfo.height}cm / {charInfo.weight}kg</span>
               </div>
-              <div className="flex items-center gap-3 mt-3 flex-wrap">
-                <div className="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700 shadow-sm">
-                  <Dumbbell size={14} className="text-emerald-400" />
-                  <span className="text-sm font-medium text-slate-300">Físico</span>
-                  <span className="text-xs text-slate-400 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-700/50">Lvl {charInfo.physicalLevel || 0}</span>
-                  <span className="text-xs text-slate-500">({charInfo.physicalValue || 0})</span>
+              <div className="flex flex-col gap-3 mt-4 flex-wrap w-full">
+                
+                {/* Physical Bar */}
+                <div className="flex items-center gap-3 w-full max-w-sm">
+                  <Dumbbell size={16} className="text-emerald-400" />
+                  <div className="w-8 text-xs font-bold text-slate-400 text-right">Nv {charInfo.physicalLevel || 0}</div>
+                  <div className="flex-1 h-3 bg-slate-950 rounded-full overflow-hidden border border-slate-800/80 shadow-inner">
+                    <div className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full shadow-[0_0_10px_rgba(52,211,153,0.3)] transition-all duration-1000" style={{ width: `${Math.min(100, ((charInfo.physicalValue || 0) / 100) * 100)}%` }}></div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700 shadow-sm">
-                  <Brain size={14} className="text-blue-400" />
-                  <span className="text-sm font-medium text-slate-300">Intelectual</span>
-                  <span className="text-xs text-slate-400 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-700/50">Lvl {charInfo.intellectualLevel || 0}</span>
-                  <span className="text-xs text-slate-500">({charInfo.intellectualValue || 0})</span>
+
+                {/* Intellectual Bar */}
+                <div className="flex items-center gap-3 w-full max-w-sm">
+                  <Brain size={16} className="text-blue-400" />
+                  <div className="w-8 text-xs font-bold text-slate-400 text-right">Nv {charInfo.intellectualLevel || 0}</div>
+                  <div className="flex-1 h-3 bg-slate-950 rounded-full overflow-hidden border border-slate-800/80 shadow-inner">
+                    <div className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full shadow-[0_0_10px_rgba(96,165,250,0.3)] transition-all duration-1000" style={{ width: `${Math.min(100, ((charInfo.intellectualValue || 0) / 100) * 100)}%` }}></div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700 shadow-sm">
-                  <Users size={14} className="text-amber-400" />
-                  <span className="text-sm font-medium text-slate-300">Social</span>
-                  <span className="text-xs text-slate-400 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-700/50">Lvl {charInfo.socialLevel || 0}</span>
-                  <span className="text-xs text-slate-500">({charInfo.socialValue || 0})</span>
+
+                {/* Social Bar */}
+                <div className="flex items-center gap-3 w-full max-w-sm">
+                  <Users size={16} className="text-amber-400" />
+                  <div className="w-8 text-xs font-bold text-slate-400 text-right">Nv {charInfo.socialLevel || 0}</div>
+                  <div className="flex-1 h-3 bg-slate-950 rounded-full overflow-hidden border border-slate-800/80 shadow-inner">
+                    <div className="h-full bg-gradient-to-r from-amber-600 to-amber-400 rounded-full shadow-[0_0_10px_rgba(251,191,36,0.3)] transition-all duration-1000" style={{ width: `${Math.min(100, ((charInfo.socialValue || 0) / 100) * 100)}%` }}></div>
+                  </div>
                 </div>
+
               </div>
             </div>
           </div>
@@ -230,7 +270,7 @@ export default function App() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
           {/* Left Column: Tabs & Content */}
-          <div className={`${(activeTab === "inventory" || activeTab === "arsenal" || activeTab === "aptidoes") ? "lg:col-span-12" : "lg:col-span-8"} space-y-6`}>
+          <div className={`${(activeTab === "inventory" || activeTab === "arsenal" || activeTab === "aptidoes" || activeTab === "journal") ? "lg:col-span-12" : "lg:col-span-8"} space-y-6`}>
             
             {/* Tabs Navigation */}
             <div className="flex gap-2 bg-slate-900 p-2 rounded-2xl border border-slate-800 overflow-x-auto hide-scrollbar">
@@ -270,6 +310,12 @@ export default function App() {
               >
                 <Swords size={18} /> Aptidões
               </button>
+              <button
+                onClick={() => setActiveTab("journal")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors whitespace-nowrap ${activeTab === "journal" ? "bg-amber-600 text-white" : "text-slate-400 hover:text-amber-200 hover:bg-slate-800"}`}
+              >
+                <BookOpen size={18} /> Grimório
+              </button>
             </div>
 
             {/* Tab Content */}
@@ -283,7 +329,7 @@ export default function App() {
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {Object.entries(computedAttributes).map(([name, data]) => (
+                    {Object.entries(computedAttributes as Record<string, { base: number; bonus: number }>).map(([name, data]) => (
                       <AttributeRow 
                         key={name}
                         name={name}
@@ -331,11 +377,14 @@ export default function App() {
               {activeTab === "aptidoes" && (
                 <AptidoesTab aptidoes={aptidoes} setAptidoes={setAptidoes} />
               )}
+              {activeTab === "journal" && (
+                <JournalTab notes={journalNotes} onChange={setJournalNotes} />
+              )}
             </div>
           </div>
 
           {/* Right Column: Inventory */}
-          {(activeTab !== "inventory" && activeTab !== "arsenal" && activeTab !== "aptidoes") && (
+          {(activeTab !== "inventory" && activeTab !== "arsenal" && activeTab !== "aptidoes" && activeTab !== "journal") && (
             <div className="lg:col-span-4 space-y-6 flex flex-col">
               <div className="h-[300px]">
                 <Inventory 
@@ -354,7 +403,6 @@ export default function App() {
           equippedWeapons={equippedWeapons}
           equippedArmor={equippedArmor}
           inventory={inventory}
-          aptidoes={aptidoes as Record<string, number>}
         />
       </div>
 

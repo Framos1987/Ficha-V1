@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { Lock, Fingerprint } from "lucide-react";
 import { motion } from "motion/react";
 
@@ -10,7 +10,7 @@ export function AuthGate({ onUnlock }: AuthGateProps) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (password === "krassus@123") {
       onUnlock();

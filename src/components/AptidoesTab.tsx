@@ -845,16 +845,11 @@ const RANK_BAR_COLOR: Record<string, string> = {
   "Grão Mestre": "bg-yellow-400",
 };
 
-// ─── AptidaoCard component ─────────────────────────────────────────────────────
-function AptidaoCard({
-  aptidao,
-  proficiency,
-  onChange,
-}: {
+export const AptidaoCard: React.FC<{
   aptidao: AptidaoData;
   proficiency: number;
   onChange: (val: number) => void;
-}) {
+}> = ({ aptidao, proficiency, onChange }) => {
   const [expanded, setExpanded] = useState(false);
   const tier = profToTier(proficiency);
   const rank = profToRank(proficiency);

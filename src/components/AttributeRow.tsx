@@ -1,10 +1,12 @@
-interface AttributeRowProps {
+import React from "react";
+
+export interface AttributeRowProps {
   name: string;
   base: number;
   bonus: number;
 }
 
-export function AttributeRow({ name, base, bonus }: AttributeRowProps) {
+export const AttributeRow: React.FC<AttributeRowProps> = ({ name, base, bonus }) => {
   const total = base + bonus;
 
   return (

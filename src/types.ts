@@ -16,7 +16,7 @@ export interface CharacterInfo {
 export type AttributeData = { base: number; bonus: number };
 export type Attributes = Record<string, AttributeData>;
 
-export type AccessorySlot = 'Cabeça' | 'Garganta' | 'Ouvido' | 'Antebraço' | 'Mão' | 'Pulso' | 'Dedo' | 'Cintura' | 'Tornozelo';
+export type AccessorySlot = 'Cabeça' | 'Garganta' | 'Ouvido E' | 'Ouvido D' | 'Antebraço' | 'Mão' | 'Pulso E' | 'Pulso D' | 'Dedo 1' | 'Dedo 2' | 'Dedo 3' | 'Dedo 4' | 'Dedo 5' | 'Dedo 6' | 'Dedo 7' | 'Dedo 8' | 'Dedo 9' | 'Dedo 10' | 'Cintura' | 'Tornozelo E' | 'Tornozelo D';
 
 export interface GemEffect {
   category: string; // e.g., 'Ampliadoras (Atributos)', 'Indutoras'
@@ -39,7 +39,7 @@ export interface InventoryItem {
   requiredTier?: number;       // 1-10 (Novato=1 … Grão Mestre=10)
   
   // Acessórios e Gemas
-  accessorySlot?: AccessorySlot;
+  accessorySlot?: string;
   gemCapacity?: number;
   maxGemTier?: string; // e.g. "E" to "☆☆☆" (we'll compare via arrays or just metadata)
   gemEffect?: GemEffect;
@@ -49,11 +49,11 @@ export interface InventoryItem {
 export type BodyPart = 'Cabeça' | 'Pescoço' | 'Tronco' | 'Ombro' | 'Braço' | 'Cotovelo' | 'Antebraço' | 'Mão' | 'Coxa' | 'Joelho' | 'Perna' | 'Pé';
 export type ArmorLayer = 'Interna' | 'Central' | 'Externa';
 
-export type EquippedArmor = {
+export interface EquippedArmor {
   [part in BodyPart]: {
     [layer in ArmorLayer]: InventoryItem | null;
   };
-};
+}
 
 export interface EquippedWeapons {
   mainHand: InventoryItem | null;
@@ -63,6 +63,6 @@ export interface EquippedWeapons {
 /** Maps aptidão name → proficiency (0-100) */
 export type AptidoesState = Record<string, number>;
 
-export type EquippedAccessories = {
-  [slot in AccessorySlot]: InventoryItem | null;
-};
+export interface EquippedAccessories {
+  [slot: string]: InventoryItem | null;
+}

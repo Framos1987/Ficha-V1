@@ -33,7 +33,7 @@ export function LobbyScreen({ onContinue, onNewCharacter, onImport, hasExistingC
       >
         <div className="mb-10 text-center">
           <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-indigo-300 via-purple-300 to-indigo-500 tracking-tight drop-shadow-sm mb-3">
-            Crônicas do Caos
+            Ambição Imensurável
           </h1>
           <p className="text-slate-400 text-sm tracking-widest uppercase font-medium">
             Terminal de Personagens

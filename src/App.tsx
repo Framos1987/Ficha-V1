@@ -17,6 +17,39 @@ import { JournalTab } from "./components/JournalTab";
 import { calculateStats } from "./lib/calculations";
 import { CharacterInfo, Attributes, InventoryItem, EquippedArmor, EquippedWeapons, EquippedAccessories, AptidoesState } from "./types";
 
+// ── Migrate old accessory structure to new paired/multi-slot structure ──
+(function migrateAccessorySlots() {
+  try {
+    const raw = localStorage.getItem("rpg_equipped_accessories");
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    // Detect old format: has "Dedo" key (single) instead of "Dedo 1"
+    const needsMigration = ('Dedo' in data) || ('Ouvido' in data) || ('Pulso' in data) || ('Tornozelo' in data);
+    if (!needsMigration) return;
+
+    const migrated: Record<string, any> = {
+      'Cabeça': data['Cabeça'] ?? null,
+      'Garganta': data['Garganta'] ?? null,
+      'Ouvido E': data['Ouvido'] ?? null,
+      'Ouvido D': null,
+      'Antebraço': data['Antebraço'] ?? null,
+      'Mão': data['Mão'] ?? null,
+      'Pulso E': data['Pulso'] ?? null,
+      'Pulso D': null,
+      'Dedo 1': data['Dedo'] ?? null,
+      'Dedo 2': null, 'Dedo 3': null, 'Dedo 4': null, 'Dedo 5': null,
+      'Dedo 6': null, 'Dedo 7': null, 'Dedo 8': null, 'Dedo 9': null, 'Dedo 10': null,
+      'Cintura': data['Cintura'] ?? null,
+      'Tornozelo E': data['Tornozelo'] ?? null,
+      'Tornozelo D': null,
+    };
+
+    localStorage.setItem("rpg_equipped_accessories", JSON.stringify(migrated));
+    console.log("[Migration] ✅ Accessory slots upgraded to v2. Old keys found:", Object.keys(data).filter(k => ['Dedo', 'Ouvido', 'Pulso', 'Tornozelo'].includes(k)));
+    alert("Sistema de Acessórios atualizado! Seus anéis e brincos foram migrados para os novos slots.");
+  } catch (e) { console.error("[Migration] Error:", e); }
+})();
+
 const initialAttributes: Attributes = {
   Constituição: { base: 22, bonus: 6 },
   Destreza: { base: 23, bonus: 4 },
@@ -71,7 +104,11 @@ export default function App() {
   });
 
   const [equippedAccessories, setEquippedAccessories] = useLocalStorage<EquippedAccessories>("rpg_equipped_accessories", {
-    Cabeça: null, Garganta: null, Ouvido: null, Antebraço: null, Mão: null, Pulso: null, Dedo: null, Cintura: null, Tornozelo: null
+    Cabeça: null, Garganta: null, 'Ouvido E': null, 'Ouvido D': null, Antebraço: null, Mão: null,
+    'Pulso E': null, 'Pulso D': null,
+    'Dedo 1': null, 'Dedo 2': null, 'Dedo 3': null, 'Dedo 4': null, 'Dedo 5': null,
+    'Dedo 6': null, 'Dedo 7': null, 'Dedo 8': null, 'Dedo 9': null, 'Dedo 10': null,
+    Cintura: null, 'Tornozelo E': null, 'Tornozelo D': null
   });
 
   const [aptidoes, setAptidoes] = useLocalStorage<AptidoesState>("rpg_aptidoes", {});
@@ -153,10 +190,37 @@ export default function App() {
         characterName={charInfo.name === "Novo Personagem" ? "" : charInfo.name}
         onContinue={() => setShowLobby(false)}
         onNewCharacter={() => {
-          localStorage.clear();
-          localStorage.setItem("rpg_is_auth", "true");
-          localStorage.setItem("rpg_has_character", "true");
-          window.location.reload();
+          // Controlled reset of character data instead of localStorage.clear()
+          setAttributes(initialAttributes);
+          setCharInfo(initialCharInfo);
+          setInventory([]);
+          setEquippedArmor({
+            Cabeça: { Interna: null, Central: null, Externa: null },
+            Pescoço: { Interna: null, Central: null, Externa: null },
+            Tronco: { Interna: null, Central: null, Externa: null },
+            Ombro: { Interna: null, Central: null, Externa: null },
+            Braço: { Interna: null, Central: null, Externa: null },
+            Cotovelo: { Interna: null, Central: null, Externa: null },
+            Antebraço: { Interna: null, Central: null, Externa: null },
+            Mão: { Interna: null, Central: null, Externa: null },
+            Coxa: { Interna: null, Central: null, Externa: null },
+            Joelho: { Interna: null, Central: null, Externa: null },
+            Perna: { Interna: null, Central: null, Externa: null },
+            Pé: { Interna: null, Central: null, Externa: null },
+          });
+          setEquippedWeapons({ mainHand: null, offHand: null });
+          setEquippedAccessories({
+            Cabeça: null, Garganta: null, 'Ouvido E': null, 'Ouvido D': null, Antebraço: null, Mão: null,
+            'Pulso E': null, 'Pulso D': null,
+            'Dedo 1': null, 'Dedo 2': null, 'Dedo 3': null, 'Dedo 4': null, 'Dedo 5': null,
+            'Dedo 6': null, 'Dedo 7': null, 'Dedo 8': null, 'Dedo 9': null, 'Dedo 10': null,
+            Cintura: null, 'Tornozelo E': null, 'Tornozelo D': null
+          });
+          setCurrentStatus({ vida: 0, sanidade: 0, vigor: 0, mana: 0, poder: 0, estomago: 0, figado: 0, estudo: 0, pratica: 0, treino: 0, extrapolar: 0 });
+          setAptidoes({});
+          setJournalNotes("");
+          setHasCharacter(true);
+          setShowLobby(false); // Go straight to the character sheet
         }}
         onImport={handleImport}
       />
@@ -420,4 +484,3 @@ export default function App() {
     </div>
   );
 }
-

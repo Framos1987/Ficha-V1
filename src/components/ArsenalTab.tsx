@@ -186,7 +186,15 @@ export function ArsenalTab({ inventory, setInventory, equippedArmor, setEquipped
   // Both slots now accept weapons AND shields (no directional restriction)
   const allHandItems = [...weaponItems, ...shieldItems];
 
-  const accessorySlots: AccessorySlot[] = ['Cabeça', 'Garganta', 'Ouvido', 'Antebraço', 'Mão', 'Pulso', 'Dedo', 'Cintura', 'Tornozelo'];
+  const accessorySlots: AccessorySlot[] = ['Cabeça', 'Garganta', 'Ouvido E', 'Ouvido D', 'Antebraço', 'Mão', 'Pulso E', 'Pulso D', 'Cintura', 'Tornozelo E', 'Tornozelo D'];
+  const fingerSlots: AccessorySlot[] = ['Dedo 1', 'Dedo 2', 'Dedo 3', 'Dedo 4', 'Dedo 5', 'Dedo 6', 'Dedo 7', 'Dedo 8', 'Dedo 9', 'Dedo 10'];
+  const FINGER_LABELS = ['Mínimo E', 'Anelar E', 'Médio E', 'Indicador E', 'Polegar E', 'Polegar D', 'Indicador D', 'Médio D', 'Anelar D', 'Mínimo D'];
+  // Map paired slots to their catalog base name for filtering
+  const SLOT_CATALOG_MAP: Record<string, string> = {
+    'Ouvido E': 'Ouvido', 'Ouvido D': 'Ouvido',
+    'Pulso E': 'Pulso', 'Pulso D': 'Pulso',
+    'Tornozelo E': 'Tornozelo', 'Tornozelo D': 'Tornozelo',
+  };
   const [socketingSlot, setSocketingSlot] = useState<AccessorySlot | null>(null);
 
   const getSocketedGemsGlobal = () => {
@@ -208,28 +216,45 @@ export function ArsenalTab({ inventory, setInventory, equippedArmor, setEquipped
   };
 
   const handleSocketGem = (gemId: string) => {
-    if (!socketingSlot || !equippedAccessories || !setEquippedAccessories) return;
+    if (!socketingSlot || !equippedAccessories || !setEquippedAccessories || !setInventory) return;
     const item = equippedAccessories[socketingSlot];
     if (!item) return;
 
-    const updatedGems = [...(item.socketedGemIds || []), gemId];
+    const updatedGemIds = [...(item.socketedGemIds || []), gemId];
+    const updatedItem = { ...item, socketedGemIds: updatedGemIds };
+
+    // 1. Update Equipped State
     setEquippedAccessories({
       ...equippedAccessories,
-      [socketingSlot]: { ...item, socketedGemIds: updatedGems }
+      [socketingSlot]: updatedItem
     });
+
+    // 2. Synchronize back to Inventory
+    setInventory(prev => prev.map(invItem => 
+      invItem.id === item.id ? updatedItem : invItem
+    ));
+
     setSocketingSlot(null);
   };
 
   const handleUnsocketGem = (slot: AccessorySlot, gemId: string) => {
-    if (!equippedAccessories || !setEquippedAccessories) return;
+    if (!equippedAccessories || !setEquippedAccessories || !setInventory) return;
     const item = equippedAccessories[slot];
     if (!item || !item.socketedGemIds) return;
 
-    const updatedGems = item.socketedGemIds.filter(id => id !== gemId);
+    const updatedGemIds = item.socketedGemIds.filter(id => id !== gemId);
+    const updatedItem = { ...item, socketedGemIds: updatedGemIds };
+
+    // 1. Update Equipped State
     setEquippedAccessories({
       ...equippedAccessories,
-      [slot]: { ...item, socketedGemIds: updatedGems }
+      [slot]: updatedItem
     });
+
+    // 2. Synchronize back to Inventory
+    setInventory(prev => prev.map(invItem => 
+      invItem.id === item.id ? updatedItem : invItem
+    ));
   };
 
   // ── Penalty helpers ────────────────────────
@@ -620,7 +645,11 @@ export function ArsenalTab({ inventory, setInventory, equippedArmor, setEquipped
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {accessorySlots.map(slot => {
                   const equippedItem = equippedAccessories[slot];
-                  const availableForSlot = accessoryItems.filter(i => i.accessorySlot === slot);
+                  const catalogSlot = SLOT_CATALOG_MAP[slot] || slot;
+                  // Find paired sibling to exclude already-equipped unique items
+                  const siblingSlots = accessorySlots.filter(s => s !== slot && (SLOT_CATALOG_MAP[s] || s) === catalogSlot);
+                  const siblingEquippedIds = new Set(siblingSlots.map(s => equippedAccessories[s]?.id).filter(Boolean));
+                  const availableForSlot = accessoryItems.filter(i => i.accessorySlot === catalogSlot && (!siblingEquippedIds.has(i.id) || (i.quantity || 1) > 1));
 
                   return (
                     <div key={slot} className="bg-slate-900/80 p-4 rounded-2xl border border-slate-700/80 shadow-inner group hover:border-pink-500/50 transition-colors">
@@ -683,6 +712,129 @@ export function ArsenalTab({ inventory, setInventory, equippedArmor, setEquipped
                   );
                 })}
               </div>
+
+              {/* ── Anéis (10 Dedos) — Compact Ring Panel ── */}
+              <div className="mt-6 bg-slate-900/80 p-5 rounded-2xl border border-slate-700/80 shadow-inner hover:border-amber-500/30 transition-colors">
+                <label className="block text-xs font-bold text-amber-400 mb-4 uppercase tracking-wider flex items-center gap-2">
+                  💍 Anéis — 10 Dedos
+                  <span className="text-slate-500 font-normal normal-case text-[10px]">
+                    ({fingerSlots.filter(s => equippedAccessories[s]).length}/10 equipados)
+                  </span>
+                </label>
+                
+                <div className="grid grid-cols-2 gap-x-6 gap-y-0">
+                  {/* Left Hand Header */}
+                  <div className="text-center text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-2 pb-1 border-b border-slate-700/50">
+                    🤚 Mão Esquerda
+                  </div>
+                  {/* Right Hand Header */}
+                  <div className="text-center text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-2 pb-1 border-b border-slate-700/50">
+                    Mão Direita 🤚
+                  </div>
+                  
+                  {fingerSlots.slice(0, 5).map((slot, idx) => {
+                    const equippedItem = equippedAccessories[slot];
+                    const ringItems = accessoryItems.filter(i => i.accessorySlot === 'Dedo');
+                    const alreadyEquippedIds = new Set(
+                      fingerSlots.filter(s => s !== slot).map(s => equippedAccessories[s]?.id).filter(Boolean)
+                    );
+                    const availableRings = ringItems.filter(i => !alreadyEquippedIds.has(i.id) || (i.quantity || 1) > 1);
+                    const rightSlot = fingerSlots[idx + 5];
+                    const rightEquipped = equippedAccessories[rightSlot];
+                    const rightAlreadyIds = new Set(
+                      fingerSlots.filter(s => s !== rightSlot).map(s => equippedAccessories[s]?.id).filter(Boolean)
+                    );
+                    const rightAvailable = ringItems.filter(i => !rightAlreadyIds.has(i.id) || (i.quantity || 1) > 1);
+
+                    return (
+                      <div key={slot} className="contents">
+                        {/* Left finger */}
+                        <div className="flex items-center gap-2 py-1.5 group/finger">
+                          <span className="text-[10px] text-slate-500 w-[70px] text-right shrink-0 group-hover/finger:text-amber-400 transition-colors">{FINGER_LABELS[idx]}</span>
+                          <select
+                            value={equippedItem?.id || ""}
+                            onChange={(e) => handleEquipAccessory(slot, e.target.value)}
+                            className={`flex-1 bg-slate-800 border rounded-lg px-2 py-1 text-xs focus:outline-none transition-colors min-w-0 ${
+                              equippedItem ? 'border-amber-500/40 text-amber-300' : 'border-slate-700/50 text-slate-500'
+                            }`}
+                          >
+                            <option value="">—</option>
+                            {availableRings.map(item => (
+                              <option key={item.id} value={item.id} className="text-slate-200">{item.name}</option>
+                            ))}
+                          </select>
+                          {equippedItem && equippedItem.gemCapacity && equippedItem.gemCapacity > 0 && (
+                            <button
+                              onClick={() => setSocketingSlot(slot)}
+                              className="w-6 h-6 rounded-md bg-pink-900/30 border border-pink-500/30 flex items-center justify-center text-pink-400 hover:bg-pink-900/60 transition-colors shrink-0"
+                              title="Engastar gema"
+                            >
+                              <Gem size={10} />
+                            </button>
+                          )}
+                        </div>
+                        {/* Right finger */}
+                        <div className="flex items-center gap-2 py-1.5 group/finger">
+                          <select
+                            value={rightEquipped?.id || ""}
+                            onChange={(e) => handleEquipAccessory(rightSlot, e.target.value)}
+                            className={`flex-1 bg-slate-800 border rounded-lg px-2 py-1 text-xs focus:outline-none transition-colors min-w-0 ${
+                              rightEquipped ? 'border-amber-500/40 text-amber-300' : 'border-slate-700/50 text-slate-500'
+                            }`}
+                          >
+                            <option value="">—</option>
+                            {rightAvailable.map(item => (
+                              <option key={item.id} value={item.id} className="text-slate-200">{item.name}</option>
+                            ))}
+                          </select>
+                          <span className="text-[10px] text-slate-500 w-[70px] text-left shrink-0 group-hover/finger:text-amber-400 transition-colors">{FINGER_LABELS[idx + 5]}</span>
+                          {rightEquipped && rightEquipped.gemCapacity && rightEquipped.gemCapacity > 0 && (
+                            <button
+                              onClick={() => setSocketingSlot(rightSlot)}
+                              className="w-6 h-6 rounded-md bg-pink-900/30 border border-pink-500/30 flex items-center justify-center text-pink-400 hover:bg-pink-900/60 transition-colors shrink-0"
+                              title="Engastar gema"
+                            >
+                              <Gem size={10} />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Show socketed gems summary for equipped rings */}
+                {fingerSlots.some(s => equippedAccessories[s]?.socketedGemIds?.length) && (
+                  <div className="mt-3 pt-3 border-t border-slate-700/30">
+                    <div className="flex flex-wrap gap-1.5">
+                      {fingerSlots.map(slot => {
+                        const item = equippedAccessories[slot];
+                        if (!item?.socketedGemIds?.length) return null;
+                        return item.socketedGemIds.map((gemId, gi) => {
+                          const gem = inventory.find(i => i.id === gemId);
+                          if (!gem) return null;
+                          return (
+                            <div 
+                              key={`${slot}-${gi}`}
+                              onClick={() => handleUnsocketGem(slot, gemId)}
+                              className="relative group/rg cursor-pointer"
+                            >
+                              <div className="w-7 h-7 rounded-lg bg-pink-900/30 border border-pink-500/40 flex items-center justify-center hover:bg-pink-900/50 transition-colors">
+                                <Gem size={11} className="text-pink-300" />
+                              </div>
+                              <div className="absolute opacity-0 group-hover/rg:opacity-100 bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-[180px] bg-slate-900 border border-pink-500/50 text-slate-200 text-[10px] p-2 rounded-lg shadow-xl z-20 pointer-events-none transition-opacity">
+                                <div className="font-bold text-pink-300">{gem.name}</div>
+                                <div className="text-slate-400 text-[9px]">{slot} • {gem.gemEffect?.category}</div>
+                                <div className="text-red-400 mt-0.5 font-bold">Clique p/ Remover</div>
+                              </div>
+                            </div>
+                          );
+                        });
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -727,14 +879,14 @@ export function ArsenalTab({ inventory, setInventory, equippedArmor, setEquipped
                          onClick={() => handleSocketGem(gem.id)}
                          className="px-4 py-2 bg-pink-600 hover:bg-pink-500 text-white font-bold rounded-lg text-sm transition-colors"
                        >
-                         Engastar
+                         Selecionar
                        </button>
                      </div>
                    );
                 })}
                 {gemItems.filter(g => !usedGemIds.has(g.id)).length === 0 && (
-                   <div className="text-center py-8 text-slate-500">
-                     Nenhuma gema solta no inventário.
+                   <div className="text-center py-10 text-slate-500 italic">
+                     Nenhuma gema disponível no inventário.
                    </div>
                 )}
               </div>

@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from "react";
-import { Save, Shield, User, Edit3, Download, Upload } from "lucide-react";
+import { Save, Shield, User, Edit3, Download, Upload, LayoutDashboard, Activity, List, Target, Brain, Dumbbell, Users, Package, Sword, Swords } from "lucide-react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { AttributeRow } from "./components/AttributeRow";
 import { Inventory } from "./components/Inventory";

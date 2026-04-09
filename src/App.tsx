@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { Save, Shield, User, Edit3, LayoutDashboard, Activity, List, Target, Brain, Dumbbell, Users, Package, Sword, Swords } from "lucide-react";
+import { useState, useMemo, useRef } from "react";
+import { Save, Shield, User, Edit3, Download, Upload } from "lucide-react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { AttributeRow } from "./components/AttributeRow";
 import { Inventory } from "./components/Inventory";
@@ -11,6 +11,7 @@ import { DerivedStats } from "./components/DerivedStats";
 import { StatusTab } from "./components/StatusTab";
 import { CombatSummary } from "./components/CombatSummary";
 import { AptidoesTab } from "./components/AptidoesTab";
+import { AuthGate } from "./components/AuthGate";
 import { calculateStats } from "./lib/calculations";
 import { CharacterInfo, Attributes, InventoryItem, EquippedArmor, EquippedWeapons, EquippedAccessories, AptidoesState } from "./types";
 
@@ -76,6 +77,8 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<"attributes" | "derived" | "status" | "inventory" | "arsenal" | "aptidoes">("attributes");
   const [isEditing, setIsEditing] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useLocalStorage<boolean>("rpg_is_auth", false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Calculate derived stats and max status dynamically
   const { derived, maxStatus, computedAttributes, statBreakdown } = useMemo(() => calculateStats(attributes, charInfo, equippedAccessories, inventory, aptidoes as Record<string, number>), [attributes, charInfo, equippedAccessories, inventory, aptidoes]);
@@ -88,6 +91,53 @@ export default function App() {
     setSaveMessage("Ficha salva com sucesso!");
     setTimeout(() => setSaveMessage(""), 3000);
   };
+
+  const handleExport = () => {
+    const data = {
+      rpg_attributes: localStorage.getItem("rpg_attributes"),
+      rpg_char_info: localStorage.getItem("rpg_char_info"),
+      rpg_inventory: localStorage.getItem("rpg_inventory"),
+      rpg_equipped_armor: localStorage.getItem("rpg_equipped_armor"),
+      rpg_equipped_weapons: localStorage.getItem("rpg_equipped_weapons"),
+      rpg_equipped_accessories: localStorage.getItem("rpg_equipped_accessories"),
+      rpg_current_status: localStorage.getItem("rpg_current_status"),
+      rpg_aptidoes: localStorage.getItem("rpg_aptidoes"),
+    };
+    const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `ficha_${charInfo.name.toLowerCase().replace(/[^a-z0-9]/g, "_")}_backup.rpg`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const json = JSON.parse(event.target?.result as string);
+        for (const key in json) {
+          if (json[key]) {
+            localStorage.setItem(key, json[key]);
+          }
+        }
+        localStorage.setItem("rpg_is_auth", "true");
+        window.location.reload();
+      } catch (err) {
+        alert("Erro ao importar a ficha. O arquivo parece inválido.");
+      }
+    };
+    reader.readAsText(file);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  if (!isAuthenticated) {
+    return <AuthGate onUnlock={() => setIsAuthenticated(true)} />;
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 p-4 md:p-8 font-sans selection:bg-indigo-500/30">
@@ -140,14 +190,38 @@ export default function App() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 z-10">
+          <div className="flex items-center gap-3 z-10 flex-wrap justify-end">
             {saveMessage && <span className="text-emerald-400 text-sm font-medium animate-pulse">{saveMessage}</span>}
+            
+            <button 
+              onClick={handleExport}
+              className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-4 py-2.5 rounded-xl font-medium transition-all"
+              title="Fazer Backup (Exportar .rpg)"
+            >
+              <Download size={18} className="text-indigo-400" />
+            </button>
+
+            <button 
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-4 py-2.5 rounded-xl font-medium transition-all"
+              title="Carregar Backup (Importar .rpg)"
+            >
+              <Upload size={18} className="text-emerald-400" />
+            </button>
+            <input 
+              type="file" 
+              accept=".rpg,.json" 
+              className="hidden" 
+              ref={fileInputRef} 
+              onChange={handleImport} 
+            />
+
             <button 
               onClick={handleSave}
               className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl font-semibold transition-all shadow-lg shadow-indigo-900/20"
             >
               <Save size={18} />
-              Salvar Ficha
+              <span className="hidden sm:inline">Salvar</span>
             </button>
           </div>
         </header>

@@ -155,7 +155,7 @@ export default function App() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Calculate derived stats and max status dynamically
-  const { derived, maxStatus, computedAttributes, statBreakdown } = useMemo(() => calculateStats(attributes, charInfo, equippedAccessories, inventory, aptidoes as Record<string, number>), [attributes, charInfo, equippedAccessories, inventory, aptidoes]);
+  const { derived, maxStatus, computedAttributes, statBreakdown, gemBonuses } = useMemo(() => calculateStats(attributes, charInfo, equippedAccessories, inventory, aptidoes as Record<string, number>), [attributes, charInfo, equippedAccessories, inventory, aptidoes]);
 
   const handleStatusChange = (key: string, val: number) => {
     setCurrentStatus(prev => ({ ...prev, [key]: val }));

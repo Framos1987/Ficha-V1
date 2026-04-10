@@ -69,7 +69,6 @@ export function calculateStats(
   const sor = getTot("Sorte");
   const von = getTot("Vontade");
 
-
   const statBreakdown: Record<string, { base: number; bonus: number; label: string }> = {};
 
   const setBd = (key: string, base: number, ...bonuses: { val: number, label: string }[]) => {

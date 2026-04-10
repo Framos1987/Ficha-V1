@@ -14,10 +14,40 @@ export interface CharacterInfo {
   imageUrl?: string;
 }
 
+export interface JournalNote {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: number;
+}
+
+export interface NPC {
+  id: string;
+  name: string;
+  vida: number;
+  maxVida: number;
+  mana: number;
+  maxMana: number;
+  notes: string;
+}
+
+export interface MasterState {
+  messages: {
+    id: string;
+    sender: string;
+    recipient: string; // "Todos" or char name
+    content: string;
+    timestamp: number;
+    read: boolean;
+  }[];
+  npcs: NPC[];
+  initiativeOrder: { id: string; name: string; value: number }[];
+}
+
 export type AttributeData = { base: number; bonus: number };
 export type Attributes = Record<string, AttributeData>;
 
-export type AccessorySlot = 'Cabeça' | 'Garganta' | 'Ouvido E' | 'Ouvido D' | 'Antebraço E' | 'Antebraço D' | 'Mão E' | 'Mão D' | 'Pulso E' | 'Pulso D' | 'Dedo 1' | 'Dedo 2' | 'Dedo 3' | 'Dedo 4' | 'Dedo 5' | 'Dedo 6' | 'Dedo 7' | 'Dedo 8' | 'Dedo 9' | 'Dedo 10' | 'Cintura' | 'Tornozelo E' | 'Tornozelo D';
+export type AccessorySlot = 'Cabeça' | 'Garganta' | 'Ouvido E' | 'Ouvido D' | 'Antebraço' | 'Mão' | 'Pulso E' | 'Pulso D' | 'Dedo 1' | 'Dedo 2' | 'Dedo 3' | 'Dedo 4' | 'Dedo 5' | 'Dedo 6' | 'Dedo 7' | 'Dedo 8' | 'Dedo 9' | 'Dedo 10' | 'Cintura' | 'Tornozelo E' | 'Tornozelo D';
 
 export interface GemEffect {
   category: string; // e.g., 'Ampliadoras (Atributos)', 'Indutoras'
@@ -50,11 +80,11 @@ export interface InventoryItem {
 export type BodyPart = 'Cabeça' | 'Pescoço' | 'Tronco' | 'Ombro' | 'Braço' | 'Cotovelo' | 'Antebraço' | 'Mão' | 'Coxa' | 'Joelho' | 'Perna' | 'Pé';
 export type ArmorLayer = 'Interna' | 'Central' | 'Externa';
 
-export interface EquippedArmor {
+export type EquippedArmor = {
   [part in BodyPart]: {
     [layer in ArmorLayer]: InventoryItem | null;
   };
-}
+};
 
 export interface EquippedWeapons {
   mainHand: InventoryItem | null;
@@ -64,41 +94,6 @@ export interface EquippedWeapons {
 /** Maps aptidão name → proficiency (0-100) */
 export type AptidoesState = Record<string, number>;
 
-export interface EquippedAccessories {
-  [slot: string]: InventoryItem | null;
-}
-
-export interface JournalNote {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: number;
-}
-
-export interface MailMessage {
-  id: string;
-  sender: string;
-  recipient: string;
-  subject: string;
-  content: string;
-  timestamp: number;
-  read: boolean;
-  isGlobal?: boolean;
-}
-
-export interface NPC {
-  id: string;
-  name: string;
-  health: number;
-  maxHealth: number;
-  mana: number;
-  maxMana: number;
-  initiative?: number;
-  notes: string;
-}
-
-export interface MasterState {
-  messages: MailMessage[];
-  npcs: NPC[];
-  initiativeOrder: string[];
-}
+export type EquippedAccessories = {
+  [slot in AccessorySlot]: InventoryItem | null;
+};

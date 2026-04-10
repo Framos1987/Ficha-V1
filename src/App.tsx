@@ -19,6 +19,7 @@ import { MailSystem } from "./components/MailSystem";
 import { MasterDashboard } from "./components/MasterDashboard";
 import { calculateStats } from "./lib/calculations";
 import { CharacterInfo, Attributes, InventoryItem, EquippedArmor, EquippedWeapons, EquippedAccessories, AptidoesState, JournalNote, MasterState } from "./types";
+import { AnimatePresence } from "motion/react";
 
 // ── Migrate old accessory structure to new paired/multi-slot structure ──
 (function migrateAccessorySlots() {
@@ -26,7 +27,6 @@ import { CharacterInfo, Attributes, InventoryItem, EquippedArmor, EquippedWeapon
     const raw = localStorage.getItem("rpg_equipped_accessories");
     if (!raw) return;
     const data = JSON.parse(raw);
-    // Detect old format: has single keys instead of paired E/D or numbered
     const needsMigration = ('Dedo' in data) || ('Ouvido' in data) || ('Pulso' in data) || ('Tornozelo' in data) || ('Antebraço' in data) || ('Mão' in data);
     if (!needsMigration) return;
 
@@ -50,7 +50,7 @@ import { CharacterInfo, Attributes, InventoryItem, EquippedArmor, EquippedWeapon
     };
 
     localStorage.setItem("rpg_equipped_accessories", JSON.stringify(migrated));
-    console.log("[Migration] ✅ Accessory slots upgraded. Old keys found:", Object.keys(data).filter(k => ['Dedo', 'Ouvido', 'Pulso', 'Tornozelo', 'Antebraço', 'Mão'].includes(k)));
+    console.log("[Migration] ✅ Accessory slots upgraded.");
   } catch (e) { console.error("[Migration] Error:", e); }
 })();
 
@@ -59,10 +59,9 @@ import { CharacterInfo, Attributes, InventoryItem, EquippedArmor, EquippedWeapon
   try {
     const raw = localStorage.getItem("rpg_journal_notes");
     if (!raw) return;
-    if (raw.startsWith('[') && raw.endsWith(']')) return; // Already array
+    if (raw.startsWith('[') && raw.endsWith(']')) return; 
 
-    // It's a plain string, convert to first note
-    const legacyText = raw.replace(/^"|"$/g, ''); // Simple strip quotes if stored as JSON string
+    const legacyText = raw.replace(/^"|"$/g, ''); 
     const migrated: JournalNote[] = [{
       id: 'legacy-' + Date.now(),
       title: 'Nota Migrada',
@@ -222,7 +221,6 @@ export default function App() {
         characterName={charInfo.name === "Novo Personagem" ? "" : charInfo.name}
         onContinue={() => setShowLobby(false)}
         onNewCharacter={() => {
-          // Controlled reset of character data instead of localStorage.clear()
           setAttributes(initialAttributes);
           setCharInfo(initialCharInfo);
           setInventory([]);
@@ -253,7 +251,7 @@ export default function App() {
           setAptidoes({});
           setJournalNotes([]);
           setHasCharacter(true);
-          setShowLobby(false); // Go straight to the character sheet
+          setShowLobby(false); 
         }}
         onImport={handleImport}
       />
@@ -298,62 +296,49 @@ export default function App() {
                 <span>Raça: {charInfo.race || "N/A"}</span>
                 <span>•</span>
                 <span>Constelação: {charInfo.constellation || "N/A"}</span>
-                <span>•</span>
-                <span>{charInfo.height}cm / {charInfo.weight}kg</span>
               </div>
               <div className="flex flex-col gap-3 mt-4 flex-wrap w-full">
-                
                 {/* Physical Bar */}
-                <div className="flex items-center gap-3 w-full max-w-sm">
+                <div className="flex items-center gap-3 w-full max-w-sm cursor-help" title={`Exp Física: ${charInfo.physicalValue || 0}/100`}>
                   <Dumbbell size={16} className="text-emerald-400" />
                   <div className="w-8 text-xs font-bold text-slate-400 text-right">Nv {charInfo.physicalLevel || 0}</div>
-                  <div className="flex-1 h-3 bg-slate-950 rounded-full overflow-hidden border border-slate-800/80 shadow-inner">
-                    <div className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full shadow-[0_0_10px_rgba(52,211,153,0.3)] transition-all duration-1000" style={{ width: `${Math.min(100, ((charInfo.physicalValue || 0) / 100) * 100)}%` }}></div>
+                  <div className="flex-1 h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800/80 shadow-inner">
+                    <div className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full shadow-[0_0_10px_rgba(52,211,153,0.3)] transition-all duration-1000" style={{ width: `${Math.min(100, (charInfo.physicalValue || 0))}%` }}></div>
                   </div>
                 </div>
-
                 {/* Intellectual Bar */}
-                <div className="flex items-center gap-3 w-full max-w-sm">
+                <div className="flex items-center gap-3 w-full max-w-sm cursor-help" title={`Exp Intelectual: ${charInfo.intellectualValue || 0}/100`}>
                   <Brain size={16} className="text-blue-400" />
                   <div className="w-8 text-xs font-bold text-slate-400 text-right">Nv {charInfo.intellectualLevel || 0}</div>
-                  <div className="flex-1 h-3 bg-slate-950 rounded-full overflow-hidden border border-slate-800/80 shadow-inner">
-                    <div className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full shadow-[0_0_10px_rgba(96,165,250,0.3)] transition-all duration-1000" style={{ width: `${Math.min(100, ((charInfo.intellectualValue || 0) / 100) * 100)}%` }}></div>
+                  <div className="flex-1 h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800/80 shadow-inner">
+                    <div className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full shadow-[0_0_10px_rgba(96,165,250,0.3)] transition-all duration-1000" style={{ width: `${Math.min(100, (charInfo.intellectualValue || 0))}%` }}></div>
                   </div>
                 </div>
-
                 {/* Social Bar */}
-                <div className="flex items-center gap-3 w-full max-w-sm">
+                <div className="flex items-center gap-3 w-full max-w-sm cursor-help" title={`Exp Social: ${charInfo.socialValue || 0}/100`}>
                   <Users size={16} className="text-amber-400" />
                   <div className="w-8 text-xs font-bold text-slate-400 text-right">Nv {charInfo.socialLevel || 0}</div>
-                  <div className="flex-1 h-3 bg-slate-950 rounded-full overflow-hidden border border-slate-800/80 shadow-inner">
-                    <div className="h-full bg-gradient-to-r from-amber-600 to-amber-400 rounded-full shadow-[0_0_10px_rgba(251,191,36,0.3)] transition-all duration-1000" style={{ width: `${Math.min(100, ((charInfo.socialValue || 0) / 100) * 100)}%` }}></div>
+                  <div className="flex-1 h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800/80 shadow-inner">
+                    <div className="h-full bg-gradient-to-r from-amber-600 to-amber-400 rounded-full shadow-[0_0_10px_rgba(251,191,36,0.3)] transition-all duration-1000" style={{ width: `${Math.min(100, (charInfo.socialValue || 0))}%` }}></div>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
 
           <div className="flex items-center gap-3 z-10 flex-wrap justify-end">
             <button 
-              onClick={() => isMasterMode ? setActiveTab("master") : setShowMasterGate(true)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition-all border ${
-                isMasterMode 
-                ? "bg-amber-600/20 border-amber-500/50 text-amber-400 hover:bg-amber-600/30" 
-                : "bg-slate-800 border-slate-700 text-slate-400 hover:text-white"
-              }`}
+              onClick={() => setShowMasterGate(true)}
+              className="group flex items-center justify-center gap-2 bg-slate-800/50 hover:bg-amber-900/20 border border-slate-700/50 hover:border-amber-500/50 text-amber-500/70 hover:text-amber-400 px-4 py-2.5 rounded-xl font-medium transition-all"
+              title="Modo Mestre"
             >
-              <Crown size={18} className={isMasterMode ? "text-amber-400" : ""} />
-              <span className="hidden sm:inline">{isMasterMode ? "Modo Mestre Ativo" : "Modo Mestre"}</span>
-              {isMasterMode && <ShieldCheck size={14} />}
+              <Crown size={18} className="group-hover:rotate-12 transition-transform" />
             </button>
 
-            {saveMessage && <span className="text-emerald-400 text-sm font-medium animate-pulse">{saveMessage}</span>}
-            
             <button 
               onClick={handleExport}
               className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-4 py-2.5 rounded-xl font-medium transition-all"
-              title="Fazer Backup (Exportar .rpg)"
+              title="Backup (.rpg)"
             >
               <Download size={18} className="text-indigo-400" />
             </button>
@@ -361,36 +346,27 @@ export default function App() {
             <button 
               onClick={() => fileInputRef.current?.click()}
               className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-4 py-2.5 rounded-xl font-medium transition-all"
-              title="Carregar Backup (Importar .rpg)"
+              title="Importar (.rpg)"
             >
               <Upload size={18} className="text-emerald-400" />
             </button>
-            <input 
-              type="file" 
-              accept=".rpg,.json" 
-              className="hidden" 
-              ref={fileInputRef} 
-              onChange={handleImport} 
-            />
+            <input type="file" accept=".rpg,.json" className="hidden" ref={fileInputRef} onChange={handleImport} />
 
             <button 
               onClick={handleSave}
               className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl font-semibold transition-all shadow-lg shadow-indigo-900/20"
             >
               <Save size={18} />
-              <span className="hidden sm:inline">Salvar</span>
+              <span className="hidden sm:inline">{saveMessage || "Salvar"}</span>
             </button>
           </div>
         </header>
 
-        {/* Main Content Grid */}
+        {/* Main Tabs */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          
-          {/* Left Column: Tabs & Content */}
-          <div className={`${(activeTab === "inventory" || activeTab === "arsenal" || activeTab === "aptidoes" || activeTab === "journal") ? "lg:col-span-12" : "lg:col-span-8"} space-y-6`}>
+          <div className={`${(activeTab === "inventory" || activeTab === "arsenal" || activeTab === "aptidoes" || activeTab === "journal" || activeTab === "mail" || activeTab === "master") ? "lg:col-span-12" : "lg:col-span-8"} space-y-6`}>
             
-            {/* Tabs Navigation */}
-            <div className="flex gap-2 bg-slate-900 p-2 rounded-2xl border border-slate-800 overflow-x-auto hide-scrollbar">
+            <div className="flex gap-2 bg-slate-900 p-2 rounded-2xl border border-slate-800 overflow-x-auto hide-scrollbar scroll-smooth">
               <button
                 onClick={() => setActiveTab("attributes")}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors whitespace-nowrap ${activeTab === "attributes" ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"}`}
@@ -444,23 +420,17 @@ export default function App() {
                   onClick={() => setActiveTab("master")}
                   className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold transition-colors whitespace-nowrap ${activeTab === "master" ? "bg-amber-600 text-white shadow-[0_0_15px_rgba(251,191,36,0.4)]" : "text-amber-500/70 hover:text-amber-400 hover:bg-amber-900/20"}`}
                 >
-                  <Crown size={18} /> Master Dashboard
+                  <Crown size={18} /> Dashboard
                 </button>
               )}
             </div>
 
-            {/* Tab Content */}
             <div className="min-h-[400px]">
               {activeTab === "attributes" && (
                 <div className="bg-slate-800 rounded-3xl border border-slate-700 p-6 shadow-xl">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                    <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                      Atributos
-                    </h2>
-                  </div>
-                  
+                  <h2 className="text-xl font-bold text-white mb-6">Atributos</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {Object.entries(computedAttributes as Record<string, { base: number; bonus: number }>).map(([name, data]) => (
+                    {Object.entries(computedAttributes).map(([name, data]) => (
                       <AttributeRow 
                         key={name}
                         name={name}
@@ -473,9 +443,7 @@ export default function App() {
                 </div>
               )}
 
-              {activeTab === "derived" && (
-                <DerivedStats stats={derived} bonusBreakdown={statBreakdown} />
-              )}
+              {activeTab === "derived" && <DerivedStats stats={derived} bonusBreakdown={statBreakdown} />}
 
               {activeTab === "status" && (
                 <StatusTab 
@@ -486,13 +454,7 @@ export default function App() {
                 />
               )}
 
-              {activeTab === "inventory" && (
-                <InventoryTab 
-                  items={inventory} 
-                  setItems={setInventory} 
-                  maxLoad={Number(derived["Carga Máxima"]) || 0} 
-                />
-              )}
+              {activeTab === "inventory" && <InventoryTab items={inventory} setItems={setInventory} maxLoad={Number(derived["Carga Máxima"]) || 0} />}
 
               {activeTab === "arsenal" && (
                 <ArsenalTab 
@@ -507,12 +469,9 @@ export default function App() {
                   aptidoes={aptidoes as Record<string, number>}
                 />
               )}
-              {activeTab === "aptidoes" && (
-                <AptidoesTab aptidoes={aptidoes} setAptidoes={setAptidoes} />
-              )}
-              {activeTab === "journal" && (
-                <JournalTab notes={journalNotes} onChange={setJournalNotes} />
-              )}
+
+              {activeTab === "aptidoes" && <AptidoesTab aptidoes={aptidoes} setAptidoes={setAptidoes} />}
+              {activeTab === "journal" && <JournalTab notes={journalNotes} onChange={setJournalNotes} />}
               {activeTab === "mail" && (
                 <MailSystem 
                   messages={masterState.messages} 
@@ -531,27 +490,14 @@ export default function App() {
             </div>
           </div>
 
-          {/* Right Column: Inventory */}
-          {(activeTab !== "inventory" && activeTab !== "arsenal" && activeTab !== "aptidoes" && activeTab !== "journal") && (
-            <div className="lg:col-span-4 space-y-6 flex flex-col">
-              <div className="h-[300px]">
-                <Inventory 
-                  items={inventory} 
-                  setItems={setInventory} 
-                  maxLoad={Number(derived["Carga Máxima"]) || 0} 
-                />
-              </div>
+          {(activeTab !== "inventory" && activeTab !== "arsenal" && activeTab !== "aptidoes" && activeTab !== "journal" && activeTab !== "mail" && activeTab !== "master") && (
+            <div className="lg:col-span-4 space-y-6">
+              <Inventory items={inventory} setItems={setInventory} maxLoad={Number(derived["Carga Máxima"]) || 0} />
             </div>
           )}
-
         </div>
 
-        {/* Combat Summary */}
-        <CombatSummary 
-          equippedWeapons={equippedWeapons}
-          equippedArmor={equippedArmor}
-          inventory={inventory}
-        />
+        <CombatSummary equippedWeapons={equippedWeapons} equippedArmor={equippedArmor} inventory={inventory} />
       </div>
 
       <Calculator />

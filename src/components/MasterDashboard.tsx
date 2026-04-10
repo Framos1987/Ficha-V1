@@ -8,9 +8,10 @@ interface MasterDashboardProps {
   masterState: MasterState;
   setMasterState: (state: MasterState | ((prev: MasterState) => MasterState)) => void;
   charInfo: CharacterInfo;
+  onExit: () => void;
 }
 
-export function MasterDashboard({ masterState, setMasterState, charInfo }: MasterDashboardProps) {
+export function MasterDashboard({ masterState, setMasterState, charInfo, onExit }: MasterDashboardProps) {
   const [activeSubTab, setActiveSubTab] = useState<"npcs" | "initiative">("npcs");
   const [editingNpc, setEditingNpc] = useState<NPC | null>(null);
   const [inspectorTab, setInspectorTab] = useState<"stats" | "inventory">("stats");
@@ -65,18 +66,28 @@ export function MasterDashboard({ masterState, setMasterState, charInfo }: Maste
 
   return (
     <div className="space-y-6">
-      <div className="flex gap-4 border-b border-slate-800 pb-4">
+      <div className="flex gap-4 border-b border-slate-800 pb-4 items-center justify-between">
+        <div className="flex gap-4">
+          <button 
+            onClick={() => setActiveSubTab("npcs")}
+            className={`px-4 py-2 rounded-xl transition-all font-bold flex items-center gap-2 ${activeSubTab === "npcs" ? "bg-amber-600 text-white" : "text-slate-400 hover:bg-slate-800"}`}
+          >
+            <Users size={18} /> Gerenciador de NPCs
+          </button>
+          <button 
+            onClick={() => setActiveSubTab("initiative")}
+            className={`px-4 py-2 rounded-xl transition-all font-bold flex items-center gap-2 ${activeSubTab === "initiative" ? "bg-amber-600 text-white" : "text-slate-400 hover:bg-slate-800"}`}
+          >
+            <Swords size={18} /> Controle de Iniciativa
+          </button>
+        </div>
+        
         <button 
-          onClick={() => setActiveSubTab("npcs")}
-          className={`px-4 py-2 rounded-xl transition-all font-bold flex items-center gap-2 ${activeSubTab === "npcs" ? "bg-amber-600 text-white" : "text-slate-400 hover:bg-slate-800"}`}
+          onClick={onExit}
+          className="group flex items-center gap-2 bg-slate-800 hover:bg-red-900/20 border border-slate-700 hover:border-red-500/50 text-slate-400 hover:text-red-400 px-4 py-2 rounded-xl font-bold transition-all text-xs uppercase tracking-widest"
         >
-          <Users size={18} /> Gerenciador de NPCs
-        </button>
-        <button 
-          onClick={() => setActiveSubTab("initiative")}
-          className={`px-4 py-2 rounded-xl transition-all font-bold flex items-center gap-2 ${activeSubTab === "initiative" ? "bg-amber-600 text-white" : "text-slate-400 hover:bg-slate-800"}`}
-        >
-          <Swords size={18} /> Controle de Iniciativa
+          <LogOut size={16} className="group-hover:-translate-x-1 transition-transform" />
+          Sair do Mestre
         </button>
       </div>
 

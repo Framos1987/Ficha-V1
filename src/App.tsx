@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, ChangeEvent, useEffect } from "react";
-import { Save, Shield, User, Edit3, Download, Upload, LayoutDashboard, Activity, List, Target, Brain, Dumbbell, Users, Package, Sword, Swords, BookOpen, Crown, Mail, ShieldCheck, Cloud, CloudOff } from "lucide-react";
+import { Save, Shield, User, Edit3, Download, Upload, LayoutDashboard, Activity, List, Target, Brain, Dumbbell, Users, Package, Sword, Swords, BookOpen, Crown, Mail, ShieldCheck, Cloud, CloudOff, RefreshCw, LogOut } from "lucide-react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { AttributeRow } from "./components/AttributeRow";
 import { Inventory } from "./components/Inventory";
@@ -435,6 +435,21 @@ export default function App() {
               {cloudStatus === "syncing" ? <RefreshCw size={18} className="animate-spin" /> : <Save size={18} />}
               <span className="hidden sm:inline">{saveMessage || (cloudStatus === "syncing" ? "Salvando..." : "Salvar")}</span>
             </button>
+
+            <div className="w-[1px] h-8 bg-slate-800 mx-1 hidden sm:block" />
+
+            <button 
+              onClick={() => {
+                setHasCharacter(false);
+                setIsAuthenticated(false);
+                setIsMasterMode(false);
+              }}
+              className="group flex items-center justify-center gap-2 bg-red-900/10 hover:bg-red-900/20 border border-red-500/20 hover:border-red-500/50 text-red-500/70 hover:text-red-400 px-4 py-2.5 rounded-xl font-medium transition-all"
+              title="Sair do Personagem"
+            >
+              <LogOut size={18} className="group-hover:translate-x-1 transition-transform" />
+              <span className="hidden lg:inline text-xs font-black uppercase tracking-widest">Sair</span>
+            </button>
           </div>
         </header>
 
@@ -561,6 +576,7 @@ export default function App() {
                   masterState={masterState}
                   setMasterState={setMasterState}
                   charInfo={charInfo}
+                  onExit={() => setIsMasterMode(false)}
                 />
               )}
             </div>

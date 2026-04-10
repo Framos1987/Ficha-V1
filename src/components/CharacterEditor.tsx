@@ -105,6 +105,17 @@ export function CharacterEditor({ charInfo, setCharInfo, attributes, setAttribut
             </div>
 
             <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] text-slate-500 uppercase tracking-widest font-black mb-2">Altura (cm)</label>
+                  <input type="number" value={charInfo.height} onChange={e => handleCharChange("height", parseInt(e.target.value) || 0)} className="w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:border-indigo-500/50 outline-none" />
+                </div>
+                <div>
+                  <label className="block text-[10px] text-slate-500 uppercase tracking-widest font-black mb-2">Peso (kg)</label>
+                  <input type="number" value={charInfo.weight} onChange={e => handleCharChange("weight", parseInt(e.target.value) || 0)} className="w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:border-indigo-500/50 outline-none" />
+                </div>
+              </div>
+
               {charInfo.race === "Humana" && (
                 <div className="p-4 bg-indigo-500/5 border border-indigo-500/20 rounded-2xl">
                   <label className="block text-[10px] text-indigo-400 uppercase tracking-widest font-black mb-3 italic">Bônus da Adaptação Humana (+2 em 3)</label>
@@ -125,18 +136,6 @@ export function CharacterEditor({ charInfo, setCharInfo, attributes, setAttribut
                       </select>
                     ))}
                   </div>
-                </div>
-              )}
-              {!charInfo.race || charInfo.race !== "Humana" && (
-                <div className="grid grid-cols-2 gap-4 mt-auto">
-                    <div>
-                      <label className="block text-[10px] text-slate-500 uppercase tracking-widest font-black mb-2">Altura (cm)</label>
-                      <input type="number" value={charInfo.height} onChange={e => handleCharChange("height", parseInt(e.target.value) || 0)} className="w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm" />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] text-slate-500 uppercase tracking-widest font-black mb-2">Peso (kg)</label>
-                      <input type="number" value={charInfo.weight} onChange={e => handleCharChange("weight", parseInt(e.target.value) || 0)} className="w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm" />
-                    </div>
                 </div>
               )}
             </div>

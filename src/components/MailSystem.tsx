@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { Mail, Send, Trash2, User, Users, Clock, ChevronRight, Inbox, PlusCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Mail, Send, Trash2, User, Clock, ChevronRight, Inbox, PlusCircle, RefreshCw } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { MailMessage, MasterState } from "../types";
+import { supabase } from "../lib/supabase";
 
 interface MailSystemProps {
   messages: MailMessage[];
@@ -14,6 +15,49 @@ export function MailSystem({ messages, setMasterState, charName, isMaster }: Mai
   const [view, setView] = useState<"inbox" | "sent" | "compose">("inbox");
   const [selectedMsg, setSelectedMsg] = useState<MailMessage | null>(null);
   const [newMsg, setNewMsg] = useState({ recipient: "", subject: "", content: "" });
+  const [isSending, setIsSending] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  // ── Sync with Supabase on Mount & Realtime ──
+  useEffect(() => {
+    fetchMessages();
+
+    const channel = supabase
+      .channel('schema-db-changes')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'messages' },
+        (payload) => {
+          const msg = payload.new as MailMessage;
+          if (msg.recipient === charName || msg.isGlobal || msg.sender === charName) {
+            setMasterState(prev => {
+              if (prev.messages.some(m => m.id === msg.id)) return prev;
+              return { ...prev, messages: [msg, ...prev.messages] };
+            });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [charName]);
+
+  const fetchMessages = async () => {
+    setIsSyncing(true);
+    const { data, error } = await supabase
+      .from('messages')
+      .select('*')
+      .or(`recipient.eq.${charName},sender.eq.${charName},is_global.eq.true`)
+      .order('timestamp', { ascending: false });
+
+    if (!error && data) {
+      setMasterState(prev => ({
+        ...prev,
+        messages: data as MailMessage[]
+      }));
+    }
+    setIsSyncing(false);
+  };
 
   const filteredMessages = messages.filter(m => {
     if (view === "inbox") return m.recipient === charName || m.isGlobal;
@@ -21,11 +65,11 @@ export function MailSystem({ messages, setMasterState, charName, isMaster }: Mai
     return false;
   }).sort((a, b) => b.timestamp - a.timestamp);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!newMsg.recipient || !newMsg.subject || !newMsg.content) return;
+    setIsSending(true);
 
-    const msg: MailMessage = {
-      id: "msg-" + Date.now(),
+    const msg: Partial<MailMessage> = {
       sender: charName,
       recipient: newMsg.recipient,
       subject: newMsg.subject,
@@ -35,29 +79,38 @@ export function MailSystem({ messages, setMasterState, charName, isMaster }: Mai
       isGlobal: newMsg.recipient.toLowerCase() === "todos"
     };
 
-    setMasterState(prev => ({
-      ...prev,
-      messages: [...prev.messages, msg]
-    }));
+    const { error } = await supabase.from('messages').insert([msg]);
 
-    setNewMsg({ recipient: "", subject: "", content: "" });
-    setView("sent");
+    if (error) {
+      alert("Erro ao enviar mensagem mística: " + error.message);
+    } else {
+      setNewMsg({ recipient: "", subject: "", content: "" });
+      setView("sent");
+      fetchMessages();
+    }
+    setIsSending(false);
   };
 
-  const handleDeleteMessage = (id: string) => {
-    setMasterState(prev => ({
-      ...prev,
-      messages: prev.messages.filter(m => m.id !== id)
-    }));
-    if (selectedMsg?.id === id) setSelectedMsg(null);
+  const handleDeleteMessage = async (id: string) => {
+    const { error } = await supabase.from('messages').delete().eq('id', id);
+    if (!error) {
+      setMasterState(prev => ({
+        ...prev,
+        messages: prev.messages.filter(m => m.id !== id)
+      }));
+      if (selectedMsg?.id === id) setSelectedMsg(null);
+    }
   };
 
-  const markAsRead = (msg: MailMessage) => {
+  const markAsRead = async (msg: MailMessage) => {
     if (msg.read || msg.sender === charName) return;
-    setMasterState(prev => ({
-      ...prev,
-      messages: prev.messages.map(m => m.id === msg.id ? { ...m, read: true } : m)
-    }));
+    const { error } = await supabase.from('messages').update({ read: true }).eq('id', msg.id);
+    if (!error) {
+      setMasterState(prev => ({
+        ...prev,
+        messages: prev.messages.map(m => m.id === msg.id ? { ...m, read: true } : m)
+      }));
+    }
   };
 
   return (
@@ -86,6 +139,17 @@ export function MailSystem({ messages, setMasterState, charName, isMaster }: Mai
         >
           <PlusCircle size={18} /> Escrever
         </button>
+
+        <div className="mt-auto p-2">
+          <button 
+            onClick={fetchMessages}
+            disabled={isSyncing}
+            className="w-full flex items-center justify-center gap-2 text-[10px] text-slate-500 hover:text-cyan-400 transition-colors py-2 uppercase tracking-tighter"
+          >
+            <RefreshCw size={12} className={isSyncing ? "animate-spin" : ""} />
+            {isSyncing ? "Sincronizando..." : "Sincronizar Agora"}
+          </button>
+        </div>
       </div>
 
       {/* Main Area */}
@@ -133,9 +197,10 @@ export function MailSystem({ messages, setMasterState, charName, isMaster }: Mai
                 </div>
                 <button 
                   onClick={handleSendMessage}
-                  className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg shadow-cyan-900/20"
+                  disabled={isSending}
+                  className="bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg shadow-cyan-900/20"
                 >
-                  Enviar Mensagem
+                  {isSending ? "Invocando Mensagem..." : "Enviar Mensagem"}
                 </button>
               </div>
             </motion.div>
@@ -162,13 +227,13 @@ export function MailSystem({ messages, setMasterState, charName, isMaster }: Mai
                   <Trash2 size={18} />
                 </button>
               </div>
-              <div className="flex-1 bg-slate-950/30 border border-slate-800 p-6 rounded-2xl text-slate-300 leading-relaxed whitespace-pre-wrap overflow-y-auto">
+              <div className="flex-1 bg-slate-950/30 border border-slate-800 p-6 rounded-2xl text-slate-300 leading-relaxed whitespace-pre-wrap overflow-y-auto font-serif">
                 {selectedMsg.content}
               </div>
             </motion.div>
           ) : (
             <div className="flex-1 flex flex-col overflow-hidden">
-              <div className="p-4 border-b border-slate-800 bg-slate-900/20 overflow-y-auto max-h-full">
+              <div className="p-4 border-b border-slate-800 bg-slate-900/20 overflow-y-auto max-h-full scrollbar-thin scrollbar-thumb-slate-800">
                 {filteredMessages.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full py-20 text-slate-600">
                     <Mail size={48} className="mb-4 opacity-20" />
@@ -187,7 +252,7 @@ export function MailSystem({ messages, setMasterState, charName, isMaster }: Mai
                           <div>
                             <div className="font-bold text-slate-200 flex items-center gap-2">
                               {msg.subject}
-                              {msg.isGlobal && <span className="text-[9px] bg-amber-500/20 text-amber-500 px-1.5 py-0.5 rounded border border-amber-500/30 font-black uppercase">Global</span>}
+                              {msg.isGlobal && <span className="text-[9px] bg-amber-500/20 text-amber-500 px-1.5 py-0.5 rounded border border-amber-500/30 font-black uppercase tracking-tighter">Global</span>}
                             </div>
                             <div className="text-xs text-slate-500 mt-1 flex items-center gap-2">
                               <span>{msg.sender === charName ? `Para: ${msg.recipient}` : `De: ${msg.sender}`}</span>

@@ -1,5 +1,5 @@
-import { useState, useMemo, useRef, ChangeEvent } from "react";
-import { Save, Shield, User, Edit3, Download, Upload, LayoutDashboard, Activity, List, Target, Brain, Dumbbell, Users, Package, Sword, Swords, BookOpen, Crown, Mail, ShieldCheck } from "lucide-react";
+import { useState, useMemo, useRef, ChangeEvent, useEffect } from "react";
+import { Save, Shield, User, Edit3, Download, Upload, LayoutDashboard, Activity, List, Target, Brain, Dumbbell, Users, Package, Sword, Swords, BookOpen, Crown, Mail, ShieldCheck, Cloud, CloudOff } from "lucide-react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { AttributeRow } from "./components/AttributeRow";
 import { Inventory } from "./components/Inventory";
@@ -20,6 +20,7 @@ import { MasterDashboard } from "./components/MasterDashboard";
 import { calculateStats } from "./lib/calculations";
 import { CharacterInfo, Attributes, InventoryItem, EquippedArmor, EquippedWeapons, EquippedAccessories, AptidoesState, JournalNote, MasterState } from "./types";
 import { AnimatePresence } from "motion/react";
+import { supabase } from "./lib/supabase";
 
 // ── Migrate old accessory structure to new paired/multi-slot structure ──
 (function migrateAccessorySlots() {
@@ -151,17 +152,85 @@ export default function App() {
     initiativeOrder: []
   });
   const [showLobby, setShowLobby] = useState(true);
+  const [isCloudSyncing, setIsCloudSyncing] = useState(false);
+  const [cloudStatus, setCloudStatus] = useState<"idle" | "syncing" | "success" | "error">("idle");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Calculate derived stats and max status dynamically
   const { derived, maxStatus, computedAttributes, statBreakdown, gemBonuses } = useMemo(() => calculateStats(attributes, charInfo, equippedAccessories, inventory, aptidoes as Record<string, number>), [attributes, charInfo, equippedAccessories, inventory, aptidoes]);
+
+  // ── Cloud Sync Logic ──
+  const syncToCloud = async () => {
+    if (!charInfo.name || charInfo.name === "Novo Personagem") return;
+    
+    setCloudStatus("syncing");
+    const payload = {
+      attributes,
+      charInfo,
+      inventory,
+      equippedArmor,
+      equippedWeapons,
+      equippedAccessories,
+      currentStatus,
+      aptidoes,
+      journalNotes,
+      lastSync: Date.now()
+    };
+
+    const { error } = await supabase
+      .from('characters')
+      .upsert({ 
+        name: charInfo.name, 
+        data: payload,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'name' });
+
+    if (error) {
+      console.error("Cloud Sync Error:", error);
+      setCloudStatus("error");
+    } else {
+      setCloudStatus("success");
+      setTimeout(() => setCloudStatus("idle"), 3000);
+    }
+  };
+
+  const loadFromCloud = async (name: string) => {
+    setCloudStatus("syncing");
+    const { data, error } = await supabase
+      .from('characters')
+      .select('data')
+      .eq('name', name)
+      .single();
+
+    if (error || !data) {
+      setCloudStatus("error");
+      return false;
+    }
+
+    const d = data.data;
+    if (d.attributes) setAttributes(d.attributes);
+    if (d.charInfo) setCharInfo(d.charInfo);
+    if (d.inventory) setInventory(d.inventory);
+    if (d.equippedArmor) setEquippedArmor(d.equippedArmor);
+    if (d.equippedWeapons) setEquippedWeapons(d.equippedWeapons);
+    if (d.equippedAccessories) setEquippedAccessories(d.equippedAccessories);
+    if (d.currentStatus) setCurrentStatus(d.currentStatus);
+    if (d.aptidoes) setAptidoes(d.aptidoes);
+    if (d.journalNotes) setJournalNotes(d.journalNotes);
+    
+    setHasCharacter(true);
+    setCloudStatus("success");
+    setTimeout(() => setCloudStatus("idle"), 3000);
+    return true;
+  };
 
   const handleStatusChange = (key: string, val: number) => {
     setCurrentStatus(prev => ({ ...prev, [key]: val }));
   };
 
   const handleSave = () => {
-    setSaveMessage("Ficha salva com sucesso!");
+    syncToCloud();
+    setSaveMessage("Ficha salva na Nuvem!");
     setTimeout(() => setSaveMessage(""), 3000);
   };
 
@@ -254,6 +323,7 @@ export default function App() {
           setShowLobby(false); 
         }}
         onImport={handleImport}
+        onCloudLoad={loadFromCloud}
       />
     );
   }
@@ -286,6 +356,11 @@ export default function App() {
             <div>
               <div className="flex items-center gap-3">
                 <h1 className="text-3xl font-bold text-white tracking-tight">{charInfo.name}</h1>
+                <div className="flex items-center gap-1">
+                  {cloudStatus === "syncing" && <RefreshCw size={14} className="text-cyan-400 animate-spin" />}
+                  {cloudStatus === "success" && <Cloud size={14} className="text-emerald-400" />}
+                  {cloudStatus === "error" && <CloudOff size={14} className="text-red-400" />}
+                </div>
                 <button onClick={() => setIsEditing(true)} className="text-slate-400 hover:text-indigo-400 transition-colors">
                   <Edit3 size={18} />
                 </button>
@@ -354,10 +429,11 @@ export default function App() {
 
             <button 
               onClick={handleSave}
-              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl font-semibold transition-all shadow-lg shadow-indigo-900/20"
+              disabled={cloudStatus === "syncing"}
+              className={`flex items-center gap-2 ${cloudStatus === "syncing" ? 'bg-slate-700' : 'bg-indigo-600 hover:bg-indigo-500'} text-white px-5 py-2.5 rounded-xl font-semibold transition-all shadow-lg shadow-indigo-900/20`}
             >
-              <Save size={18} />
-              <span className="hidden sm:inline">{saveMessage || "Salvar"}</span>
+              {cloudStatus === "syncing" ? <RefreshCw size={18} className="animate-spin" /> : <Save size={18} />}
+              <span className="hidden sm:inline">{saveMessage || (cloudStatus === "syncing" ? "Salvando..." : "Salvar")}</span>
             </button>
           </div>
         </header>

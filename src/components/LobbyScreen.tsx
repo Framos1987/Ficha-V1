@@ -1,20 +1,33 @@
 import { motion } from "motion/react";
-import { UserPlus, PlayCircle, Upload } from "lucide-react";
-import { useRef, ChangeEvent } from "react";
+import { UserPlus, PlayCircle, Upload, CloudDownload, RefreshCw } from "lucide-react";
+import { useRef, ChangeEvent, useState } from "react";
 
 interface LobbyScreenProps {
   onContinue: () => void;
   onNewCharacter: () => void;
   onImport: (e: ChangeEvent<HTMLInputElement>) => void;
+  onCloudLoad: (name: string) => Promise<boolean>;
   hasExistingCharacter: boolean;
   characterName?: string;
 }
 
-export function LobbyScreen({ onContinue, onNewCharacter, onImport, hasExistingCharacter, characterName }: LobbyScreenProps) {
+export function LobbyScreen({ onContinue, onNewCharacter, onImport, onCloudLoad, hasExistingCharacter, characterName }: LobbyScreenProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [cloudName, setCloudName] = useState("");
+  const [isCloudLoading, setIsCloudLoading] = useState(false);
+  const [cloudError, setCloudError] = useState(false);
 
   const handleImportClick = () => {
     fileInputRef.current?.click();
+  };
+
+  const handleCloudInvoke = async () => {
+    if (!cloudName) return;
+    setIsCloudLoading(true);
+    setCloudError(false);
+    const success = await onCloudLoad(cloudName);
+    if (!success) setCloudError(true);
+    setIsCloudLoading(false);
   };
 
   return (
@@ -23,8 +36,6 @@ export function LobbyScreen({ onContinue, onNewCharacter, onImport, hasExistingC
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute top-0 right-0 w-96 h-96 bg-purple-900/10 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-900/10 rounded-full blur-[100px] pointer-events-none" />
-      
-      {/* Floating particles simulation via pseudo-elements would go in css, but glowing orbs suffice here */}
       
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
@@ -46,48 +57,63 @@ export function LobbyScreen({ onContinue, onNewCharacter, onImport, hasExistingC
             <div className="mb-6 flex flex-col items-center">
               <div className="text-xs text-slate-500 uppercase tracking-widest mb-1">Aventura Atual</div>
               <div className="text-xl font-bold text-indigo-300">{characterName || "Aventureiro Desconhecido"}</div>
+              <button 
+                onClick={onContinue}
+                className="w-full mt-4 group flex items-center justify-center gap-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-indigo-600/20 active:scale-[0.98]"
+              >
+                <PlayCircle className="group-hover:scale-110 transition-transform" />
+                Retomar Localmente
+              </button>
             </div>
           )}
 
-          {hasExistingCharacter && (
-            <button 
-              onClick={onContinue}
-              className="w-full group flex items-center justify-center gap-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-indigo-600/20 active:scale-[0.98]"
-            >
-              <PlayCircle className="group-hover:scale-110 transition-transform" />
-              Retomar Aventura
-            </button>
-          )}
+          <div className="relative py-2">
+            <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-slate-800"></span></div>
+            <div className="relative flex justify-center text-xs uppercase"><span className="bg-[#0c121d] px-2 text-slate-500">Nuvem Arcaica</span></div>
+          </div>
 
-          {!hasExistingCharacter && (
-            <div className="py-4 text-center text-slate-400 text-sm">
-              Nenhuma marca mística detectada neste dispositivo.
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <input 
+                type="text"
+                placeholder="Nome do Personagem na Nuvem..."
+                value={cloudName}
+                onChange={(e) => setCloudName(e.target.value)}
+                className={`flex-1 bg-slate-950/50 border ${cloudError ? 'border-red-500/50' : 'border-slate-800'} rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-cyan-500/50 transition-all`}
+              />
+              <button 
+                onClick={handleCloudInvoke}
+                disabled={isCloudLoading || !cloudName}
+                className="bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-800 text-white px-4 rounded-xl transition-all active:scale-95"
+              >
+                {isCloudLoading ? <RefreshCw size={18} className="animate-spin" /> : <CloudDownload size={18} />}
+              </button>
             </div>
-          )}
+            {cloudError && <p className="text-[10px] text-red-400 text-center animate-pulse">Personagem não encontrado nos registros celestiais.</p>}
+          </div>
 
-          <div className="grid grid-cols-1 gap-4 pt-2">
+          <div className="relative py-2">
+            <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-slate-800"></span></div>
+            <div className="relative flex justify-center text-xs uppercase"><span className="bg-[#0c121d] px-2 text-slate-500">Manual</span></div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
             <button 
               onClick={onNewCharacter}
-              className="w-full flex items-center justify-center gap-2 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-slate-200 py-3 rounded-2xl transition-all active:scale-[0.98]"
+              className="flex items-center justify-center gap-2 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-slate-200 py-3 rounded-xl transition-all text-xs font-bold"
             >
-              <UserPlus size={18} className="text-emerald-400" />
-              Forjar Nova Ficha
+              <UserPlus size={16} className="text-emerald-400" />
+              Nova Ficha
             </button>
 
             <button 
               onClick={handleImportClick}
-              className="w-full flex items-center justify-center gap-2 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-slate-200 py-3 rounded-2xl transition-all active:scale-[0.98]"
+              className="flex items-center justify-center gap-2 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-slate-200 py-3 rounded-xl transition-all text-xs font-bold"
             >
-              <Upload size={18} className="text-amber-400" />
-              Invocar do Backup (.rpg)
+              <Upload size={16} className="text-amber-400" />
+              Importar
             </button>
-            <input 
-              type="file" 
-              accept=".rpg,.json" 
-              className="hidden" 
-              ref={fileInputRef} 
-              onChange={onImport} 
-            />
+            <input type="file" accept=".rpg,.json" className="hidden" ref={fileInputRef} onChange={onImport} />
           </div>
           
         </div>

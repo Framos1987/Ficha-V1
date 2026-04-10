@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Users, Swords, Plus, Trash2, Heart, Zap, User, Dice5, ChevronRight, Save, Shield, Backpack, Info } from "lucide-react";
+import { Users, Swords, Plus, Trash2, Heart, Zap, User, Dice5, ChevronRight, Save, Shield, Backpack, Info, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { MasterState, NPC, CharacterInfo } from "../types";
 import { NPCInventory } from "./NPCInventory";
@@ -51,7 +51,6 @@ export function MasterDashboard({ masterState, setMasterState, charInfo, onExit 
   const handleRollInitiative = () => {
     setMasterState(prev => {
       const rolledNpcs = prev.npcs.map(n => {
-        const initiativeVal = (prev.npcs.find(x => x.id === n.id)?.initiative ?? 0); // Keep existing if needed, or re-roll
         return { ...n, initiative: Math.floor(Math.random() * 20) + 1 };
       });
       

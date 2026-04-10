@@ -206,7 +206,7 @@ export function calculateStats(
     "Destino": destino,
     "Dificuldade Armada": des,
     "Dificuldade Desarmada": des,
-    "Evasão": setBd("Evasão", Math.floor(des / 5), { val: anBonus, label: anLabel }, { val: racaEvasaoBonus, label: "Bônus Racial" }),
+    "Evasão": setBd("Evasão", Math.floor(des / 5), { val: anBonus, label: anLabel }, { val: racaEvasaoBonus, label: "Bônus Racial (Goblínica)" }),
     "Foco Mágico": Math.floor(int / 5),
     "Foco Místico": Math.floor(car / 5),
     "Fôlego": Math.floor(cst / 5),

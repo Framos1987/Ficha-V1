@@ -16,7 +16,7 @@ export interface CharacterInfo {
 export type AttributeData = { base: number; bonus: number };
 export type Attributes = Record<string, AttributeData>;
 
-export type AccessorySlot = 'Cabeça' | 'Garganta' | 'Ouvido E' | 'Ouvido D' | 'Antebraço' | 'Mão' | 'Pulso E' | 'Pulso D' | 'Dedo 1' | 'Dedo 2' | 'Dedo 3' | 'Dedo 4' | 'Dedo 5' | 'Dedo 6' | 'Dedo 7' | 'Dedo 8' | 'Dedo 9' | 'Dedo 10' | 'Cintura' | 'Tornozelo E' | 'Tornozelo D';
+export type AccessorySlot = 'Cabeça' | 'Garganta' | 'Ouvido E' | 'Ouvido D' | 'Antebraço E' | 'Antebraço D' | 'Mão E' | 'Mão D' | 'Pulso E' | 'Pulso D' | 'Dedo 1' | 'Dedo 2' | 'Dedo 3' | 'Dedo 4' | 'Dedo 5' | 'Dedo 6' | 'Dedo 7' | 'Dedo 8' | 'Dedo 9' | 'Dedo 10' | 'Cintura' | 'Tornozelo E' | 'Tornozelo D';
 
 export interface GemEffect {
   category: string; // e.g., 'Ampliadoras (Atributos)', 'Indutoras'
@@ -65,4 +65,11 @@ export type AptidoesState = Record<string, number>;
 
 export interface EquippedAccessories {
   [slot: string]: InventoryItem | null;
+}
+
+export interface JournalNote {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: number;
 }

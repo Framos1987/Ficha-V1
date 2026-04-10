@@ -175,6 +175,78 @@ const BodySilhouette = ({ equippedArmor, inventory }: { equippedArmor: EquippedA
   );
 };
 
+const AccessorySilhouette = ({ equippedAccessories }: { equippedAccessories: EquippedAccessories }) => {
+  const isEquipped = (slot: string) => !!equippedAccessories[slot];
+  const getColor = (slot: string) => isEquipped(slot) ? "text-pink-400" : "text-slate-200/10";
+  const getGlow = (slot: string) => isEquipped(slot) ? "drop-shadow-[0_0_8px_rgba(244,114,182,0.8)]" : "";
+
+  return (
+    <svg viewBox="0 0 200 450" className="w-full h-auto max-h-[700px] lg:max-h-[800px] transition-all duration-500">
+      {/* Base Body Shadow */}
+      <g className="text-slate-800/30">
+        <circle cx="100" cy="50" r="22" fill="currentColor" />
+        <rect x="92" y="73" width="16" height="15" fill="currentColor" />
+        <path d="M65 90 L135 90 L125 220 L75 220 Z" fill="currentColor" />
+        <circle cx="55" cy="100" r="14" fill="currentColor" />
+        <circle cx="145" cy="100" r="14" fill="currentColor" />
+        <rect x="38" y="105" width="16" height="50" rx="8" transform="rotate(15 47 105)" fill="currentColor" />
+        <rect x="146" y="105" width="16" height="50" rx="8" transform="rotate(-15 153 105)" fill="currentColor" />
+        <circle cx="33" cy="162" r="8" fill="currentColor" />
+        <circle cx="167" cy="162" r="8" fill="currentColor" />
+        <rect x="25" y="172" width="12" height="45" rx="6" transform="rotate(10 30 172)" fill="currentColor" />
+        <rect x="163" y="172" width="12" height="45" rx="6" transform="rotate(-10 170 172)" fill="currentColor" />
+        <circle cx="21" cy="230" r="9" fill="currentColor" />
+        <circle cx="179" cy="230" r="9" fill="currentColor" />
+      </g>
+
+      {/* Cabeça / Tiara */}
+      <g className={`${getColor('Cabeça')} ${getGlow('Cabeça')} transition-all duration-300`}>
+        <path d="M80 35 Q100 25 120 35" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+      </g>
+
+      {/* Ouvidos */}
+      <circle cx="76" cy="50" r="4" className={`${getColor('Ouvido E')} ${getGlow('Ouvido E')} transition-all`} fill="currentColor" />
+      <circle cx="124" cy="50" r="4" className={`${getColor('Ouvido D')} ${getGlow('Ouvido D')} transition-all`} fill="currentColor" />
+
+      {/* Garganta / Colar */}
+      <path d="M90 80 Q100 88 110 80" className={`${getColor('Garganta')} ${getGlow('Garganta')} transition-all`} fill="none" stroke="currentColor" strokeWidth="2.5" />
+
+      {/* Pulsos */}
+      <rect x="22" cy="210" width="15" height="4" rx="1" transform="rotate(10 22 210)" className={`${getColor('Pulso E')} ${getGlow('Pulso E')} transition-all`} fill="currentColor" />
+      <rect x="163" cy="210" width="15" height="4" rx="1" transform="rotate(-10 178 210)" className={`${getColor('Pulso D')} ${getGlow('Pulso D')} transition-all`} fill="currentColor" />
+
+      {/* Antebraços */}
+      <rect x="25" cy="180" width="12" height="6" rx="1" transform="rotate(10 28 180)" className={`${getColor('Antebraço E')} ${getGlow('Antebraço E')} transition-all`} fill="currentColor" />
+      <rect x="163" cy="180" width="12" height="6" rx="1" transform="rotate(-10 172 180)" className={`${getColor('Antebraço D')} ${getGlow('Antebraço D')} transition-all`} fill="currentColor" />
+
+      {/* Mãos / Luvas de Acessório */}
+      <circle cx="21" cy="230" r="6" className={`${getColor('Mão E')} ${getGlow('Mão E')} transition-all`} fill="none" stroke="currentColor" strokeWidth="2" />
+      <circle cx="179" cy="230" r="6" className={`${getColor('Mão D')} ${getGlow('Mão D')} transition-all`} fill="none" stroke="currentColor" strokeWidth="2" />
+
+      {/* Cintura */}
+      <path d="M75 220 L125 220 L122 228 L78 228 Z" className={`${getColor('Cintura')} ${getGlow('Cintura')} transition-all`} fill="currentColor" />
+
+      {/* Tornozelos */}
+      <rect x="74" y="385" width="20" height="4" rx="1" className={`${getColor('Tornozelo E')} ${getGlow('Tornozelo E')} transition-all`} fill="currentColor" />
+      <rect x="106" y="385" width="20" height="4" rx="1" className={`${getColor('Tornozelo D')} ${getGlow('Tornozelo D')} transition-all`} fill="currentColor" />
+
+      {/* Indicador de Anéis (Dedo 1 a 10) */}
+      <g opacity="0.6">
+        {[...Array(10)].map((_, i) => (
+          <circle 
+            key={i} 
+            cx={i < 5 ? 12 - i*2 : 188 - (i-5)*2} 
+            cy={245 + (i%5)*3} 
+            r="2" 
+            className={isEquipped(`Dedo ${i+1}`) ? "text-amber-400 drop-shadow-[0_0_3px_rgba(251,191,36,1)]" : "text-slate-800"} 
+            fill="currentColor" 
+          />
+        ))}
+      </g>
+    </svg>
+  );
+};
+
 export function ArsenalTab({ inventory, setInventory, equippedArmor, setEquippedArmor, equippedWeapons, setEquippedWeapons, equippedAccessories, setEquippedAccessories, aptidoes = {} }: ArsenalTabProps) {
   const [activeTab, setActiveTab] = useState<'weapons' | 'armor' | 'accessories'>('weapons');
 
@@ -186,13 +258,15 @@ export function ArsenalTab({ inventory, setInventory, equippedArmor, setEquipped
   // Both slots now accept weapons AND shields (no directional restriction)
   const allHandItems = [...weaponItems, ...shieldItems];
 
-  const accessorySlots: AccessorySlot[] = ['Cabeça', 'Garganta', 'Ouvido E', 'Ouvido D', 'Antebraço', 'Mão', 'Pulso E', 'Pulso D', 'Cintura', 'Tornozelo E', 'Tornozelo D'];
+  const accessorySlots: AccessorySlot[] = ['Cabeça', 'Garganta', 'Ouvido E', 'Ouvido D', 'Antebraço E', 'Antebraço D', 'Mão E', 'Mão D', 'Pulso E', 'Pulso D', 'Cintura', 'Tornozelo E', 'Tornozelo D'];
   const fingerSlots: AccessorySlot[] = ['Dedo 1', 'Dedo 2', 'Dedo 3', 'Dedo 4', 'Dedo 5', 'Dedo 6', 'Dedo 7', 'Dedo 8', 'Dedo 9', 'Dedo 10'];
   const FINGER_LABELS = ['Mínimo E', 'Anelar E', 'Médio E', 'Indicador E', 'Polegar E', 'Polegar D', 'Indicador D', 'Médio D', 'Anelar D', 'Mínimo D'];
   // Map paired slots to their catalog base name for filtering
   const SLOT_CATALOG_MAP: Record<string, string> = {
     'Ouvido E': 'Ouvido', 'Ouvido D': 'Ouvido',
     'Pulso E': 'Pulso', 'Pulso D': 'Pulso',
+    'Antebraço E': 'Antebraço', 'Antebraço D': 'Antebraço',
+    'Mão E': 'Mão', 'Mão D': 'Mão',
     'Tornozelo E': 'Tornozelo', 'Tornozelo D': 'Tornozelo',
   };
   const [socketingSlot, setSocketingSlot] = useState<AccessorySlot | null>(null);
@@ -255,6 +329,39 @@ export function ArsenalTab({ inventory, setInventory, equippedArmor, setEquipped
     setInventory(prev => prev.map(invItem => 
       invItem.id === item.id ? updatedItem : invItem
     ));
+  };
+
+  const handleEquipAllAccessories = () => {
+    if (!setEquippedAccessories || !equippedAccessories) return;
+
+    const sortedAccs = [...accessoryItems].sort((a, b) => (b.requiredTier || 0) - (a.requiredTier || 0));
+    const sortedRings = [...accessoryItems].filter(i => i.accessorySlot === 'Dedo').sort((a, b) => (b.requiredTier || 0) - (a.requiredTier || 0));
+    
+    const newEquipped = { ...equippedAccessories };
+    const usedIds = new Set<string>();
+
+    // 1. Clear current and attempt to fill standard slots
+    accessorySlots.forEach(slot => {
+      newEquipped[slot] = null;
+      const catalogSlot = SLOT_CATALOG_MAP[slot] || slot;
+      const bestItem = sortedAccs.find(i => i.accessorySlot === catalogSlot && !usedIds.has(i.id));
+      if (bestItem) {
+        newEquipped[slot] = bestItem;
+        usedIds.add(bestItem.id);
+      }
+    });
+
+    // 2. Clear current and attempt to fill finger slots
+    fingerSlots.forEach(slot => {
+      newEquipped[slot] = null;
+      const bestRing = sortedRings.find(i => !usedIds.has(i.id));
+      if (bestRing) {
+        newEquipped[slot] = bestRing;
+        usedIds.add(bestRing.id);
+      }
+    });
+
+    setEquippedAccessories(newEquipped);
   };
 
   // ── Penalty helpers ────────────────────────
@@ -637,80 +744,108 @@ export function ArsenalTab({ inventory, setInventory, equippedArmor, setEquipped
               transition={{ duration: 0.2 }}
               className="bg-slate-900/40 p-6 rounded-3xl border border-slate-700/50 relative overflow-hidden"
             >
-              <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <Crown size={20} className="text-pink-400" />
-                Acessórios Equipados e Engaste
-              </h3>
+              <div className="flex justify-between items-center mb-6 relative z-10">
+                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <Crown size={20} className="text-pink-400" />
+                  Acessórios Equipados e Engaste
+                </h3>
+                <button
+                  onClick={handleEquipAllAccessories}
+                  className="px-4 py-2 bg-pink-600/20 hover:bg-pink-600/40 text-pink-400 border border-pink-500/30 rounded-xl text-sm font-bold transition-colors shadow-inner flex items-center"
+                >
+                  ✨ Equipar Tudo (Otimizado)
+                </button>
+              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {accessorySlots.map(slot => {
-                  const equippedItem = equippedAccessories[slot];
-                  const catalogSlot = SLOT_CATALOG_MAP[slot] || slot;
-                  // Find paired sibling to exclude already-equipped unique items
-                  const siblingSlots = accessorySlots.filter(s => s !== slot && (SLOT_CATALOG_MAP[s] || s) === catalogSlot);
-                  const siblingEquippedIds = new Set(siblingSlots.map(s => equippedAccessories[s]?.id).filter(Boolean));
-                  const availableForSlot = accessoryItems.filter(i => i.accessorySlot === catalogSlot && (!siblingEquippedIds.has(i.id) || (i.quantity || 1) > 1));
+              <div className="flex flex-col lg:grid lg:grid-cols-[1fr_300px_1fr] xl:grid-cols-[1fr_400px_1fr] gap-6 items-start relative z-10">
+                
+                {/* Center Silhouette (Mobile) */}
+                <div className="flex lg:hidden justify-center items-center w-full mb-4">
+                  <div className="relative w-full max-w-[200px] flex justify-center">
+                    <AccessorySilhouette equippedAccessories={equippedAccessories} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent pointer-events-none" />
+                  </div>
+                </div>
 
-                  return (
-                    <div key={slot} className="bg-slate-900/80 p-4 rounded-2xl border border-slate-700/80 shadow-inner group hover:border-pink-500/50 transition-colors">
-                      <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider group-hover:text-pink-400 transition-colors">{slot}</label>
-                      <select
-                        value={equippedItem?.id || ""}
-                        onChange={(e) => handleEquipAccessory(slot, e.target.value)}
-                        className={`w-full bg-slate-800 border rounded-xl px-3 py-2 text-sm focus:outline-none transition-colors mb-3 ${
-                          equippedItem ? 'border-pink-500/50 text-pink-300' : 'border-slate-700 text-slate-400'
-                        }`}
-                      >
-                        <option value="">-- Vazio --</option>
-                        {availableForSlot.map(item => (
-                          <option key={item.id} value={item.id} className="text-slate-200">{item.name}</option>
-                        ))}
-                      </select>
-
-                      {/* Engaste Sub-painel */}
-                      {equippedItem && (
-                        <div className="mt-4 pt-3 border-t border-slate-700/50 space-y-2">
-                          <div className="flex justify-between items-center text-xs px-1">
-                            <span className="text-slate-400">Engaste ({equippedItem.socketedGemIds?.length || 0}/{equippedItem.gemCapacity || 0})</span>
-                            <span className="text-slate-500 font-mono">Max: {equippedItem.maxGemTier || '?'}</span>
+                {/* Left Column (Accessory Boxes) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 w-full">
+                  {accessorySlots.slice(0, Math.ceil(accessorySlots.length / 2)).map(slot => {
+                    const equippedItem = equippedAccessories[slot];
+                    const catalogSlot = SLOT_CATALOG_MAP[slot] || slot;
+                    const siblingSlots = accessorySlots.filter(s => s !== slot && (SLOT_CATALOG_MAP[s] || s) === catalogSlot);
+                    const siblingEquippedIds = new Set(siblingSlots.map(s => equippedAccessories[s]?.id).filter(Boolean));
+                    const availableForSlot = accessoryItems.filter(i => i.accessorySlot === catalogSlot && (!siblingEquippedIds.has(i.id) || (i.quantity || 1) > 1));
+                    
+                    return (
+                      <div key={slot} className="bg-slate-900/80 p-4 rounded-2xl border border-slate-700/80 shadow-inner group hover:border-pink-500/50 transition-colors">
+                        <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider group-hover:text-pink-400 transition-colors">
+                           {slot}
+                        </label>
+                        <select
+                          value={equippedItem?.id || ""}
+                          onChange={(e) => handleEquipAccessory(slot, e.target.value)}
+                          className={`w-full bg-slate-800 border rounded-xl px-3 py-2 text-sm focus:outline-none transition-colors mb-2 ${
+                            equippedItem ? 'border-pink-500/50 text-pink-300' : 'border-slate-700 text-slate-400'
+                          }`}
+                        >
+                          <option value="">-- Vazio --</option>
+                          {availableForSlot.map(item => (
+                            <option key={item.id} value={item.id} className="text-slate-200">{item.name}</option>
+                          ))}
+                        </select>
+                        {equippedItem && (
+                          <div className="flex justify-between items-center text-[10px] text-slate-500 px-1 mt-1">
+                            <span>Gemas: {equippedItem.socketedGemIds?.length || 0}/{equippedItem.gemCapacity || 0}</span>
+                            <button onClick={() => setSocketingSlot(slot)} className="text-pink-400 hover:text-pink-300 underline underline-offset-2">Modificar</button>
                           </div>
-                          
-                          <div className="flex flex-wrap gap-2">
-                            {Array.from({ length: equippedItem.gemCapacity || 0 }).map((_, idx) => {
-                              const gemId = equippedItem.socketedGemIds?.[idx];
-                              const actualGem = gemId ? inventory.find(i => i.id === gemId) : null;
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
 
-                              if (actualGem) {
-                                return (
-                                  <div key={idx} className="relative group/gem cursor-pointer" onClick={() => handleUnsocketGem(slot, gemId)}>
-                                    <div className="w-10 h-10 rounded-xl bg-pink-900/40 border border-pink-500/50 flex items-center justify-center shadow-lg shadow-pink-500/10 hover:bg-pink-900/60 transition-colors">
-                                      <Gem size={16} className="text-pink-300" />
-                                    </div>
-                                    <div className="absolute opacity-0 group-hover/gem:opacity-100 bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-[200px] bg-slate-900 border border-pink-500/50 text-slate-200 text-[10px] p-2 rounded-lg shadow-xl z-20 pointer-events-none transition-opacity">
-                                      <div className="font-bold text-pink-300 mb-1">{actualGem.name}</div>
-                                      <div className="text-slate-400">{actualGem.gemEffect?.category} | +{actualGem.gemEffect?.value}</div>
-                                      <div className="text-red-400 mt-1 font-bold">Clique para Remover</div>
-                                    </div>
-                                  </div>
-                                );
-                              }
+                {/* Center Silhouette (Desktop) */}
+                <div className="hidden lg:flex justify-center items-start sticky top-4">
+                  <div className="relative w-full flex justify-center">
+                    <AccessorySilhouette equippedAccessories={equippedAccessories} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent pointer-events-none" />
+                  </div>
+                </div>
 
-                              return (
-                                <div 
-                                  key={idx} 
-                                  onClick={() => setSocketingSlot(slot)}
-                                  className="w-10 h-10 rounded-xl bg-slate-900 border border-dashed border-slate-700 flex items-center justify-center cursor-pointer hover:border-pink-500/50 hover:bg-pink-900/20 transition-all text-slate-500 hover:text-pink-400 shadow-inner"
-                                >
-                                  +
-                                </div>
-                              );
-                            })}
+                {/* Right Column (Accessory Boxes) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 w-full">
+                  {accessorySlots.slice(Math.ceil(accessorySlots.length / 2)).map(slot => {
+                    const equippedItem = equippedAccessories[slot];
+                    const catalogSlot = SLOT_CATALOG_MAP[slot] || slot;
+                    const siblingSlots = accessorySlots.filter(s => s !== slot && (SLOT_CATALOG_MAP[s] || s) === catalogSlot);
+                    const siblingEquippedIds = new Set(siblingSlots.map(s => equippedAccessories[s]?.id).filter(Boolean));
+                    const availableForSlot = accessoryItems.filter(i => i.accessorySlot === catalogSlot && (!siblingEquippedIds.has(i.id) || (i.quantity || 1) > 1));
+                    
+                    return (
+                      <div key={slot} className="bg-slate-900/80 p-4 rounded-2xl border border-slate-700/80 shadow-inner group hover:border-pink-500/50 transition-colors">
+                        <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider group-hover:text-pink-400 transition-colors">{slot}</label>
+                        <select
+                          value={equippedItem?.id || ""}
+                          onChange={(e) => handleEquipAccessory(slot, e.target.value)}
+                          className={`w-full bg-slate-800 border rounded-xl px-3 py-2 text-sm focus:outline-none transition-colors mb-2 ${
+                            equippedItem ? 'border-pink-500/50 text-pink-300' : 'border-slate-700 text-slate-400'
+                          }`}
+                        >
+                          <option value="">-- Vazio --</option>
+                          {availableForSlot.map(item => (
+                            <option key={item.id} value={item.id} className="text-slate-200">{item.name}</option>
+                          ))}
+                        </select>
+                        {equippedItem && (
+                          <div className="flex justify-between items-center text-[10px] text-slate-500 px-1 mt-1">
+                            <span>Gemas: {equippedItem.socketedGemIds?.length || 0}/{equippedItem.gemCapacity || 0}</span>
+                            <button onClick={() => setSocketingSlot(slot)} className="text-pink-400 hover:text-pink-300 underline underline-offset-2">Modificar</button>
                           </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
               {/* ── Anéis (10 Dedos) — Compact Ring Panel ── */}

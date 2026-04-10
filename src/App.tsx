@@ -15,7 +15,7 @@ import { AuthGate } from "./components/AuthGate";
 import { LobbyScreen } from "./components/LobbyScreen";
 import { JournalTab } from "./components/JournalTab";
 import { calculateStats } from "./lib/calculations";
-import { CharacterInfo, Attributes, InventoryItem, EquippedArmor, EquippedWeapons, EquippedAccessories, AptidoesState } from "./types";
+import { CharacterInfo, Attributes, InventoryItem, EquippedArmor, EquippedWeapons, EquippedAccessories, AptidoesState, JournalNote } from "./types";
 
 // ── Migrate old accessory structure to new paired/multi-slot structure ──
 (function migrateAccessorySlots() {
@@ -23,31 +23,52 @@ import { CharacterInfo, Attributes, InventoryItem, EquippedArmor, EquippedWeapon
     const raw = localStorage.getItem("rpg_equipped_accessories");
     if (!raw) return;
     const data = JSON.parse(raw);
-    // Detect old format: has "Dedo" key (single) instead of "Dedo 1"
-    const needsMigration = ('Dedo' in data) || ('Ouvido' in data) || ('Pulso' in data) || ('Tornozelo' in data);
+    // Detect old format: has single keys instead of paired E/D or numbered
+    const needsMigration = ('Dedo' in data) || ('Ouvido' in data) || ('Pulso' in data) || ('Tornozelo' in data) || ('Antebraço' in data) || ('Mão' in data);
     if (!needsMigration) return;
 
     const migrated: Record<string, any> = {
       'Cabeça': data['Cabeça'] ?? null,
       'Garganta': data['Garganta'] ?? null,
-      'Ouvido E': data['Ouvido'] ?? null,
-      'Ouvido D': null,
-      'Antebraço': data['Antebraço'] ?? null,
-      'Mão': data['Mão'] ?? null,
-      'Pulso E': data['Pulso'] ?? null,
-      'Pulso D': null,
-      'Dedo 1': data['Dedo'] ?? null,
-      'Dedo 2': null, 'Dedo 3': null, 'Dedo 4': null, 'Dedo 5': null,
-      'Dedo 6': null, 'Dedo 7': null, 'Dedo 8': null, 'Dedo 9': null, 'Dedo 10': null,
+      'Ouvido E': data['Ouvido'] ?? data['Ouvido E'] ?? null,
+      'Ouvido D': data['Ouvido D'] ?? null,
+      'Antebraço E': data['Antebraço'] ?? data['Antebraço E'] ?? null,
+      'Antebraço D': data['Antebraço D'] ?? null,
+      'Mão E': data['Mão'] ?? data['Mão E'] ?? null,
+      'Mão D': data['Mão D'] ?? null,
+      'Pulso E': data['Pulso'] ?? data['Pulso E'] ?? null,
+      'Pulso D': data['Pulso D'] ?? null,
+      'Dedo 1': data['Dedo'] ?? data['Dedo 1'] ?? null,
+      'Dedo 2': data['Dedo 2'] ?? null, 'Dedo 3': data['Dedo 3'] ?? null, 'Dedo 4': data['Dedo 4'] ?? null, 'Dedo 5': data['Dedo 5'] ?? null,
+      'Dedo 6': data['Dedo 6'] ?? null, 'Dedo 7': data['Dedo 7'] ?? null, 'Dedo 8': data['Dedo 8'] ?? null, 'Dedo 9': data['Dedo 9'] ?? null, 'Dedo 10': data['Dedo 10'] ?? null,
       'Cintura': data['Cintura'] ?? null,
-      'Tornozelo E': data['Tornozelo'] ?? null,
-      'Tornozelo D': null,
+      'Tornozelo E': data['Tornozelo'] ?? data['Tornozelo E'] ?? null,
+      'Tornozelo D': data['Tornozelo D'] ?? null,
     };
 
     localStorage.setItem("rpg_equipped_accessories", JSON.stringify(migrated));
-    console.log("[Migration] ✅ Accessory slots upgraded to v2. Old keys found:", Object.keys(data).filter(k => ['Dedo', 'Ouvido', 'Pulso', 'Tornozelo'].includes(k)));
-    alert("Sistema de Acessórios atualizado! Seus anéis e brincos foram migrados para os novos slots.");
+    console.log("[Migration] ✅ Accessory slots upgraded. Old keys found:", Object.keys(data).filter(k => ['Dedo', 'Ouvido', 'Pulso', 'Tornozelo', 'Antebraço', 'Mão'].includes(k)));
   } catch (e) { console.error("[Migration] Error:", e); }
+})();
+
+// ── Migrate Journal from string to JournalNote[] ──
+(function migrateJournal() {
+  try {
+    const raw = localStorage.getItem("rpg_journal_notes");
+    if (!raw) return;
+    if (raw.startsWith('[') && raw.endsWith(']')) return; // Already array
+
+    // It's a plain string, convert to first note
+    const legacyText = raw.replace(/^"|"$/g, ''); // Simple strip quotes if stored as JSON string
+    const migrated: JournalNote[] = [{
+      id: 'legacy-' + Date.now(),
+      title: 'Nota Migrada',
+      content: legacyText,
+      createdAt: Date.now()
+    }];
+    localStorage.setItem("rpg_journal_notes", JSON.stringify(migrated));
+    console.log("[Migration] ✅ Journal converted to multi-note format.");
+  } catch (e) { console.error("[Migration Journal] Error:", e); }
 })();
 
 const initialAttributes: Attributes = {
@@ -104,7 +125,8 @@ export default function App() {
   });
 
   const [equippedAccessories, setEquippedAccessories] = useLocalStorage<EquippedAccessories>("rpg_equipped_accessories", {
-    Cabeça: null, Garganta: null, 'Ouvido E': null, 'Ouvido D': null, Antebraço: null, Mão: null,
+    Cabeça: null, Garganta: null, 'Ouvido E': null, 'Ouvido D': null,
+    'Antebraço E': null, 'Antebraço D': null, 'Mão E': null, 'Mão D': null,
     'Pulso E': null, 'Pulso D': null,
     'Dedo 1': null, 'Dedo 2': null, 'Dedo 3': null, 'Dedo 4': null, 'Dedo 5': null,
     'Dedo 6': null, 'Dedo 7': null, 'Dedo 8': null, 'Dedo 9': null, 'Dedo 10': null,
@@ -112,7 +134,7 @@ export default function App() {
   });
 
   const [aptidoes, setAptidoes] = useLocalStorage<AptidoesState>("rpg_aptidoes", {});
-  const [journalNotes, setJournalNotes] = useLocalStorage<string>("rpg_journal_notes", "");
+  const [journalNotes, setJournalNotes] = useLocalStorage<JournalNote[]>("rpg_journal_notes", []);
   const [hasCharacter, setHasCharacter] = useLocalStorage<boolean>("rpg_has_character", false);
 
   const [activeTab, setActiveTab] = useState<"attributes" | "derived" | "status" | "inventory" | "arsenal" | "aptidoes" | "journal">("attributes");
@@ -210,7 +232,8 @@ export default function App() {
           });
           setEquippedWeapons({ mainHand: null, offHand: null });
           setEquippedAccessories({
-            Cabeça: null, Garganta: null, 'Ouvido E': null, 'Ouvido D': null, Antebraço: null, Mão: null,
+            Cabeça: null, Garganta: null, 'Ouvido E': null, 'Ouvido D': null,
+            'Antebraço E': null, 'Antebraço D': null, 'Mão E': null, 'Mão D': null,
             'Pulso E': null, 'Pulso D': null,
             'Dedo 1': null, 'Dedo 2': null, 'Dedo 3': null, 'Dedo 4': null, 'Dedo 5': null,
             'Dedo 6': null, 'Dedo 7': null, 'Dedo 8': null, 'Dedo 9': null, 'Dedo 10': null,
@@ -218,7 +241,7 @@ export default function App() {
           });
           setCurrentStatus({ vida: 0, sanidade: 0, vigor: 0, mana: 0, poder: 0, estomago: 0, figado: 0, estudo: 0, pratica: 0, treino: 0, extrapolar: 0 });
           setAptidoes({});
-          setJournalNotes("");
+          setJournalNotes([]);
           setHasCharacter(true);
           setShowLobby(false); // Go straight to the character sheet
         }}

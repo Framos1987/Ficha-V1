@@ -11,6 +11,7 @@ export interface CharacterInfo {
   intellectualValue?: number;
   socialLevel?: number;
   socialValue?: number;
+  imageUrl?: string;
 }
 
 export type AttributeData = { base: number; bonus: number };
@@ -72,4 +73,32 @@ export interface JournalNote {
   title: string;
   content: string;
   createdAt: number;
+}
+
+export interface MailMessage {
+  id: string;
+  sender: string;
+  recipient: string;
+  subject: string;
+  content: string;
+  timestamp: number;
+  read: boolean;
+  isGlobal?: boolean;
+}
+
+export interface NPC {
+  id: string;
+  name: string;
+  health: number;
+  maxHealth: number;
+  mana: number;
+  maxMana: number;
+  initiative?: number;
+  notes: string;
+}
+
+export interface MasterState {
+  messages: MailMessage[];
+  npcs: NPC[];
+  initiativeOrder: string[];
 }

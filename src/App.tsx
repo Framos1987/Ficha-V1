@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, ChangeEvent } from "react";
-import { Save, Shield, User, Edit3, Download, Upload, LayoutDashboard, Activity, List, Target, Brain, Dumbbell, Users, Package, Sword, Swords, BookOpen } from "lucide-react";
+import { Save, Shield, User, Edit3, Download, Upload, LayoutDashboard, Activity, List, Target, Brain, Dumbbell, Users, Package, Sword, Swords, BookOpen, Crown, Mail, ShieldCheck } from "lucide-react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { AttributeRow } from "./components/AttributeRow";
 import { Inventory } from "./components/Inventory";
@@ -14,8 +14,11 @@ import { AptidoesTab } from "./components/AptidoesTab";
 import { AuthGate } from "./components/AuthGate";
 import { LobbyScreen } from "./components/LobbyScreen";
 import { JournalTab } from "./components/JournalTab";
+import { MasterGate } from "./components/MasterGate";
+import { MailSystem } from "./components/MailSystem";
+import { MasterDashboard } from "./components/MasterDashboard";
 import { calculateStats } from "./lib/calculations";
-import { CharacterInfo, Attributes, InventoryItem, EquippedArmor, EquippedWeapons, EquippedAccessories, AptidoesState, JournalNote } from "./types";
+import { CharacterInfo, Attributes, InventoryItem, EquippedArmor, EquippedWeapons, EquippedAccessories, AptidoesState, JournalNote, MasterState } from "./types";
 
 // ── Migrate old accessory structure to new paired/multi-slot structure ──
 (function migrateAccessorySlots() {
@@ -137,10 +140,17 @@ export default function App() {
   const [journalNotes, setJournalNotes] = useLocalStorage<JournalNote[]>("rpg_journal_notes", []);
   const [hasCharacter, setHasCharacter] = useLocalStorage<boolean>("rpg_has_character", false);
 
-  const [activeTab, setActiveTab] = useState<"attributes" | "derived" | "status" | "inventory" | "arsenal" | "aptidoes" | "journal">("attributes");
+  const [activeTab, setActiveTab] = useState<"attributes" | "derived" | "status" | "inventory" | "arsenal" | "aptidoes" | "journal" | "mail" | "master">("attributes");
   const [isEditing, setIsEditing] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useLocalStorage<boolean>("rpg_is_auth", false);
+  const [isMasterMode, setIsMasterMode] = useLocalStorage<boolean>("rpg_is_master", false);
+  const [showMasterGate, setShowMasterGate] = useState(false);
+  const [masterState, setMasterState] = useLocalStorage<MasterState>("rpg_master_data", {
+    messages: [],
+    npcs: [],
+    initiativeOrder: []
+  });
   const [showLobby, setShowLobby] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -265,8 +275,15 @@ export default function App() {
           <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
           
           <div className="flex items-center gap-4 z-10 w-full md:w-auto">
-            <div className="w-16 h-16 min-w-[64px] bg-slate-800 rounded-2xl flex items-center justify-center border border-slate-700 shadow-[inset_0_4px_20px_rgba(0,0,0,0.5)]">
-              <User size={32} className="text-indigo-400 drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]" />
+            <div 
+              className="w-16 h-16 min-w-[64px] bg-slate-800 rounded-2xl flex items-center justify-center border border-slate-700 shadow-[inset_0_4px_20px_rgba(0,0,0,0.5)] overflow-hidden cursor-pointer hover:border-indigo-500/50 transition-colors"
+              onClick={() => setIsEditing(true)}
+            >
+              {charInfo.imageUrl ? (
+                <img src={charInfo.imageUrl} alt={charInfo.name} className="w-full h-full object-cover" />
+              ) : (
+                <User size={32} className="text-indigo-400 drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]" />
+              )}
             </div>
             <div>
               <div className="flex items-center gap-3">
@@ -318,6 +335,19 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-3 z-10 flex-wrap justify-end">
+            <button 
+              onClick={() => isMasterMode ? setActiveTab("master") : setShowMasterGate(true)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition-all border ${
+                isMasterMode 
+                ? "bg-amber-600/20 border-amber-500/50 text-amber-400 hover:bg-amber-600/30" 
+                : "bg-slate-800 border-slate-700 text-slate-400 hover:text-white"
+              }`}
+            >
+              <Crown size={18} className={isMasterMode ? "text-amber-400" : ""} />
+              <span className="hidden sm:inline">{isMasterMode ? "Modo Mestre Ativo" : "Modo Mestre"}</span>
+              {isMasterMode && <ShieldCheck size={14} />}
+            </button>
+
             {saveMessage && <span className="text-emerald-400 text-sm font-medium animate-pulse">{saveMessage}</span>}
             
             <button 
@@ -403,6 +433,20 @@ export default function App() {
               >
                 <BookOpen size={18} /> Grimório
               </button>
+              <button
+                onClick={() => setActiveTab("mail")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors whitespace-nowrap ${activeTab === "mail" ? "bg-cyan-600 text-white" : "text-slate-400 hover:text-cyan-200 hover:bg-slate-800"}`}
+              >
+                <Mail size={18} /> Correio
+              </button>
+              {isMasterMode && (
+                <button
+                  onClick={() => setActiveTab("master")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold transition-colors whitespace-nowrap ${activeTab === "master" ? "bg-amber-600 text-white shadow-[0_0_15px_rgba(251,191,36,0.4)]" : "text-amber-500/70 hover:text-amber-400 hover:bg-amber-900/20"}`}
+                >
+                  <Crown size={18} /> Master Dashboard
+                </button>
+              )}
             </div>
 
             {/* Tab Content */}
@@ -422,6 +466,7 @@ export default function App() {
                         name={name}
                         base={data.base}
                         bonus={data.bonus}
+                        gemBonus={gemBonuses.attributes[name] || 0}
                       />
                     ))}
                   </div>
@@ -436,7 +481,8 @@ export default function App() {
                 <StatusTab 
                   currentStatus={currentStatus} 
                   maxStatus={maxStatus} 
-                  onChange={handleStatusChange} 
+                  onChange={handleStatusChange}
+                  bonusBreakdown={statBreakdown}
                 />
               )}
 
@@ -466,6 +512,21 @@ export default function App() {
               )}
               {activeTab === "journal" && (
                 <JournalTab notes={journalNotes} onChange={setJournalNotes} />
+              )}
+              {activeTab === "mail" && (
+                <MailSystem 
+                  messages={masterState.messages} 
+                  setMasterState={setMasterState}
+                  charName={charInfo.name}
+                  isMaster={isMasterMode}
+                />
+              )}
+              {isMasterMode && activeTab === "master" && (
+                <MasterDashboard 
+                  masterState={masterState}
+                  setMasterState={setMasterState}
+                  charInfo={charInfo}
+                />
               )}
             </div>
           </div>
@@ -504,6 +565,19 @@ export default function App() {
           onClose={() => setIsEditing(false)}
         />
       )}
+
+      <AnimatePresence>
+        {showMasterGate && (
+          <MasterGate 
+            onUnlock={() => {
+              setIsMasterMode(true);
+              setShowMasterGate(false);
+              setActiveTab("master");
+            }} 
+            onClose={() => setShowMasterGate(false)} 
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

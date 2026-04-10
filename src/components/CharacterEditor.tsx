@@ -29,33 +29,63 @@ export function CharacterEditor({ charInfo, setCharInfo, attributes, setAttribut
         </div>
 
         <div className="p-6 overflow-y-auto space-y-8">
-          {/* Info Básica */}
+          {/* Foto e Info Básica */}
           <section>
-            <h3 className="text-lg font-semibold text-indigo-400 mb-4 border-b border-slate-800 pb-2">Informações Básicas</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">Nome</label>
-                <input type="text" value={charInfo.name} onChange={e => handleCharChange("name", e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white" />
+            <h3 className="text-lg font-semibold text-indigo-400 mb-4 border-b border-slate-800 pb-2">Identidade Visual</h3>
+            <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
+              <div className="relative group">
+                <div className="w-32 h-32 bg-slate-800 rounded-3xl border-2 border-slate-700 overflow-hidden shadow-2xl flex items-center justify-center">
+                  {charInfo.imageUrl ? (
+                    <img src={charInfo.imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <User size={48} className="text-slate-600" />
+                  )}
+                </div>
+                <label className="absolute inset-0 flex items-center justify-center bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer rounded-3xl">
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    className="hidden" 
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          handleCharChange("imageUrl", reader.result as string);
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }} 
+                  />
+                  <div className="text-white text-xs font-bold text-center p-2">Alterar Foto</div>
+                </label>
+                {charInfo.imageUrl && (
+                  <button 
+                    onClick={() => handleCharChange("imageUrl", "")}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full shadow-lg hover:bg-red-600 transition-colors"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
               </div>
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">Nível Total</label>
-                <input type="number" value={charInfo.level} onChange={e => handleCharChange("level", parseInt(e.target.value) || 0)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white" />
-              </div>
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">Raça / Espécie</label>
-                <input type="text" value={charInfo.race} onChange={e => handleCharChange("race", e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white" />
-              </div>
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">Constelação / Signo</label>
-                <input type="text" value={charInfo.constellation} onChange={e => handleCharChange("constellation", e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white" />
-              </div>
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">Altura (cm)</label>
-                <input type="number" value={charInfo.height} onChange={e => handleCharChange("height", parseInt(e.target.value) || 0)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white" />
-              </div>
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">Peso (kg)</label>
-                <input type="number" value={charInfo.weight} onChange={e => handleCharChange("weight", parseInt(e.target.value) || 0)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white" />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 w-full">
+                <div>
+                  <label className="block text-sm text-slate-400 mb-1">Nome</label>
+                  <input type="text" value={charInfo.name} onChange={e => handleCharChange("name", e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white" />
+                </div>
+                <div>
+                  <label className="block text-sm text-slate-400 mb-1">Nível Total</label>
+                  <input type="number" value={charInfo.level} onChange={e => handleCharChange("level", parseInt(e.target.value) || 0)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white" />
+                </div>
+                <div>
+                  <label className="block text-sm text-slate-400 mb-1">Raça / Espécie</label>
+                  <input type="text" value={charInfo.race} onChange={e => handleCharChange("race", e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white" />
+                </div>
+                <div>
+                  <label className="block text-sm text-slate-400 mb-1">Altura (cm)</label>
+                  <input type="number" value={charInfo.height} onChange={e => handleCharChange("height", parseInt(e.target.value) || 0)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white" />
+                </div>
               </div>
             </div>
           </section>

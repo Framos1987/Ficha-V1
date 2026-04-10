@@ -364,6 +364,55 @@ export function ArsenalTab({ inventory, setInventory, equippedArmor, setEquipped
     setEquippedAccessories(newEquipped);
   };
 
+  const handleOptimizeGems = () => {
+    if (!equippedAccessories || !setEquippedAccessories || !setInventory) return;
+
+    // 1. Get all gems currently in inventory
+    const allGems = [...gemItems].sort((a, b) => (b.gemEffect?.value || 0) - (a.gemEffect?.value || 0));
+    
+    // 2. Clear all socketed gems from all accessories (equipped or not)
+    const updatedInventory = inventory.map(item => {
+      if (item.category === 'Acessórios') {
+        return { ...item, socketedGemIds: [] };
+      }
+      return item;
+    });
+
+    const newEquipped = { ...equippedAccessories };
+    let gemIndex = 0;
+
+    // 3. Redistribute gems to EQUIPPED accessories only, prioritizing by item tier
+    const slots = Object.keys(newEquipped).sort((a, b) => {
+      const itemA = newEquipped[a as AccessorySlot];
+      const itemB = newEquipped[b as AccessorySlot];
+      return (itemB?.requiredTier || 0) - (itemA?.requiredTier || 0);
+    });
+
+    slots.forEach(slotKey => {
+      const slot = slotKey as AccessorySlot;
+      const item = newEquipped[slot];
+      if (!item || !item.gemCapacity) return;
+
+      const capacity = item.gemCapacity;
+      const socketedIds: string[] = [];
+
+      for (let i = 0; i < capacity && gemIndex < allGems.length; i++) {
+        socketedIds.push(allGems[gemIndex].id);
+        gemIndex++;
+      }
+
+      const updatedItem = { ...item, socketedGemIds: socketedIds };
+      newEquipped[slot] = updatedItem;
+
+      // Sync back to the temporary updated inventory
+      const invIdx = updatedInventory.findIndex(i => i.id === item.id);
+      if (invIdx !== -1) updatedInventory[invIdx] = updatedItem;
+    });
+
+    setEquippedAccessories(newEquipped);
+    setInventory(updatedInventory);
+  };
+
   // ── Penalty helpers ────────────────────────
   const getItemRequiredTier = (item: InventoryItem): number => {
     // Try requiredTier field first (set by catalog on new items)
@@ -480,7 +529,7 @@ export function ArsenalTab({ inventory, setInventory, equippedArmor, setEquipped
 
   const isTwoHanded = (item: InventoryItem | null): boolean => {
     if (!item) return false;
-    return /arco|longbow|shortbow/i.test(item.name);
+    return /arco|longbow|shortbow|yumi/i.test(item.name);
   };
 
   const handleEquipWeapon = (slot: 'mainHand' | 'offHand', itemId: string) => {
@@ -749,12 +798,22 @@ export function ArsenalTab({ inventory, setInventory, equippedArmor, setEquipped
                   <Crown size={20} className="text-pink-400" />
                   Acessórios Equipados e Engaste
                 </h3>
-                <button
-                  onClick={handleEquipAllAccessories}
-                  className="px-4 py-2 bg-pink-600/20 hover:bg-pink-600/40 text-pink-400 border border-pink-500/30 rounded-xl text-sm font-bold transition-colors shadow-inner flex items-center"
-                >
-                  ✨ Equipar Tudo (Otimizado)
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleEquipAllAccessories}
+                    className="px-4 py-2 bg-pink-600/20 hover:bg-pink-600/40 text-pink-400 border border-pink-500/30 rounded-xl text-sm font-bold transition-colors shadow-inner flex items-center"
+                    title="Preenche slots vazios com os melhores itens"
+                  >
+                    ✨ Equipar Itens
+                  </button>
+                  <button
+                    onClick={handleOptimizeGems}
+                    className="px-4 py-2 bg-purple-600/20 hover:bg-purple-600/40 text-purple-400 border border-purple-500/30 rounded-xl text-sm font-bold transition-colors shadow-inner flex items-center gap-2"
+                    title="Redistribui as melhores gemas entre os itens equipados"
+                  >
+                    <Gem size={14} /> Otimizar Gemas
+                  </button>
+                </div>
               </div>
 
               <div className="flex flex-col lg:grid lg:grid-cols-[1fr_300px_1fr] xl:grid-cols-[1fr_400px_1fr] gap-6 items-start relative z-10">
@@ -794,9 +853,27 @@ export function ArsenalTab({ inventory, setInventory, equippedArmor, setEquipped
                           ))}
                         </select>
                         {equippedItem && (
-                          <div className="flex justify-between items-center text-[10px] text-slate-500 px-1 mt-1">
-                            <span>Gemas: {equippedItem.socketedGemIds?.length || 0}/{equippedItem.gemCapacity || 0}</span>
-                            <button onClick={() => setSocketingSlot(slot)} className="text-pink-400 hover:text-pink-300 underline underline-offset-2">Modificar</button>
+                          <div className="space-y-2 mt-2">
+                             {/* Gem Display List */}
+                            {equippedItem.socketedGemIds && equippedItem.socketedGemIds.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mb-2">
+                                {equippedItem.socketedGemIds.map((gemId, idx) => {
+                                  const gem = inventory.find(i => i.id === gemId);
+                                  if (!gem) return null;
+                                  return (
+                                    <div key={idx} className="flex items-center gap-1 bg-pink-900/20 border border-pink-500/30 px-1.5 py-0.5 rounded text-[9px] text-pink-300">
+                                      <Gem size={8} />
+                                      <span>{gem.gemEffect?.target} +{gem.gemEffect?.value}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+
+                            <div className="flex justify-between items-center text-[10px] text-slate-500 px-1">
+                              <span>Gemas: {equippedItem.socketedGemIds?.length || 0}/{equippedItem.gemCapacity || 0}</span>
+                              <button onClick={() => setSocketingSlot(slot)} className="text-pink-400 hover:text-pink-300 underline underline-offset-2">Modificar</button>
+                            </div>
                           </div>
                         )}
                       </div>

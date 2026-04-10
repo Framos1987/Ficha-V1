@@ -4,9 +4,10 @@ export interface AttributeRowProps {
   name: string;
   base: number;
   bonus: number;
+  gemBonus?: number;
 }
 
-export const AttributeRow: React.FC<AttributeRowProps> = ({ name, base, bonus }) => {
+export const AttributeRow: React.FC<AttributeRowProps> = ({ name, base, bonus, gemBonus = 0 }) => {
   const total = base + bonus;
 
   return (
@@ -15,11 +16,12 @@ export const AttributeRow: React.FC<AttributeRowProps> = ({ name, base, bonus })
         <h3 className="font-semibold text-slate-200">{name}</h3>
         <div className="text-xs text-slate-500">
           Base: {base} | Bônus: {bonus > 0 ? `+${bonus}` : bonus}
+          {gemBonus > 0 && <span className="text-pink-400 font-bold ml-1">(+{gemBonus} Gemas)</span>}
         </div>
       </div>
       
       <div className="flex items-center gap-4">
-        <div className="text-2xl font-bold text-indigo-400 w-12 text-center">
+        <div className={`text-2xl font-bold w-12 text-center transition-colors ${gemBonus > 0 ? "text-pink-400 drop-shadow-[0_0_8px_rgba(244,114,182,0.5)]" : "text-indigo-400"}`}>
           {total}
         </div>
       </div>

@@ -5,9 +5,10 @@ interface StatusTabProps {
   currentStatus: Record<string, number>;
   maxStatus: Record<string, number>;
   onChange: (key: string, val: number) => void;
+  bonusBreakdown?: Record<string, { base: number; bonus: number; label: string }>;
 }
 
-export function StatusTab({ currentStatus, maxStatus, onChange }: StatusTabProps) {
+export function StatusTab({ currentStatus, maxStatus, onChange, bonusBreakdown = {} }: StatusTabProps) {
   const statusConfig = [
     { key: "vida", label: "Vida", color: "red" as const, icon: <Heart size={16} /> },
     { key: "mana", label: "Mana", color: "blue" as const, icon: <Zap size={16} /> },

@@ -21,9 +21,9 @@ export function DerivedStats({ stats, bonusBreakdown = {} }: DerivedStatsProps) 
                 <div className="flex flex-col gap-0.5">
                   <div className="flex items-baseline gap-1">
                     <span className="text-2xl font-bold text-emerald-400 font-mono">{breakdown.base + breakdown.bonus}</span>
-                    <span className="text-xs text-slate-500 font-mono">({breakdown.base}+<span className="text-indigo-400">{breakdown.bonus}</span>)</span>
+                    <span className="text-xs text-slate-500 font-mono">({breakdown.base}+<span className={breakdown.label.includes("Gema") ? "text-pink-400" : "text-indigo-400"}>{breakdown.bonus}</span>)</span>
                   </div>
-                  <span className="text-[10px] text-indigo-400/70 italic truncate">{breakdown.label}</span>
+                  <span className={`text-[10px] italic truncate ${breakdown.label.includes("Gema") ? "text-pink-400/70 font-bold" : "text-indigo-400/70"}`}>{breakdown.label}</span>
                 </div>
               ) : (
                 <span className="text-2xl font-bold text-emerald-400 font-mono">{value}</span>

@@ -565,8 +565,6 @@ export default function App() {
               )}
             </div>
           </div>
-
-          </div>
         </div>
 
         <CombatSummary equippedWeapons={equippedWeapons} equippedArmor={equippedArmor} inventory={inventory} />

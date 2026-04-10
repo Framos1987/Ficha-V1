@@ -3,6 +3,8 @@ export interface CharacterInfo {
   level: number;
   race: string;
   constellation: string;
+  gender?: 'XY' | 'XX' | '∅∅';
+  humanBonuses?: string[]; // Array of 3 attribute names
   height: number;
   weight: number;
   physicalLevel?: number;
@@ -24,10 +26,12 @@ export interface JournalNote {
 export interface NPC {
   id: string;
   name: string;
-  vida: number;
-  maxVida: number;
+  health: number;
+  maxHealth: number;
   mana: number;
   maxMana: number;
+  strength: number;      // For capacity calculations
+  inventory: InventoryItem[];
   notes: string;
 }
 

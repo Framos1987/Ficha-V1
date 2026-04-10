@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Users, Swords, Plus, Trash2, Heart, Zap, User, Dice5, ChevronRight, Save } from "lucide-react";
+import { Users, Swords, Plus, Trash2, Heart, Zap, User, Dice5, ChevronRight, Save, Shield, Backpack, Info } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { MasterState, NPC, CharacterInfo } from "../types";
+import { NPCInventory } from "./NPCInventory";
 
 interface MasterDashboardProps {
   masterState: MasterState;
@@ -12,6 +13,7 @@ interface MasterDashboardProps {
 export function MasterDashboard({ masterState, setMasterState, charInfo }: MasterDashboardProps) {
   const [activeSubTab, setActiveSubTab] = useState<"npcs" | "initiative">("npcs");
   const [editingNpc, setEditingNpc] = useState<NPC | null>(null);
+  const [inspectorTab, setInspectorTab] = useState<"stats" | "inventory">("stats");
 
   const handleAddNpc = () => {
     const newNpc: NPC = {
@@ -21,10 +23,13 @@ export function MasterDashboard({ masterState, setMasterState, charInfo }: Maste
       maxHealth: 100,
       mana: 50,
       maxMana: 50,
+      strength: 10,
+      inventory: [],
       notes: ""
     };
     setMasterState(prev => ({ ...prev, npcs: [...prev.npcs, newNpc] }));
     setEditingNpc(newNpc);
+    setInspectorTab("stats");
   };
 
   const handleUpdateNpc = (npc: NPC) => {
@@ -44,12 +49,11 @@ export function MasterDashboard({ masterState, setMasterState, charInfo }: Maste
 
   const handleRollInitiative = () => {
     setMasterState(prev => {
-      const rolledNpcs = prev.npcs.map(n => ({ ...n, initiative: Math.floor(Math.random() * 20) + 1 }));
-      const sortedIds = [...rolledNpcs]
-        .sort((a, b) => (b.initiative || 0) - (a.initiative || 0))
-        .map(n => n.id);
+      const rolledNpcs = prev.npcs.map(n => {
+        const initiativeVal = (prev.npcs.find(x => x.id === n.id)?.initiative ?? 0); // Keep existing if needed, or re-roll
+        return { ...n, initiative: Math.floor(Math.random() * 20) + 1 };
+      });
       
-      // Add the player character to the order as well
       const playerInitiative = Math.floor(Math.random() * 20) + 1;
       const orderWithPlayer = [...rolledNpcs.map(n => ({ id: n.id, val: n.initiative || 0 })), { id: "player", val: playerInitiative }]
         .sort((a, b) => b.val - a.val)
@@ -104,12 +108,15 @@ export function MasterDashboard({ masterState, setMasterState, charInfo }: Maste
                         <Trash2 size={14} />
                       </button>
                     </div>
-                    <div className="grid grid-cols-2 gap-3 text-xs">
-                      <div className="flex items-center gap-2 text-emerald-400">
-                        <Heart size={12} /> {npc.health}/{npc.maxHealth}
+                    <div className="grid grid-cols-3 gap-2 text-[10px] uppercase font-bold tracking-wider">
+                      <div className="flex items-center gap-1.5 text-emerald-400">
+                        <Heart size={10} /> {npc.health}
                       </div>
-                      <div className="flex items-center gap-2 text-cyan-400">
-                        <Zap size={12} /> {npc.mana}/{npc.maxMana}
+                      <div className="flex items-center gap-1.5 text-cyan-400">
+                        <Zap size={10} /> {npc.mana}
+                      </div>
+                      <div className="flex items-center gap-1.5 text-orange-400">
+                        <Shield size={10} /> STR {npc.strength}
                       </div>
                     </div>
                   </div>
@@ -152,7 +159,7 @@ export function MasterDashboard({ masterState, setMasterState, charInfo }: Maste
                             {idx + 1}
                           </div>
                           <div>
-                            <div className="font-bold flex items-center gap-2">
+                            <div className="font-bold flex items-center gap-2 text-white">
                               {isPlayer ? charInfo.name : npc?.name}
                               {isPlayer && <User size={14} className="text-indigo-400" />}
                             </div>
@@ -163,7 +170,7 @@ export function MasterDashboard({ masterState, setMasterState, charInfo }: Maste
                         </div>
                         <div className="flex items-center gap-4">
                           <div className="text-2xl font-black text-slate-600 tabular-nums">
-                            {isPlayer ? "—" : npc?.initiative}
+                            {isPlayer ? "—" : (npc as any).initiative}
                           </div>
                           <ChevronRight className="text-slate-800" />
                         </div>
@@ -177,121 +184,147 @@ export function MasterDashboard({ masterState, setMasterState, charInfo }: Maste
         </div>
 
         {/* Sidebar: Inspector */}
-        <div className="lg:col-span-4 bg-slate-900/60 p-6 rounded-3xl border border-slate-700/50 shadow-xl h-fit sticky top-6">
-          <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-             Propriedades do NPC
-          </h3>
-          
-          <AnimatePresence mode="wait">
-            {editingNpc ? (
-              <motion.div 
-                key={editingNpc.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="space-y-5"
-              >
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Nome</label>
-                  <input 
-                    type="text" 
-                    value={editingNpc.name} 
-                    onChange={e => {
-                      const updated = { ...editingNpc, name: e.target.value };
-                      setEditingNpc(updated);
-                      handleUpdateNpc(updated);
-                    }}
-                    className="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2 text-white outline-none focus:border-amber-500 transition-colors"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-emerald-500/70 uppercase mb-1">Vida Atual</label>
-                    <input 
-                      type="number" 
-                      value={editingNpc.health} 
-                      onChange={e => {
-                        const updated = { ...editingNpc, health: parseInt(e.target.value) || 0 };
-                        setEditingNpc(updated);
-                        handleUpdateNpc(updated);
-                      }}
-                      className="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2 text-white outline-none focus:border-emerald-500 transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-emerald-500/30 uppercase mb-1">Vida Máx</label>
-                    <input 
-                      type="number" 
-                      value={editingNpc.maxHealth} 
-                      onChange={e => {
-                        const updated = { ...editingNpc, maxHealth: parseInt(e.target.value) || 0 };
-                        setEditingNpc(updated);
-                        handleUpdateNpc(updated);
-                      }}
-                      className="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2 text-slate-400 outline-none focus:border-emerald-500 transition-colors"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-cyan-500/70 uppercase mb-1">Mana Atual</label>
-                    <input 
-                      type="number" 
-                      value={editingNpc.mana} 
-                      onChange={e => {
-                        const updated = { ...editingNpc, mana: parseInt(e.target.value) || 0 };
-                        setEditingNpc(updated);
-                        handleUpdateNpc(updated);
-                      }}
-                      className="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2 text-white outline-none focus:border-cyan-500 transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-cyan-500/30 uppercase mb-1">Mana Máx</label>
-                    <input 
-                      type="number" 
-                      value={editingNpc.maxMana} 
-                      onChange={e => {
-                        const updated = { ...editingNpc, maxMana: parseInt(e.target.value) || 0 };
-                        setEditingNpc(updated);
-                        handleUpdateNpc(updated);
-                      }}
-                      className="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2 text-slate-400 outline-none focus:border-cyan-500 transition-colors"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Notas / Habilidades</label>
-                  <textarea 
-                    rows={6}
-                    value={editingNpc.notes} 
-                    onChange={e => {
-                      const updated = { ...editingNpc, notes: e.target.value };
-                      setEditingNpc(updated);
-                      handleUpdateNpc(updated);
-                    }}
-                    className="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-3 text-white outline-none focus:border-amber-500 transition-colors resize-none text-sm"
-                  />
-                </div>
-
+        <div className="lg:col-span-4 bg-slate-900/60 rounded-3xl border border-slate-700/50 shadow-xl h-fit sticky top-6 overflow-hidden">
+          {editingNpc ? (
+            <div className="flex flex-col">
+              {/* Tabs */}
+              <div className="flex border-b border-slate-800">
                 <button 
-                  onClick={() => setEditingNpc(null)}
-                  className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition-all border border-slate-700 flex items-center justify-center gap-2"
+                  onClick={() => setInspectorTab("stats")}
+                  className={`flex-1 py-4 text-xs font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${inspectorTab === "stats" ? "bg-amber-600/20 text-amber-400 border-b-2 border-amber-500" : "text-slate-500 hover:text-slate-300"}`}
                 >
-                  <Save size={18} /> Salvar e Fechar
+                  <Info size={14} /> Atributos
                 </button>
-
-              </motion.div>
-            ) : (
-              <div className="text-center py-20 text-slate-600 flex flex-col items-center">
-                <Users size={48} className="mb-4 opacity-10" />
-                <p className="text-sm">Selecione um NPC para editar suas estatísticas e notas.</p>
+                <button 
+                  onClick={() => setInspectorTab("inventory")}
+                  className={`flex-1 py-4 text-xs font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${inspectorTab === "inventory" ? "bg-amber-600/20 text-amber-400 border-b-2 border-amber-500" : "text-slate-500 hover:text-slate-300"}`}
+                >
+                  <Backpack size={14} /> Inventário
+                </button>
               </div>
-            )}
-          </AnimatePresence>
+
+              <div className="p-6">
+                <AnimatePresence mode="wait">
+                  {inspectorTab === "stats" ? (
+                    <motion.div 
+                      key="stats"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="space-y-4"
+                    >
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Nome</label>
+                        <input 
+                          type="text" 
+                          value={editingNpc.name} 
+                          onChange={e => {
+                            const updated = { ...editingNpc, name: e.target.value };
+                            setEditingNpc(updated);
+                            handleUpdateNpc(updated);
+                          }}
+                          className="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2 text-white outline-none focus:border-amber-500 transition-colors"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-emerald-500/70 uppercase mb-1">Vida Atual</label>
+                          <input 
+                            type="number" 
+                            value={editingNpc.health} 
+                            onChange={e => {
+                              const updated = { ...editingNpc, health: parseInt(e.target.value) || 0 };
+                              setEditingNpc(updated);
+                              handleUpdateNpc(updated);
+                            }}
+                            className="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2 text-white outline-none focus:border-emerald-500 transition-colors"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-emerald-500/30 uppercase mb-1">Vida Máx</label>
+                          <input 
+                            type="number" 
+                            value={editingNpc.maxHealth} 
+                            onChange={e => {
+                              const updated = { ...editingNpc, maxHealth: parseInt(e.target.value) || 0 };
+                              setEditingNpc(updated);
+                              handleUpdateNpc(updated);
+                            }}
+                            className="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2 text-slate-400 outline-none"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-cyan-500/70 uppercase mb-1">Mana Atual</label>
+                          <input 
+                            type="number" 
+                            value={editingNpc.mana} 
+                            onChange={e => {
+                              const updated = { ...editingNpc, mana: parseInt(e.target.value) || 0 };
+                              setEditingNpc(updated);
+                              handleUpdateNpc(updated);
+                            }}
+                            className="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2 text-white outline-none focus:border-cyan-500 transition-colors"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-orange-500/70 uppercase mb-1">Força (STR)</label>
+                          <input 
+                            type="number" 
+                            value={editingNpc.strength} 
+                            onChange={e => {
+                              const updated = { ...editingNpc, strength: parseInt(e.target.value) || 0 };
+                              setEditingNpc(updated);
+                              handleUpdateNpc(updated);
+                            }}
+                            className="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2 text-white outline-none focus:border-orange-500 transition-colors"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Notas / Habilidades</label>
+                        <textarea 
+                          rows={4}
+                          value={editingNpc.notes} 
+                          onChange={e => {
+                            const updated = { ...editingNpc, notes: e.target.value };
+                            setEditingNpc(updated);
+                            handleUpdateNpc(updated);
+                          }}
+                          className="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-3 text-white outline-none focus:border-amber-500 transition-colors resize-none text-xs"
+                        />
+                      </div>
+
+                      <button 
+                        onClick={() => setEditingNpc(null)}
+                        className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition-all border border-slate-700 flex items-center justify-center gap-2 text-xs"
+                      >
+                        <Save size={16} /> Salvar e Fechar
+                      </button>
+                    </motion.div>
+                  ) : (
+                    <motion.div 
+                      key="inventory"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                    >
+                      <NPCInventory npc={editingNpc} onUpdate={handleUpdateNpc} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+          ) : (
+            <div className="p-12 text-center text-slate-600 flex flex-col items-center">
+              <Users size={48} className="mb-4 opacity-10" />
+              <p className="text-sm">Selecione um NPC para gerenciar suas estatísticas e itens.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

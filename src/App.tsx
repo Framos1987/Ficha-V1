@@ -363,10 +363,10 @@ export default function App() {
         </header>
 
         {/* Main Tabs */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className={`${(activeTab === "inventory" || activeTab === "arsenal" || activeTab === "aptidoes" || activeTab === "journal" || activeTab === "mail" || activeTab === "master") ? "lg:col-span-12" : "lg:col-span-8"} space-y-6`}>
+        <div className="grid grid-cols-1 gap-6">
+          <div className="space-y-6">
             
-            <div className="flex gap-2 bg-slate-900 p-2 rounded-2xl border border-slate-800 overflow-x-auto hide-scrollbar scroll-smooth">
+            <div className="flex gap-2 bg-slate-900 p-2 rounded-2xl border border-slate-800 overflow-x-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent scroll-smooth pb-3">
               <button
                 onClick={() => setActiveTab("attributes")}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors whitespace-nowrap ${activeTab === "attributes" ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"}`}
@@ -490,11 +490,7 @@ export default function App() {
             </div>
           </div>
 
-          {(activeTab !== "inventory" && activeTab !== "arsenal" && activeTab !== "aptidoes" && activeTab !== "journal" && activeTab !== "mail" && activeTab !== "master") && (
-            <div className="lg:col-span-4 space-y-6">
-              <Inventory items={inventory} setItems={setInventory} maxLoad={Number(derived["Carga Máxima"]) || 0} />
-            </div>
-          )}
+          </div>
         </div>
 
         <CombatSummary equippedWeapons={equippedWeapons} equippedArmor={equippedArmor} inventory={inventory} />

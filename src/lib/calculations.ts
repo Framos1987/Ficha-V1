@@ -10,8 +10,8 @@ export function calculateStats(
 ) {
   // ── Rune Bonuses (active body runes only — object runes are informational) ──
   const runeBonuses = {
-    vida_percent: 0,           // Conservação Ser
-    defesa_universal_percent: 0, // Preservação
+    vida_mult: 1.0,            // Conservação Ser
+    defesa_universal_mult: 1.0, // Preservação
     temperatura_maxima_flat: 0,  // Aquecimento Ser
     temperatura_minima_flat: 0,  // Resfriamento Ser
   };
@@ -23,9 +23,9 @@ export function calculateStats(
       if (!item || !item.runeEffect) return;
       const eff = item.runeEffect;
       if (eff.type === 'status_percent' && eff.target === 'vida') {
-        runeBonuses.vida_percent += eff.value;
+        runeBonuses.vida_mult *= (1 + eff.value / 100);
       } else if (eff.type === 'derived_percent' && eff.target === 'Defesa Universal') {
-        runeBonuses.defesa_universal_percent += eff.value;
+        runeBonuses.defesa_universal_mult *= (1 + eff.value / 100);
       } else if (eff.type === 'derived_flat' && eff.target === 'Temperatura Máxima') {
         runeBonuses.temperatura_maxima_flat += eff.value;
       } else if (eff.type === 'derived_flat' && eff.target === 'Temperatura Mínima') {
@@ -231,7 +231,7 @@ export function calculateStats(
     "Defesa Universal": (() => {
       const base = Math.floor((cst + con + von) / 50);
       const gemVal = gemBonuses.protetoras["Universal"] || 0;
-      const runeVal = runeBonuses.defesa_universal_percent > 0 ? Math.floor(base * runeBonuses.defesa_universal_percent / 100) : 0;
+      const runeVal = runeBonuses.defesa_universal_mult > 1.0 ? Math.floor((base + gemVal) * (runeBonuses.defesa_universal_mult - 1.0)) : 0;
       return setBd("Defesa Universal", base, { val: gemVal, label: "Gema" }, { val: runeVal, label: "Runa" });
     })(),
     "Desconto": Math.min(100, car) + "%",
@@ -291,7 +291,8 @@ export function calculateStats(
     vida: (() => {
       const base = cst * 2;
       const gemVal = gemBonuses.tanque["Vida"] || 0;
-      const runeVal = runeBonuses.vida_percent > 0 ? Math.floor(base * runeBonuses.vida_percent / 100) : 0;
+      const afterGem = base + gemVal;
+      const runeVal = runeBonuses.vida_mult > 1.0 ? Math.floor(afterGem * (runeBonuses.vida_mult - 1.0)) : 0;
       return setBd("Vida Máx", base, { val: gemVal, label: "Gema" }, { val: runeVal, label: "Runa" });
     })(),
     sanidade: setBd("Sanidade Máx", intu * 2, { val: gemBonuses.tanque["Sanidade"] || 0, label: "Gema" }),

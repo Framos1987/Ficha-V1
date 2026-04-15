@@ -529,7 +529,6 @@ export function ItemCatalog({ onClose, onAddItem }: ItemCatalogProps) {
     if (!selectedRuneEntry) return;
     const effect = selectedRuneEntry.getPotenciaEffect(selectedRunePotenciaIdx);
     const potenciaName = RUNE_POTENCIAS[selectedRunePotenciaIdx];
-    const colors = RUNE_COLOR_CLASSES[selectedRuneEntry.color];
     const displayName = `${selectedRuneEntry.baseName} (${selectedRuneEntry.anchor}) — ${potenciaName}`;
     setCart(prev => [...prev, {
       name: displayName,

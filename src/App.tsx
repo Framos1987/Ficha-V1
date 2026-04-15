@@ -18,7 +18,7 @@ import { MasterGate } from "./components/MasterGate";
 import { MailSystem } from "./components/MailSystem";
 import { MasterDashboard } from "./components/MasterDashboard";
 import { calculateStats } from "./lib/calculations";
-import { CharacterInfo, Attributes, InventoryItem, EquippedArmor, EquippedWeapons, EquippedAccessories, AptidoesState, JournalNote, MasterState } from "./types";
+import { CharacterInfo, Attributes, InventoryItem, EquippedArmor, EquippedWeapons, EquippedAccessories, AptidoesState, JournalNote, MasterState, EquippedRunes } from "./types";
 import { AnimatePresence } from "motion/react";
 import { supabase } from "./lib/supabase";
 
@@ -139,6 +139,10 @@ export default function App() {
   const [aptidoes, setAptidoes] = useLocalStorage<AptidoesState>("rpg_aptidoes", {});
   const [journalNotes, setJournalNotes] = useLocalStorage<JournalNote[]>("rpg_journal_notes", []);
   const [hasCharacter, setHasCharacter] = useLocalStorage<boolean>("rpg_has_character", false);
+  const [equippedRunes, setEquippedRunes] = useLocalStorage<EquippedRunes>("rpg_equipped_runes", {
+    bodyRunes: [],
+    objectRunes: [],
+  });
 
   const [activeTab, setActiveTab] = useState<"attributes" | "derived" | "status" | "inventory" | "arsenal" | "aptidoes" | "journal" | "mail" | "master">("attributes");
   const [isEditing, setIsEditing] = useState(false);
@@ -157,7 +161,7 @@ export default function App() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Calculate derived stats and max status dynamically
-  const { derived, maxStatus, computedAttributes, statBreakdown, gemBonuses } = useMemo(() => calculateStats(attributes, charInfo, equippedAccessories, inventory, aptidoes as Record<string, number>), [attributes, charInfo, equippedAccessories, inventory, aptidoes]);
+  const { derived, maxStatus, computedAttributes, statBreakdown, gemBonuses } = useMemo(() => calculateStats(attributes, charInfo, equippedAccessories, inventory, aptidoes as Record<string, number>, equippedRunes), [attributes, charInfo, equippedAccessories, inventory, aptidoes, equippedRunes]);
 
   // ── Cloud Sync Logic ──
   const syncToCloud = async () => {
@@ -174,6 +178,7 @@ export default function App() {
       currentStatus,
       aptidoes,
       journalNotes,
+      equippedRunes,
       lastSync: Date.now()
     };
 
@@ -217,6 +222,7 @@ export default function App() {
     if (d.currentStatus) setCurrentStatus(d.currentStatus);
     if (d.aptidoes) setAptidoes(d.aptidoes);
     if (d.journalNotes) setJournalNotes(d.journalNotes);
+    if (d.equippedRunes) setEquippedRunes(d.equippedRunes);
     
     setHasCharacter(true);
     setCloudStatus("success");
@@ -245,6 +251,7 @@ export default function App() {
       rpg_current_status: localStorage.getItem("rpg_current_status"),
       rpg_aptidoes: localStorage.getItem("rpg_aptidoes"),
       rpg_journal_notes: localStorage.getItem("rpg_journal_notes"),
+      rpg_equipped_runes: localStorage.getItem("rpg_equipped_runes"),
       rpg_has_character: "true",
     };
     const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
@@ -319,6 +326,7 @@ export default function App() {
           setCurrentStatus({ vida: 0, sanidade: 0, vigor: 0, mana: 0, poder: 0, estomago: 0, figado: 0, estudo: 0, pratica: 0, treino: 0, extrapolar: 0 });
           setAptidoes({});
           setJournalNotes([]);
+          setEquippedRunes({ bodyRunes: [], objectRunes: [] });
           setHasCharacter(true);
           setShowLobby(false); 
         }}
@@ -558,6 +566,8 @@ export default function App() {
                   equippedAccessories={equippedAccessories}
                   setEquippedAccessories={setEquippedAccessories}
                   aptidoes={aptidoes as Record<string, number>}
+                  equippedRunes={equippedRunes}
+                  setEquippedRunes={setEquippedRunes}
                 />
               )}
 

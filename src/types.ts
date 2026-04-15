@@ -3,7 +3,7 @@ export interface CharacterInfo {
   level: number;
   race: string;
   constellation: string;
-  gender?: 'XY' | 'XX' | '∅∅';
+  gender?: 'XY' | 'XX' | '\u2205\u2205';
   humanBonuses?: string[]; // Array of 3 attribute names
   height: number;
   weight: number;
@@ -51,15 +51,74 @@ export interface MasterState {
 export type AttributeData = { base: number; bonus: number };
 export type Attributes = Record<string, AttributeData>;
 
-export type AccessorySlot = 'Cabeça' | 'Garganta' | 'Ouvido E' | 'Ouvido D' | 'Antebraço' | 'Mão' | 'Pulso E' | 'Pulso D' | 'Dedo 1' | 'Dedo 2' | 'Dedo 3' | 'Dedo 4' | 'Dedo 5' | 'Dedo 6' | 'Dedo 7' | 'Dedo 8' | 'Dedo 9' | 'Dedo 10' | 'Cintura' | 'Tornozelo E' | 'Tornozelo D';
+export type AccessorySlot =
+  | 'Cabe\u00e7a'
+  | 'Garganta'
+  | 'Ouvido E'
+  | 'Ouvido D'
+  | 'Antebra\u00e7o'
+  | 'M\u00e3o'
+  | 'Pulso E'
+  | 'Pulso D'
+  | 'Dedo 1'
+  | 'Dedo 2'
+  | 'Dedo 3'
+  | 'Dedo 4'
+  | 'Dedo 5'
+  | 'Dedo 6'
+  | 'Dedo 7'
+  | 'Dedo 8'
+  | 'Dedo 9'
+  | 'Dedo 10'
+  | 'Cintura'
+  | 'Tornozelo E'
+  | 'Tornozelo D';
 
 export interface GemEffect {
   category: string; // e.g., 'Ampliadoras (Atributos)', 'Indutoras'
   target: string;   // e.g., 'Carisma', 'Vital'
   value: number;    // The numerical effect value
   runas: number;    // Runa cost
-  prefix: string;   // e.g., 'Ataques', 'Regeneração'
+  prefix: string;   // e.g., 'Ataques', 'Recupera\u00e7\u00e3o'
 }
+
+// \u2500\u2500 Rune System \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+
+export type RuneAnchor = 'Ser' | 'Objeto';
+
+export type RuneEffectType =
+  | 'status_percent'       // Ex: Vida +X% (Conserva\u00e7\u00e3o Ser)
+  | 'derived_percent'      // Ex: Defesa Universal +X% (Preserva\u00e7\u00e3o)
+  | 'derived_flat'         // Ex: Temperatura M\u00e1xima +X\u00b0C (Aquecimento Ser)
+  | 'object_temp'          // Ex: Temperatura interna do objeto +X\u00b0C
+  | 'object_light_up'      // Ex: Aumenta Lux em raio (Alvorada Objeto)
+  | 'object_light_down'    // Ex: Reduz Lux em raio (Crep\u00fasculo Objeto)
+  | 'aura_light_up'        // Ex: Ser emite mais luz (Alvorada Ser)
+  | 'aura_light_down'      // Ex: Ser absorve luz (Crep\u00fasculo Ser)
+  | 'damage_mult_objects'  // Ex: Dano \u00d7N contra objetos (Destrui\u00e7\u00e3o)
+  | 'kill_chance';         // Ex: X% chance de matar (Morte)
+
+export interface RuneEffect {
+  type: RuneEffectType;
+  target: string;      // Ex: 'vida', 'Defesa Universal', 'Temperatura M\u00e1xima'
+  value: number;       // Numeric magnitude (%, multiplier, \u00b0C, lux, etc.)
+  unit?: string;       // Ex: '%', '\u00b0C', 'lux', 'x'
+  radius?: number;     // For aura runes (meters)
+  description: string; // Human-readable description of the effect
+}
+
+export interface ActiveRune {
+  runeInventoryId: string; // ID of the InventoryItem (rune)
+  active: boolean;          // Toggled on/off
+  appliedToItemId?: string; // For object runes: which inventory item they're on
+}
+
+export interface EquippedRunes {
+  bodyRunes: ActiveRune[];   // Runas no corpo do ser (tatuagens)
+  objectRunes: ActiveRune[]; // Runas em objetos (decalques)
+}
+
+// \u2500\u2500 End Rune System \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
 export interface InventoryItem {
   id: string;
@@ -71,17 +130,36 @@ export interface InventoryItem {
   armorPart?: BodyPart;
   armorLayer?: ArmorLayer;
   requiredAptitude?: string;  // e.g. "Esgrima Civil"
-  requiredTier?: number;       // 1-10 (Novato=1 … Grão Mestre=10)
-  
-  // Acessórios e Gemas
+  requiredTier?: number;       // 1-10 (Novato=1 \u2026 Gr\u00e3o Mestre=10)
+
+  // Acess\u00f3rios e Gemas
   accessorySlot?: string;
   gemCapacity?: number;
-  maxGemTier?: string; // e.g. "E" to "☆☆☆" (we'll compare via arrays or just metadata)
+  maxGemTier?: string;
   gemEffect?: GemEffect;
   socketedGemIds?: string[];
+
+  // Runas
+  runeEffect?: RuneEffect;
+  runeAnchor?: RuneAnchor;       // 'Ser' ou 'Objeto'
+  runePotenciaIndex?: number;    // 0-9
+  runePotenciaName?: string;     // Ex: 'Mundano', 'Supremo'
 }
 
-export type BodyPart = 'Cabeça' | 'Pescoço' | 'Tronco' | 'Ombro' | 'Braço' | 'Cotovelo' | 'Antebraço' | 'Mão' | 'Coxa' | 'Joelho' | 'Perna' | 'Pé';
+export type BodyPart =
+  | 'Cabe\u00e7a'
+  | 'Pesco\u00e7o'
+  | 'Tronco'
+  | 'Ombro'
+  | 'Bra\u00e7o'
+  | 'Cotovelo'
+  | 'Antebra\u00e7o'
+  | 'M\u00e3o'
+  | 'Coxa'
+  | 'Joelho'
+  | 'Perna'
+  | 'P\u00e9';
+
 export type ArmorLayer = 'Interna' | 'Central' | 'Externa';
 
 export type EquippedArmor = {
@@ -95,7 +173,7 @@ export interface EquippedWeapons {
   offHand: InventoryItem | null;
 }
 
-/** Maps aptidão name → proficiency (0-100) */
+/** Maps aptid\u00e3o name \u2192 proficiency (0-100) */
 export type AptidoesState = Record<string, number>;
 
 export type EquippedAccessories = {

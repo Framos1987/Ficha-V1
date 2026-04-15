@@ -1,12 +1,39 @@
-import { Attributes, CharacterInfo, EquippedAccessories, InventoryItem } from "../types";
+import { Attributes, CharacterInfo, EquippedAccessories, EquippedRunes, InventoryItem } from "../types";
 
 export function calculateStats(
   attrs: Attributes, 
   char: CharacterInfo,
   equippedAccessories?: EquippedAccessories,
   inventory?: InventoryItem[],
-  aptidoes: Record<string, number> = {}
+  aptidoes: Record<string, number> = {},
+  equippedRunes?: EquippedRunes
 ) {
+  // ── Rune Bonuses (active body runes only — object runes are informational) ──
+  const runeBonuses = {
+    vida_percent: 0,           // Conservação Ser
+    defesa_universal_percent: 0, // Preservação
+    temperatura_maxima_flat: 0,  // Aquecimento Ser
+    temperatura_minima_flat: 0,  // Resfriamento Ser
+  };
+
+  if (equippedRunes && inventory) {
+    equippedRunes.bodyRunes.forEach(ar => {
+      if (!ar.active) return;
+      const item = inventory.find(i => i.id === ar.runeInventoryId);
+      if (!item || !item.runeEffect) return;
+      const eff = item.runeEffect;
+      if (eff.type === 'status_percent' && eff.target === 'vida') {
+        runeBonuses.vida_percent += eff.value;
+      } else if (eff.type === 'derived_percent' && eff.target === 'Defesa Universal') {
+        runeBonuses.defesa_universal_percent += eff.value;
+      } else if (eff.type === 'derived_flat' && eff.target === 'Temperatura Máxima') {
+        runeBonuses.temperatura_maxima_flat += eff.value;
+      } else if (eff.type === 'derived_flat' && eff.target === 'Temperatura Mínima') {
+        runeBonuses.temperatura_minima_flat += eff.value; // value is already negative
+      }
+    });
+  }
+
   // 1. Calculate Gem Bonuses
   const gemBonuses = {
     attributes: {} as Record<string, number>,
@@ -201,7 +228,12 @@ export function calculateStats(
     "Defesa Mágica": setBd("Defesa Mágica", Math.floor(con / 5), { val: gemBonuses.protetoras["Mágica"] || 0, label: "Gema" }),
     "Defesa Mística": setBd("Defesa Mística", Math.floor(von / 5), { val: gemBonuses.protetoras["Mística"] || 0, label: "Gema" }),
     "Defesa Mental": setBd("Defesa Mental", Math.floor(intu / 5), { val: gemBonuses.protetoras["Mental"] || 0, label: "Gema" }),
-    "Defesa Universal": setBd("Defesa Universal", Math.floor((cst + con + von) / 50), { val: gemBonuses.protetoras["Universal"] || 0, label: "Gema" }),
+    "Defesa Universal": (() => {
+      const base = Math.floor((cst + con + von) / 50);
+      const gemVal = gemBonuses.protetoras["Universal"] || 0;
+      const runeVal = runeBonuses.defesa_universal_percent > 0 ? Math.floor(base * runeBonuses.defesa_universal_percent / 100) : 0;
+      return setBd("Defesa Universal", base, { val: gemVal, label: "Gema" }, { val: runeVal, label: "Runa" });
+    })(),
     "Desconto": Math.min(100, car) + "%",
     "Destino": destino,
     "Dificuldade Armada": des,
@@ -240,8 +272,13 @@ export function calculateStats(
     "Resistência Corrosiva": "0%",
     "Resistência Elétrica": "0%",
     "Revide": "0%",
-    "Temperatura Máxima": 30 + cst,
-    "Temperatura Mínima": 15 - Math.floor(cst / 2),
+    "Temperatura Máxima": setBd("Temperatura Máxima", 30 + cst, { val: runeBonuses.temperatura_maxima_flat, label: "Runa" }),
+    "Temperatura Mínima": (() => {
+      const base = 15 - Math.floor(cst / 2);
+      const runeVal = runeBonuses.temperatura_minima_flat; // negative
+      if (runeVal !== 0) setBd("Temperatura Mínima", base, { val: Math.abs(runeVal), label: "Runa" });
+      return base + runeVal;
+    })(),
     "Tenacidade": Math.floor(von / 5),
     "Velocidade": vitalidade,
     "Visão": con * 10,
@@ -251,7 +288,12 @@ export function calculateStats(
 
   // ─── MAX STATUS ───
   const maxStatus = {
-    vida: setBd("Vida Máx", cst * 2, { val: gemBonuses.tanque["Vida"] || 0, label: "Gema" }),
+    vida: (() => {
+      const base = cst * 2;
+      const gemVal = gemBonuses.tanque["Vida"] || 0;
+      const runeVal = runeBonuses.vida_percent > 0 ? Math.floor(base * runeBonuses.vida_percent / 100) : 0;
+      return setBd("Vida Máx", base, { val: gemVal, label: "Gema" }, { val: runeVal, label: "Runa" });
+    })(),
     sanidade: setBd("Sanidade Máx", intu * 2, { val: gemBonuses.tanque["Sanidade"] || 0, label: "Gema" }),
     vigor: setBd("Vigor Máx", cst * 2, { val: gemBonuses.tanque["Vigor"] || 0, label: "Gema" }, { val: statusAutoBonuses["vigor"] || 0, label: "Signo" }),
     mana: setBd("Mana Máx", con * 2, { val: gemBonuses.tanque["Mana"] || 0, label: "Gema" }, { val: statusAutoBonuses["mana"] || 0, label: "Signo" }),
@@ -268,5 +310,5 @@ export function calculateStats(
     extrapolar: setBd("Extrapolar", Math.max(1, Math.floor(sor / 10)), { val: gemBonuses.status["Extrapolar"] || 0, label: "Gema" }),
   };
 
-  return { derived, maxStatus, computedAttributes, statBreakdown, gemBonuses };
+  return { derived, maxStatus, computedAttributes, statBreakdown, gemBonuses, runeBonuses };
 }

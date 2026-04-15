@@ -14,7 +14,7 @@ export function InventoryTab({ items, setItems, maxLoad }: InventoryTabProps) {
   const [filterCategory, setFilterCategory] = useState("Todos");
   const [showCatalog, setShowCatalog] = useState(false);
 
-  const categories = ["Todos", "Geral", "Armas", "Armaduras", "Escudos", "Munições", "Poções", "Gemas", "Acessórios"];
+  const categories = ["Todos", "Geral", "Armas", "Armaduras", "Escudos", "Munições", "Poções", "Gemas", "Acessórios", "Runas", "Bolsas"];
 
   const currentLoad = items.reduce((acc, item) => acc + (item.weight * (item.quantity || 1)), 0);
   const isOverloaded = currentLoad > maxLoad;
@@ -116,9 +116,25 @@ export function InventoryTab({ items, setItems, maxLoad }: InventoryTabProps) {
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-medium text-slate-200">{item.name}</h3>
-                    <span className="text-[10px] text-slate-500 uppercase tracking-wider bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700">
-                      {item.category || "Geral"}
-                    </span>
+                    <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
+                      <span className="text-[10px] text-slate-500 uppercase tracking-wider bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700">
+                        {item.category || "Geral"}
+                      </span>
+                      {item.category === 'Runas' && item.runeAnchor && (
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full border font-semibold ${
+                          item.runeAnchor === 'Ser'
+                            ? 'border-violet-500/40 text-violet-300 bg-violet-900/20'
+                            : 'border-amber-500/40 text-amber-300 bg-amber-900/20'
+                        }`}>
+                          ᚱ {item.runeAnchor === 'Ser' ? 'Ser' : 'Objeto'}
+                        </span>
+                      )}
+                      {item.category === 'Runas' && item.runePotenciaName && (
+                        <span className="text-[10px] px-2 py-0.5 rounded-full border border-slate-600 text-slate-400 bg-slate-800">
+                          {item.runePotenciaName}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <button 
                     onClick={() => removeItem(item.id)}

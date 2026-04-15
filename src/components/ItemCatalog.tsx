@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { X, Plus, Sword, Shield, Zap, ShieldCheck, ShoppingCart, Check, Search, Gem, Crown, Backpack } from "lucide-react";
 import { InventoryItem, BodyPart, ArmorLayer } from "../types";
+import { RUNE_CATALOG, RUNE_POTENCIAS, RUNE_COLOR_CLASSES, RuneCatalogEntry } from "../lib/runeCatalog";
 
 interface ItemCatalogProps {
   onClose: () => void;
@@ -476,7 +477,7 @@ const BAG_SIZES = [
 ];
 
 export function ItemCatalog({ onClose, onAddItem }: ItemCatalogProps) {
-  const [tab, setTab] = useState<'weapons' | 'armors' | 'ammo' | 'shields' | 'gems' | 'accessories' | 'bags'>('weapons');
+  const [tab, setTab] = useState<'weapons' | 'armors' | 'ammo' | 'shields' | 'gems' | 'accessories' | 'bags' | 'runas'>('weapons');
   
   // Weapon State
   const [selectedWeaponCategoryIdx, setSelectedWeaponCategoryIdx] = useState(0);
@@ -513,6 +514,36 @@ export function ItemCatalog({ onClose, onAddItem }: ItemCatalogProps) {
   // Bolsas State
   const [selectedBagSizeIdx, setSelectedBagSizeIdx] = useState(0);
   const [selectedBagMaterialIdx, setSelectedBagMaterialIdx] = useState(0);
+
+  // Runas State
+  const uniqueRuneNames = Array.from(new Set(RUNE_CATALOG.map(e => `${e.baseName}||${e.anchor}`)));
+  const [selectedRuneEntryKey, setSelectedRuneEntryKey] = useState(uniqueRuneNames[0]);
+  const [selectedRunePotenciaIdx, setSelectedRunePotenciaIdx] = useState(0);
+
+  const selectedRuneEntry: RuneCatalogEntry | undefined = (() => {
+    const [baseName, anchor] = selectedRuneEntryKey.split('||');
+    return RUNE_CATALOG.find(e => e.baseName === baseName && e.anchor === anchor);
+  })();
+
+  const handleAddRune = () => {
+    if (!selectedRuneEntry) return;
+    const effect = selectedRuneEntry.getPotenciaEffect(selectedRunePotenciaIdx);
+    const potenciaName = RUNE_POTENCIAS[selectedRunePotenciaIdx];
+    const colors = RUNE_COLOR_CLASSES[selectedRuneEntry.color];
+    const displayName = `${selectedRuneEntry.baseName} (${selectedRuneEntry.anchor}) — ${potenciaName}`;
+    setCart(prev => [...prev, {
+      name: displayName,
+      category: 'Runas',
+      weight: 0,
+      quantity: 1,
+      description: effect.description,
+      runeEffect: effect,
+      runeAnchor: selectedRuneEntry.anchor,
+      runePotenciaIndex: selectedRunePotenciaIdx,
+      runePotenciaName: potenciaName,
+    } as Omit<InventoryItem, 'id'>]);
+    showSuccessToast();
+  };
 
   // Cart State
   const [cart, setCart] = useState<Omit<InventoryItem, 'id'>[]>([]);
@@ -791,6 +822,12 @@ export function ItemCatalog({ onClose, onAddItem }: ItemCatalogProps) {
             className={`flex-1 min-w-[120px] py-4 font-medium flex items-center justify-center gap-2 transition-colors ${tab === 'bags' ? 'text-lime-400 border-b-2 border-lime-400 bg-lime-400/5' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'}`}
           >
             <Backpack size={18} /> Bolsas
+          </button>
+          <button
+            onClick={() => setTab('runas')}
+            className={`flex-1 min-w-[120px] py-4 font-medium flex items-center justify-center gap-2 transition-colors ${tab === 'runas' ? 'text-violet-400 border-b-2 border-violet-400 bg-violet-400/5' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'}`}
+          >
+            <span className="text-lg leading-none">ᚱ</span> Runas
           </button>
         </div>
 
@@ -1384,6 +1421,93 @@ export function ItemCatalog({ onClose, onAddItem }: ItemCatalogProps) {
                 className="w-full py-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
               >
                 <Plus size={20} /> Adicionar Escudo {SHIELD_TYPES[selectedShieldTypeIdx].name} ao Carrinho
+              </button>
+            </div>
+          ) : tab === 'runas' ? (
+            <div className="space-y-6">
+              {/* Rune selector */}
+              <div className="space-y-4">
+                <div>
+                  <label className="text-xs font-bold text-violet-300 uppercase tracking-wider block mb-2">Selecionar Runa</label>
+                  <select
+                    value={selectedRuneEntryKey}
+                    onChange={e => { setSelectedRuneEntryKey(e.target.value); setSelectedRunePotenciaIdx(0); }}
+                    className="w-full bg-slate-700 border border-slate-600 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-violet-500 text-sm"
+                  >
+                    {RUNE_CATALOG.map(entry => {
+                      const key = `${entry.baseName}||${entry.anchor}`;
+                      const preview = entry.getPotenciaEffect(0);
+                      return (
+                        <option key={key} value={key}>
+                          {entry.icon} {entry.baseName} ({entry.anchor}) — {preview.description.split('+')[0].split('-')[0].trim()}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-violet-300 uppercase tracking-wider block mb-2">Potencial</label>
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                    {RUNE_POTENCIAS.map((p, i) => {
+                      const colors = selectedRuneEntry ? RUNE_COLOR_CLASSES[selectedRuneEntry.color] : RUNE_COLOR_CLASSES.indigo;
+                      return (
+                        <button
+                          key={p}
+                          onClick={() => setSelectedRunePotenciaIdx(i)}
+                          className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all ${
+                            selectedRunePotenciaIdx === i
+                              ? `${colors.border} ${colors.bg} ${colors.text}`
+                              : 'border-slate-700 text-slate-500 hover:border-slate-600 hover:text-slate-300'
+                          }`}
+                        >
+                          {p}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Effect Preview */}
+              {selectedRuneEntry && (() => {
+                const effect = selectedRuneEntry.getPotenciaEffect(selectedRunePotenciaIdx);
+                const colors = RUNE_COLOR_CLASSES[selectedRuneEntry.color];
+                return (
+                  <div className={`${colors.bg} border ${colors.border} rounded-2xl p-5 space-y-3`}>
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">{selectedRuneEntry.icon}</span>
+                      <div>
+                        <div className={`font-bold ${colors.text}`}>
+                          {selectedRuneEntry.baseName} — {RUNE_POTENCIAS[selectedRunePotenciaIdx]}
+                        </div>
+                        <div className="text-xs text-slate-500">
+                          Para: <strong className={colors.text}>{selectedRuneEntry.anchor === 'Ser' ? '👤 Seres' : '📦 Objetos'}</strong> • Categoria: {selectedRuneEntry.category}
+                        </div>
+                      </div>
+                    </div>
+                    <div className={`text-sm ${colors.text} bg-slate-900/40 rounded-xl p-3 border ${colors.border}`}>
+                      <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-1">Efeito</span>
+                      {effect.description}
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="text-slate-500">Tipo: <span className={colors.text}>{effect.type}</span></div>
+                      <div className="text-slate-500">Valor: <span className={colors.text}>{effect.value}{effect.unit || ''}</span></div>
+                      {effect.radius && <div className="text-slate-500">Raio: <span className={colors.text}>{effect.radius}m</span></div>}
+                    </div>
+                    <div className="text-xs text-slate-500 italic">
+                      ᚱ Runas podem ser ativadas e desativadas mentalmente a qualquer momento
+                    </div>
+                  </div>
+                );
+              })()}
+
+              <button
+                onClick={handleAddRune}
+                disabled={!selectedRuneEntry}
+                className="w-full py-3 bg-violet-600 hover:bg-violet-500 disabled:opacity-50 text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
+              >
+                <Plus size={20} /> Adicionar Runa ao Carrinho
               </button>
             </div>
           ) : null}

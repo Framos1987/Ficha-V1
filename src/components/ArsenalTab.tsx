@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Shield, Sword, Crown, Gem, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { InventoryItem, EquippedArmor, EquippedWeapons, EquippedAccessories, AccessorySlot, BodyPart, ArmorLayer } from "../types";
+import { InventoryItem, EquippedArmor, EquippedWeapons, EquippedAccessories, EquippedRunes, AccessorySlot, BodyPart, ArmorLayer } from "../types";
+import { RunasTab } from "./RunasTab";
 
 interface ArsenalTabProps {
   inventory: InventoryItem[];
@@ -13,6 +14,8 @@ interface ArsenalTabProps {
   equippedAccessories?: EquippedAccessories;
   setEquippedAccessories?: (acc: EquippedAccessories) => void;
   aptidoes?: Record<string, number>;
+  equippedRunes?: EquippedRunes;
+  setEquippedRunes?: (r: EquippedRunes) => void;
 }
 
 // ── Material → Required Aptitude Tier (0 = free) ────────────────────────────
@@ -175,8 +178,8 @@ const BodySilhouette = ({ equippedArmor, inventory }: { equippedArmor: EquippedA
   );
 };
 
-export function ArsenalTab({ inventory, setInventory, equippedArmor, setEquippedArmor, equippedWeapons, setEquippedWeapons, equippedAccessories, setEquippedAccessories, aptidoes = {} }: ArsenalTabProps) {
-  const [activeTab, setActiveTab] = useState<'weapons' | 'armor' | 'accessories'>('weapons');
+export function ArsenalTab({ inventory, setInventory, equippedArmor, setEquippedArmor, equippedWeapons, setEquippedWeapons, equippedAccessories, setEquippedAccessories, aptidoes = {}, equippedRunes, setEquippedRunes }: ArsenalTabProps) {
+  const [activeTab, setActiveTab] = useState<'weapons' | 'armor' | 'accessories' | 'runas'>('weapons');
 
   const armorItems = inventory.filter(item => item.category === 'Armaduras');
   const weaponItems = inventory.filter(item => item.category === 'Armas');
@@ -495,6 +498,23 @@ export function ArsenalTab({ inventory, setInventory, equippedArmor, setEquipped
           )}
           <Crown size={20} />
           Acessórios
+        </button>
+
+        <button
+          onClick={() => setActiveTab('runas')}
+          className={`relative flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-colors z-10 ${
+            activeTab === 'runas' ? 'text-violet-400' : 'text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          {activeTab === 'runas' && (
+            <motion.div
+              layoutId="activeTab"
+              className="absolute inset-0 bg-violet-500/20 border border-violet-500/50 rounded-xl -z-10"
+              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+            />
+          )}
+          <span className="text-lg leading-none">ᚱ</span>
+          Runas
         </button>
       </div>
 
@@ -834,6 +854,39 @@ export function ArsenalTab({ inventory, setInventory, equippedArmor, setEquipped
                     </div>
                   </div>
                 )}
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'runas' && equippedRunes && setEquippedRunes && (
+            <motion.div
+              key="runas"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.2 }}
+            >
+              <RunasTab
+                inventory={inventory}
+                equippedRunes={equippedRunes}
+                setEquippedRunes={setEquippedRunes}
+                equippedWeapons={equippedWeapons}
+                equippedArmor={equippedArmor}
+                equippedAccessories={equippedAccessories}
+              />
+            </motion.div>
+          )}
+
+          {activeTab === 'runas' && (!equippedRunes || !setEquippedRunes) && (
+            <motion.div
+              key="runas-empty"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex items-center justify-center py-24 text-slate-500"
+            >
+              <div className="text-center">
+                <span className="text-6xl block mb-4 opacity-20">ᚱ</span>
+                <p>Sistema de Runas não inicializado.</p>
               </div>
             </motion.div>
           )}

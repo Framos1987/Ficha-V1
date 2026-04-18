@@ -272,6 +272,51 @@ const COMBAT_APTIDOES: AptidaoData[] = [
 
 const EXTRACTION_APTIDOES: AptidaoData[] = [
   {
+    "name": "Colheita",
+    "privileges": [
+      "Colher Plantas Mortas",
+      "Colher Plantas Dormentes",
+      "Colher Plantas Nascentes",
+      "Colher Plantas Infantes",
+      "Colher Plantas Jovens",
+      "Colher Plantas Adultas",
+      "Colher Plantas Anciãs",
+      "Colher Plantas Centenárias",
+      "Colher Plantas Milenares",
+      "Colher Plantas Miríades"
+    ]
+  },
+  {
+    "name": "Dissecação",
+    "privileges": [
+      "Dissecar Animais Bestiais",
+      "Dissecar Animais Humanoides",
+      "Dissecar Monstros Bestiais",
+      "Dissecar Monstros Humanoides",
+      "Dissecar Elementais Bestiais",
+      "Dissecar Elementais Humanoides",
+      "Dissecar Aberrações Bestiais",
+      "Dissecar Aberrações Humanoides",
+      "Dissecar Criaturas Bestiais",
+      "Dissecar Criaturas Humanoides"
+    ]
+  },
+  {
+    "name": "Garimpo",
+    "privileges": [
+      "Garimpar Quartzo & Ónix",
+      "Garimpar Granada",
+      "Garimpar Peridoto",
+      "Garimpar Turmalina",
+      "Garimpar Topázio",
+      "Garimpar Ametista",
+      "Garimpar Esmeralda",
+      "Garimpar Safira",
+      "Garimpar Rubi",
+      "Garimpar Diamante"
+    ]
+  },
+  {
     "name": "Lenhado",
     "privileges": [
       "Derrubar Árvores Comuns, Pinheiros & Sequoias | Torrar Madeira Comum, De Pinheiro & De Sequoia | Lenhar Madeira Comum, De Pinheiro & De Sequoia",
@@ -287,18 +332,18 @@ const EXTRACTION_APTIDOES: AptidaoData[] = [
     ]
   },
   {
-    "name": "ESPOLIO",
+    "name": "Mineração",
     "privileges": [
-      "Extrair Materiais De Animais Bestiais",
-      "Extrair Materiais De Animais Humanoides",
-      "Extrair Materiais De Monstros Bestiais",
-      "Extrair Materiais De Monstros Humanoides",
-      "Extrair Materiais De Elementais Bestiais",
-      "Extrair Materiais De Elementais Humanoides",
-      "Extrair Materiais De Aberrações Bestiais",
-      "Extrair Materiais De Aberrações Humanoides",
-      "Extrair Materiais De Criaturas Bestiais",
-      "Extrair Materiais De Criaturas Humanoides"
+      "Minerar Pedra, Alumínio & Cobre",
+      "Minerar Ferro & Latão",
+      "Minerar Níquel",
+      "Minerar Vanádio & Bronze",
+      "Minerar Titânio",
+      "Minerar Cromo & Prata",
+      "Minerar Cobalto",
+      "Minerar Irídio & Ouro",
+      "Minerar Rênio",
+      "Minerar Volfrâmio & Platina"
     ]
   }
 ];

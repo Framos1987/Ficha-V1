@@ -143,6 +143,7 @@ export default function App() {
     bodyRunes: [],
     objectRunes: [],
   });
+  const [conditions, setConditions] = useLocalStorage<Record<string, number>>("rpg_conditions", {});
 
   const [activeTab, setActiveTab] = useState<"attributes" | "derived" | "status" | "inventory" | "arsenal" | "aptidoes" | "journal" | "mail" | "master">("attributes");
   const [isEditing, setIsEditing] = useState(false);
@@ -179,6 +180,7 @@ export default function App() {
       aptidoes,
       journalNotes,
       equippedRunes,
+      conditions,
       lastSync: Date.now()
     };
 
@@ -223,6 +225,7 @@ export default function App() {
     if (d.aptidoes) setAptidoes(d.aptidoes);
     if (d.journalNotes) setJournalNotes(d.journalNotes);
     if (d.equippedRunes) setEquippedRunes(d.equippedRunes);
+    if (d.conditions) setConditions(d.conditions);
     
     setHasCharacter(true);
     setCloudStatus("success");
@@ -252,6 +255,7 @@ export default function App() {
       rpg_aptidoes: localStorage.getItem("rpg_aptidoes"),
       rpg_journal_notes: localStorage.getItem("rpg_journal_notes"),
       rpg_equipped_runes: localStorage.getItem("rpg_equipped_runes"),
+      rpg_conditions: localStorage.getItem("rpg_conditions"),
       rpg_has_character: "true",
     };
     const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
@@ -327,6 +331,7 @@ export default function App() {
           setAptidoes({});
           setJournalNotes([]);
           setEquippedRunes({ bodyRunes: [], objectRunes: [] });
+          setConditions({});
           setHasCharacter(true);
           setShowLobby(false); 
         }}
@@ -550,6 +555,9 @@ export default function App() {
                   maxStatus={maxStatus} 
                   onChange={handleStatusChange}
                   bonusBreakdown={statBreakdown}
+                  computedAttributes={computedAttributes}
+                  conditions={conditions}
+                  onConditionsChange={setConditions}
                 />
               )}
 

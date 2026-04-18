@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Backpack, Plus, Trash2, Package, Search, Filter, Minus, BookOpen } from "lucide-react";
+import { Backpack, Plus, Trash2, Package, Search, Filter, Minus } from "lucide-react";
 import { InventoryItem } from "../types";
-import { ItemCatalog } from "./ItemCatalog";
 
 interface InventoryTabProps {
   items: InventoryItem[];
@@ -12,7 +11,6 @@ interface InventoryTabProps {
 export function InventoryTab({ items, setItems, maxLoad }: InventoryTabProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("Todos");
-  const [showCatalog, setShowCatalog] = useState(false);
 
   const categories = ["Todos", "Geral", "Armas", "Armaduras", "Escudos", "Munições", "Poções", "Gemas", "Acessórios", "Runas", "Bolsas"];
 
@@ -24,14 +22,6 @@ export function InventoryTab({ items, setItems, maxLoad }: InventoryTabProps) {
     const matchesCategory = filterCategory === "Todos" || (item.category || "Geral") === filterCategory;
     return matchesSearch && matchesCategory;
   });
-
-  const handleAddItemFromCatalog = (newItem: Omit<InventoryItem, "id">) => {
-    const item: InventoryItem = {
-      ...newItem,
-      id: Math.random().toString(36).substring(2, 9) + Math.random().toString(36).substring(2, 5),
-    };
-    setItems((prevItems) => [...prevItems, item]);
-  };
 
   const updateQuantity = (id: string, delta: number) => {
     setItems((prevItems) => prevItems.map(item => {
@@ -55,13 +45,6 @@ export function InventoryTab({ items, setItems, maxLoad }: InventoryTabProps) {
             <Package className="text-emerald-400" />
             Inventário Completo
           </h2>
-          <button
-            onClick={() => setShowCatalog(true)}
-            className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-sm font-bold transition-colors"
-          >
-            <BookOpen size={16} />
-            Catálogo de Itens
-          </button>
         </div>
         <div className={`text-sm font-mono px-4 py-2 rounded-xl border ${isOverloaded ? 'bg-red-900/30 border-red-500/50 text-red-400' : 'bg-emerald-900/20 border-emerald-500/30 text-emerald-400'}`}>
           Carga Total: <span className="font-bold">{currentLoad.toFixed(1)}</span> / {maxLoad.toFixed(1)} kg
@@ -174,12 +157,6 @@ export function InventoryTab({ items, setItems, maxLoad }: InventoryTabProps) {
           </div>
         )}
       </div>
-      {showCatalog && (
-        <ItemCatalog 
-          onClose={() => setShowCatalog(false)} 
-          onAddItem={handleAddItemFromCatalog} 
-        />
-      )}
     </div>
   );
 }

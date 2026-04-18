@@ -1,10 +1,11 @@
 import { useState, useMemo, useRef, ChangeEvent, useEffect } from "react";
-import { Save, Shield, User, Edit3, Download, Upload, LayoutDashboard, Activity, List, Target, Brain, Dumbbell, Users, Package, Sword, Swords, BookOpen, Crown, Mail, ShieldCheck, Cloud, CloudOff, RefreshCw, LogOut } from "lucide-react";
+import { Save, Shield, User, Edit3, Download, Upload, LayoutDashboard, Activity, List, Target, Brain, Dumbbell, Users, Package, Sword, Swords, BookOpen, Crown, Mail, ShieldCheck, Cloud, CloudOff, RefreshCw, LogOut, ShoppingCart } from "lucide-react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { AttributeRow } from "./components/AttributeRow";
 import { Inventory } from "./components/Inventory";
 import { InventoryTab } from "./components/InventoryTab";
 import { ArsenalTab } from "./components/ArsenalTab";
+import { ItemCatalog } from "./components/ItemCatalog";
 import { Calculator } from "./components/Calculator";
 import { CharacterEditor } from "./components/CharacterEditor";
 import { DerivedStats } from "./components/DerivedStats";
@@ -145,7 +146,7 @@ export default function App() {
   });
   const [conditions, setConditions] = useLocalStorage<Record<string, number>>("rpg_conditions", {});
 
-  const [activeTab, setActiveTab] = useState<"attributes" | "derived" | "status" | "inventory" | "arsenal" | "aptidoes" | "journal" | "mail" | "master">("attributes");
+  const [activeTab, setActiveTab] = useState<"attributes" | "derived" | "status" | "inventory" | "shop" | "arsenal" | "aptidoes" | "journal" | "mail" | "master">("attributes");
   const [isEditing, setIsEditing] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useLocalStorage<boolean>("rpg_is_auth", false);
@@ -496,6 +497,12 @@ export default function App() {
                 <Package size={18} /> Inventário
               </button>
               <button
+                onClick={() => setActiveTab("shop")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors whitespace-nowrap ${activeTab === "shop" ? "bg-amber-600 text-white" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"}`}
+              >
+                <ShoppingCart size={18} /> Compras
+              </button>
+              <button
                 onClick={() => setActiveTab("arsenal")}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors whitespace-nowrap ${activeTab === "arsenal" ? "bg-amber-600 text-white" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"}`}
               >
@@ -562,6 +569,20 @@ export default function App() {
               )}
 
               {activeTab === "inventory" && <InventoryTab items={inventory} setItems={setInventory} maxLoad={Number(derived["Carga Máxima"]) || 0} />}
+
+              {activeTab === "shop" && (
+                <ItemCatalog
+                  inline
+                  onClose={() => setActiveTab("inventory")}
+                  onAddItem={(newItem) => {
+                    const item = {
+                      ...newItem,
+                      id: Math.random().toString(36).substring(2, 9) + Math.random().toString(36).substring(2, 5),
+                    };
+                    setInventory((prev) => [...prev, item]);
+                  }}
+                />
+              )}
 
               {activeTab === "arsenal" && (
                 <ArsenalTab 

@@ -6,6 +6,7 @@ import { RUNE_CATALOG, RUNE_POTENCIAS, RUNE_COLOR_CLASSES, RuneCatalogEntry } fr
 interface ItemCatalogProps {
   onClose: () => void;
   onAddItem: (item: Omit<InventoryItem, "id">) => void;
+  inline?: boolean;
 }
 
 const WEAPON_CATEGORIES = [
@@ -476,7 +477,7 @@ const BAG_SIZES = [
   { name: "Grande", baseWeightKg: 2.5 },
 ];
 
-export function ItemCatalog({ onClose, onAddItem }: ItemCatalogProps) {
+export function ItemCatalog({ onClose, onAddItem, inline = false }: ItemCatalogProps) {
   const [tab, setTab] = useState<'weapons' | 'armors' | 'ammo' | 'shields' | 'gems' | 'accessories' | 'bags' | 'runas'>('weapons');
   
   // Weapon State
@@ -760,22 +761,32 @@ export function ItemCatalog({ onClose, onAddItem }: ItemCatalogProps) {
 
   const handleCheckout = () => {
     cart.forEach(item => onAddItem(item));
-    onClose();
+    setCart([]);
+    if (!inline) onClose();
   };
 
+  const wrapperClass = inline
+    ? ""
+    : "fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4";
+  const containerClass = inline
+    ? "bg-slate-800 rounded-3xl border border-slate-700 w-full shadow-xl overflow-hidden flex flex-col"
+    : "bg-slate-800 rounded-3xl border border-slate-700 w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]";
+
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-slate-800 rounded-3xl border border-slate-700 w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div className={wrapperClass}>
+      <div className={containerClass}>
         
         {/* Header */}
         <div className="p-6 border-b border-slate-700 flex justify-between items-center bg-slate-900/50">
           <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <Plus className="text-indigo-400" />
-            Catálogo de Itens
+            <ShoppingCart className="text-amber-400" />
+            {inline ? 'Compras — Catálogo de Itens' : 'Catálogo de Itens'}
           </h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
-            <X size={24} />
-          </button>
+          {!inline && (
+            <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
+              <X size={24} />
+            </button>
+          )}
         </div>
 
         {/* Tabs */}
@@ -1533,7 +1544,7 @@ export function ItemCatalog({ onClose, onAddItem }: ItemCatalogProps) {
               onClick={handleCheckout}
               className="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-colors flex items-center gap-2 shadow-lg shadow-indigo-500/20"
             >
-              <Check size={18} /> Confirmar Compra
+              <Check size={18} /> {inline ? 'Adicionar ao Inventário' : 'Confirmar Compra'}
             </button>
           </div>
         </div>

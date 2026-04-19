@@ -787,7 +787,7 @@ export default function App() {
 
               {activeTab === "battlegrid" && (
                 <div className="h-[85vh] rounded-3xl overflow-hidden border border-slate-700 shadow-2xl">
-                  <BattleGrid />
+                  <BattleGrid charInfo={charInfo} currentStatus={currentStatus} />
                 </div>
               )}
 

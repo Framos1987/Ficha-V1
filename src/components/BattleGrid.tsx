@@ -10,9 +10,9 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import {
   ZoomIn, ZoomOut, RotateCcw, Grid3x3, Eye, EyeOff, Lightbulb,
-  Plus, Trash2, ChevronUp, ChevronDown, Move, Sword, User,
+  Plus, Minus, Trash2, ChevronUp, ChevronDown, Move, Sword, User,
   Shield, Crown, Target, CircleDot, Triangle, Square, Layers,
-  Map, X, Check, Lock, Unlock, Download, Upload
+  Map, X, Check, Lock, Unlock, Download, Upload, Copy, Save, Sunrise, Moon, Undo2, Box, Droplet, ArrowUp, ArrowDown, Mountain
 } from "lucide-react";
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -23,7 +23,7 @@ type WallMaterial   = "wood" | "stone" | "masonry" | "rock" | "iron";
 type WallThickness  = "thin" | "normal" | "thick" | "massive";
 type WallSubtype    = "wall" | "door" | "window";
 type LightType      = "candle" | "torch" | "lantern" | "lamp" | "bonfire" | "alvorada" | "crepusculo";
-type TerrainType    = "sand" | "stone" | "grass" | "water" | "fire" | "difficult";
+type TerrainType    = "sand" | "stone" | "grass" | "water" | "fire" | "difficult" | "wood" | "hole" | "stairs_up" | "stairs_down" | "debris";
 type BackgroundType = "none" | "sand" | "stone" | "grass";
 type TokenShape     = "circle" | "square" | "triangle" | "diamond";
 type TokenColor     = "red" | "blue" | "green" | "amber" | "purple" | "cyan" | "pink" | "slate";
@@ -38,6 +38,7 @@ interface WallSegment {
   thickness: WallThickness;
   subtype: WallSubtype;
   isOpen: boolean;
+  layer?: number;
 }
 
 interface LightSource {
@@ -46,24 +47,29 @@ interface LightSource {
   type: LightType;
   isOn: boolean;
   customLux?: number;
+  layer?: number;
 }
 
 interface Token {
   id: string; label: string; shape: TokenShape; color: TokenColor;
   col: number; row: number; hp: number; maxHp: number;
   initiative: number; isPlayer: boolean;
-  conditions: string[]; icon: "sword"|"shield"|"crown"|"user"|"target";
+  conditions: string[]; icon: "sword"|"shield"|"crown"|"user"|"target"|"box"|"sun"|"moon"|"droplet"|"arrow-up"|"arrow-down"|"mountain";
   sizeIndex: number;
   activeRunes: string[];
+  isProp?: boolean;
+  emission?: { lux: number; radius: number; glow: string };
+  layer?: number;
 }
 
 interface AoeMarker {
   id: string; shape: "circle"|"cone"|"square"|"line";
   col: number; row: number; size: number;
   color: TokenColor; label: string; angle: number;
+  layer?: number;
 }
 
-interface TerrainCell { col: number; row: number; type: TerrainType; }
+interface TerrainCell { col: number; row: number; type: TerrainType; layer?: number; }
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // CONSTANTS
@@ -131,12 +137,17 @@ const getLuxOpacity = (lux: number) => {
 };
 
 const TERRAIN_DEF: Record<TerrainType, { label: string; bg: string; border: string }> = {
-  sand:     { label: "Areia",  bg: "linear-gradient(135deg,#c4a055 25%,#b89040 25%,#b89040 50%,#d4b070 50%,#d4b070 75%,#bfa050 75%)", border: "#b8860b" },
-  stone:    { label: "Pedra",  bg: "linear-gradient(0deg,#586070 0%,#68707e 50%,#506068 100%)",  border: "#374151" },
-  grass:    { label: "Grama",  bg: "linear-gradient(135deg,#4a7c35 25%,#3d6e2a 25%,#3d6e2a 50%,#588c40 50%,#588c40 75%,#487a33 75%)", border: "#166534" },
-  water:    { label: "Água",   bg: "repeating-linear-gradient(90deg,#1e50c8aa 0px,#3272dcaa 3px,#1e50c8aa 3px,#1e50c8aa 6px)", border: "#1d4ed8" },
-  fire:     { label: "Fogo",   bg: "radial-gradient(ellipse at 50% 70%,#ffaa0aaa 0%,#dc3200bb 60%,#960000aa 100%)", border: "#dc2626" },
-  difficult:{ label: "Difícil",bg: "radial-gradient(circle at 30% 30%,#8b5a1e,#5a3c0e)",         border: "#92400e" },
+  sand:     { label: "Areia",       bg: "linear-gradient(135deg,#c4a055 25%,#b89040 25%,#b89040 50%,#d4b070 50%,#d4b070 75%,#bfa050 75%)", border: "#b8860b" },
+  stone:    { label: "Pedra",       bg: "linear-gradient(0deg,#586070 0%,#68707e 50%,#506068 100%)",  border: "#374151" },
+  grass:    { label: "Grama",       bg: "linear-gradient(135deg,#4a7c35 25%,#3d6e2a 25%,#3d6e2a 50%,#588c40 50%,#588c40 75%,#487a33 75%)", border: "#166534" },
+  water:    { label: "Água",        bg: "repeating-linear-gradient(90deg,#1e50c8aa 0px,#3272dcaa 3px,#1e50c8aa 3px,#1e50c8aa 6px)", border: "#1d4ed8" },
+  fire:     { label: "Fogo",        bg: "radial-gradient(ellipse at 50% 70%,#ffaa0aaa 0%,#dc3200bb 60%,#960000aa 100%)", border: "#dc2626" },
+  difficult:{ label: "Difícil",     bg: "radial-gradient(circle at 30% 30%,#8b5a1e,#5a3c0e)", border: "#92400e" },
+  wood:     { label: "Madeira",     bg: "repeating-linear-gradient(90deg, #8B5A2B 0px, #8B5A2B 15px, #6b4421 16px, #6b4421 18px)", border: "#5c3a21" },
+  hole:     { label: "Buraco Negro",bg: "radial-gradient(circle at 50% 50%, #000 0%, #111 60%, #333 100%)", border: "#ef4444" },
+  stairs_up:{ label: "Escada Sobe", bg: "repeating-linear-gradient(0deg, #71717a 0px, #71717a 8px, #3f3f46 8px, #3f3f46 11px)", border: "#27272a" },
+  stairs_down:{ label: "Esc. Desce",bg: "repeating-linear-gradient(0deg, #27272a 0px, #27272a 8px, #18181b 8px, #18181b 11px)", border: "#000" },
+  debris:   { label: "Entulho",     bg: "repeating-radial-gradient(ellipse at 30% 30%, #52525b 0%, #71717a 30%, #3f3f46 60%)", border: "#27272a" },
 };
 
 const BG_STYLE: Record<BackgroundType, string> = {
@@ -273,12 +284,16 @@ function TokenSVG({ token, isSelected, px }: { token: Token; isSelected: boolean
       {token.shape === "square"   && <rect x={3} y={3} width={s-6} height={s-6} rx={7} fill={c.bg} stroke={c.border} strokeWidth={2.5} />}
       {token.shape === "diamond"  && <polygon points={`${cx},3 ${s-3},${cx} ${cx},${s-3} 3,${cx}`} fill={c.bg} stroke={c.border} strokeWidth={2.5} />}
       {token.shape === "triangle" && <polygon points={`${cx},4 ${s-3},${s-3} 3,${s-3}`} fill={c.bg} stroke={c.border} strokeWidth={2.5} />}
-      <rect x={5} y={s-8} width={s-10} height={5} rx={2.5} fill="rgba(0,0,0,0.65)" />
-      <rect x={5} y={s-8} width={(s-10)*hpPct} height={5} rx={2.5} fill={hpCol} />
-      <circle cx={s-9} cy={9} r={8} fill="rgba(0,0,0,0.8)" stroke="rgba(255,255,255,0.2)" strokeWidth={1} />
-      <text x={s-9} y={9} textAnchor="middle" dominantBaseline="central" fontSize={9} fill="#fff" fontWeight="bold">{token.initiative}</text>
-      <rect x={3} y={s-20} width={22} height={11} rx={3} fill="rgba(0,0,0,0.7)" />
-      <text x={14} y={s-15} textAnchor="middle" dominantBaseline="central" fontSize={7} fill="#cbd5e1" fontWeight="600">{szLabel}</text>
+      {!token.isProp && (
+        <>
+          <rect x={5} y={s-8} width={s-10} height={5} rx={2.5} fill="rgba(0,0,0,0.65)" />
+          <rect x={5} y={s-8} width={(s-10)*hpPct} height={5} rx={2.5} fill={hpCol} />
+          <circle cx={s-9} cy={9} r={8} fill="rgba(0,0,0,0.8)" stroke="rgba(255,255,255,0.2)" strokeWidth={1} />
+          <text x={s-9} y={9} textAnchor="middle" dominantBaseline="central" fontSize={9} fill="#fff" fontWeight="bold">{token.initiative}</text>
+          <rect x={3} y={s-20} width={22} height={11} rx={3} fill="rgba(0,0,0,0.7)" />
+          <text x={14} y={s-15} textAnchor="middle" dominantBaseline="central" fontSize={7} fill="#cbd5e1" fontWeight="600">{szLabel}</text>
+        </>
+      )}
       {token.conditions.slice(0, 3).map((_, i) => (
         <circle key={i} cx={5 + i * 8} cy={s - 25} r={3} fill="#f59e0b" opacity={0.9} />
       ))}
@@ -297,6 +312,13 @@ function TkIcon({ icon, size = 14 }: { icon: Token["icon"]; size?: number }) {
   if (icon === "shield") return <Shield {...p} />;
   if (icon === "crown")  return <Crown {...p} />;
   if (icon === "target") return <Target {...p} />;
+  if (icon === "box")    return <Box {...p} />;
+  if (icon === "sun")    return <Sunrise {...p} />;
+  if (icon === "moon")   return <Moon {...p} />;
+  if (icon === "droplet")   return <Droplet {...p} />;
+  if (icon === "arrow-up")  return <ArrowUp {...p} />;
+  if (icon === "arrow-down")return <ArrowDown {...p} />;
+  if (icon === "mountain")  return <Mountain {...p} />;
   return <User {...p} />;
 }
 
@@ -304,7 +326,7 @@ function TkIcon({ icon, size = 14 }: { icon: Token["icon"]; size?: number }) {
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════════
 
-export default function BattleGrid() {
+export default function BattleGrid({ charInfo, currentStatus }: { charInfo?: any; currentStatus?: any }) {
   // ── Grid config ──
   const [gridCols, setGridCols] = useState(20);
   const [gridRows, setGridRows] = useState(14);
@@ -313,6 +335,7 @@ export default function BattleGrid() {
   const [showGrid, setShowGrid] = useState(true);
   const [zoom, setZoom]         = useState(1);
   const [dynLight, setDynLight] = useState(false);
+  const [currentLayer, setCurrentLayer] = useState(0);
 
   const cs = CS * zoom;
 
@@ -364,6 +387,31 @@ export default function BattleGrid() {
   const [dragging,  setDragging]  = useState<{ id: string } | null>(null);
   const [dragPos,   setDragPos]   = useState<{ x: number; y: number } | null>(null);
 
+  // ── History Undo ──
+  const [history, setHistory] = useState<string[]>([]);
+  const saveUndo = useCallback(() => {
+    setHistory(h => {
+      const snap = JSON.stringify({ tokens, walls, lights, terrain });
+      if (h[h.length - 1] === snap) return h;
+      return [...h.slice(-14), snap];
+    });
+  }, [tokens, walls, lights, terrain]);
+
+  const doUndo = useCallback(() => {
+    setHistory(h => {
+      if (h.length === 0) return h;
+      const last = h[h.length - 1];
+      const parsed = JSON.parse(last);
+      setTokens(parsed.tokens); setWalls(parsed.walls); setLights(parsed.lights); setTerrain(parsed.terrain);
+      return h.slice(0, -1);
+    });
+  }, []);
+
+  // Universal Gallery
+  const [showGallery, setShowGallery] = useState(false);
+  const galleryTokens = JSON.parse(localStorage.getItem("rpg_saved_tokens") || "[]") as Token[];
+
+
   // Refs
   const gridRef    = useRef<HTMLDivElement>(null);
   const fogCanvas  = useRef<HTMLCanvasElement>(null);
@@ -394,19 +442,26 @@ export default function BattleGrid() {
       // Cut visible areas for regular light
       ctx.globalCompositeOperation = "destination-out";
 
-      // Player tokens have a minimal inherent visibility so they aren't completely blind to themselves
-      for (const tok of tokens.filter(t => t.isPlayer)) {
-        castRays(ctx, (tok.col + 0.5) * cs, (tok.row + 0.5) * cs, 1.5 * cs, walls, cs);
+      const currentWalls = walls.filter(w => (w.layer || 0) === currentLayer);
+
+      // Player tokens
+      for (const tok of tokens.filter(t => t.isPlayer && (t.layer || 0) === currentLayer)) {
+        castRays(ctx, (tok.col + 0.5) * cs, (tok.row + 0.5) * cs, 1.5 * cs, currentWalls, cs);
       }
 
       // Positive Light sources
       for (const lt of lights.filter(l => {
         const def = LIGHT_DEF[l.type];
         const emitLux = l.customLux ?? def.lux;
-        return l.isOn && emitLux >= 0;
+        return l.isOn && emitLux >= 0 && (l.layer || 0) === currentLayer;
       })) {
         const def = LIGHT_DEF[lt.type];
-        castRays(ctx, (lt.col + 0.5) * cs, (lt.row + 0.5) * cs, def.radius * cs, walls, cs);
+        castRays(ctx, (lt.col + 0.5) * cs, (lt.row + 0.5) * cs, def.radius * cs, currentWalls, cs);
+      }
+
+      // Positive Token emissions
+      for (const tok of tokens.filter(t => t.emission && t.emission.lux >= 0 && (t.layer || 0) === currentLayer)) {
+        castRays(ctx, (tok.col + 0.5) * cs, (tok.row + 0.5) * cs, tok.emission!.radius * cs, currentWalls, cs);
       }
 
       // Negative Light sources (Darkness / Crepúsculo)
@@ -414,24 +469,63 @@ export default function BattleGrid() {
       for (const lt of lights.filter(l => {
         const def = LIGHT_DEF[l.type];
         const emitLux = l.customLux ?? def.lux;
-        return l.isOn && emitLux < 0;
+        return l.isOn && emitLux < 0 && (l.layer || 0) === currentLayer;
       })) {
         const def = LIGHT_DEF[lt.type];
-        castRays(ctx, (lt.col + 0.5) * cs, (lt.row + 0.5) * cs, def.radius * cs, walls, cs, true);
+        castRays(ctx, (lt.col + 0.5) * cs, (lt.row + 0.5) * cs, def.radius * cs, currentWalls, cs, true);
+      }
+
+      // Negative Token emissions
+      for (const tok of tokens.filter(t => t.emission && t.emission.lux < 0 && (t.layer || 0) === currentLayer)) {
+        castRays(ctx, (tok.col + 0.5) * cs, (tok.row + 0.5) * cs, tok.emission!.radius * cs, currentWalls, cs, true);
       }
 
       ctx.globalCompositeOperation = "source-over";
     });
-  }, [dynLight, tokens, lights, walls, zoom, gridCols, gridRows, cs]);
+  }, [dynLight, tokens, lights, walls, zoom, gridCols, gridRows, cs, currentLayer, ambientLux]);
 
   // ── Token mutations ──
-  const updateToken = (id: string, patch: Partial<Token>) =>
+  const updateToken = (id: string, patch: Partial<Token>) => {
+    saveUndo();
     setTokens(p => p.map(t => t.id === id ? { ...t, ...patch } : t));
+  };
 
   const addToken = () => {
-    const t: Token = { id: genId(), label: "Novo", shape: "circle", color: "slate", col: 1, row: 1, hp: 50, maxHp: 50, initiative: 10, isPlayer: false, conditions: [], icon: "user", sizeIndex: 7, activeRunes: [] };
+    saveUndo();
+    const t: Token = { id: genId(), label: "Novo", shape: "circle", color: "slate", col: 1, row: 1, hp: 50, maxHp: 50, initiative: 10, isPlayer: false, conditions: [], icon: "user", sizeIndex: 7, activeRunes: [], layer: currentLayer };
     setTokens(p => [...p, t]); setSelectedId(t.id); setPanel("tokens");
   };
+
+  const addPlayerCharacter = () => {
+    if (!charInfo?.name) { alert("Nenhum personagem carregado."); return; }
+    saveUndo();
+    const t: Token = { 
+      id: genId(), label: charInfo.name, shape: "circle", color: "blue", 
+      col: 1, row: 1, 
+      hp: currentStatus?.vida || 50, maxHp: currentStatus?.vida || 50,
+      initiative: 10, isPlayer: true, conditions: [], icon: "sword", sizeIndex: 7, activeRunes: [], layer: currentLayer 
+    };
+    setTokens(p => [...p, t]); setSelectedId(t.id); setPanel("tokens");
+  };
+
+  const cloneToken = (target: Token) => {
+    saveUndo();
+    const t = { ...target, id: genId(), col: target.col + 1, row: target.row, layer: currentLayer };
+    setTokens(p => [...p, t]); setSelectedId(t.id); setPanel("tokens");
+  };
+
+  const saveToGallery = (token: Token) => {
+    const saved = JSON.parse(localStorage.getItem("rpg_saved_tokens") || "[]");
+    localStorage.setItem("rpg_saved_tokens", JSON.stringify([...saved, token]));
+    alert("Invocação/Personagem salvo na Galeria Universal!");
+  };
+
+  const loadFromGallery = (t: Token) => {
+    saveUndo();
+    const cloned = { ...t, id: genId(), col: 1, row: 1, layer: currentLayer };
+    setTokens(p => [...p, cloned]); setSelectedId(cloned.id); setShowGallery(false);
+  };
+
 
   // ── Grid event helpers ──
   const getGridPt = (e: React.MouseEvent) => {
@@ -465,10 +559,10 @@ export default function BattleGrid() {
 
     setWalls(p => [...p, {
       id: genId(), x1: wallStart.x, y1: wallStart.y, x2, y2,
-      material: pendWallMat, thickness: pendWallThick, subtype, isOpen: false,
+      material: pendWallMat, thickness: pendWallThick, subtype, isOpen: false, layer: currentLayer
     }]);
     setWallStart(null); setWallPreview(null);
-  }, [wallStart, pendWallMat, pendWallThick]);
+  }, [wallStart, pendWallMat, pendWallThick, saveUndo]);
 
   // ── Mouse handlers ──
   const handleGridMouseDown = useCallback((e: React.MouseEvent) => {
@@ -482,6 +576,7 @@ export default function BattleGrid() {
         const cells = getTokenCells(tok.sizeIndex);
         const tx = tok.col * cs, ty = tok.row * cs;
         if (px.x >= tx && px.x <= tx + cells * cs && px.y >= ty && px.y <= ty + cells * cs) {
+          saveUndo();
           setSelectedId(tok.id); setSelWallId(null); setSelLightId(null);
           setDragging({ id: tok.id }); setDragPos(px);
           return;
@@ -505,7 +600,7 @@ export default function BattleGrid() {
     // Place light
     if (placeMode === "light") {
       const cell = snapCell(px);
-      setLights(p => [...p, { id: genId(), col: cell.col, row: cell.row, type: pendLightType, isOn: true }]);
+      setLights(p => [...p, { id: genId(), col: cell.col, row: cell.row, type: pendLightType, isOn: true, layer: currentLayer }]);
       return;
     }
 
@@ -513,27 +608,27 @@ export default function BattleGrid() {
     if (placeMode?.startsWith("terrain_") || placeMode === "erase_terrain") {
       const cell = snapCell(px);
       if (placeMode === "erase_terrain") {
-        setTerrain(p => p.filter(c => !(c.col === cell.col && c.row === cell.row)));
+        setTerrain(p => p.filter(c => !(c.col === cell.col && c.row === cell.row && (c.layer || 0) === currentLayer)));
       } else {
         const type = placeMode.replace("terrain_", "") as TerrainType;
-        setTerrain(p => [...p.filter(c => !(c.col === cell.col && c.row === cell.row)), { col: cell.col, row: cell.row, type }]);
+        setTerrain(p => [...p.filter(c => !(c.col === cell.col && c.row === cell.row && (c.layer || 0) === currentLayer)), { col: cell.col, row: cell.row, type, layer: currentLayer }]);
       }
     }
 
     // Erase wall
     if (placeMode === "erase_wall") {
       const gp = snapGP(px);
-      // Find nearest wall (within 1 grid unit)
+      // Find nearest wall (within 1 grid unit) on current layer
       let closest: string | null = null;
       let minDist = 0.8;
-      for (const w of walls) {
+      for (const w of walls.filter(w => (w.layer || 0) === currentLayer)) {
         const mx = (w.x1 + w.x2) / 2, my = (w.y1 + w.y2) / 2;
         const dist = Math.hypot(gp.x - mx, gp.y - my);
         if (dist < minDist) { minDist = dist; closest = w.id; }
       }
       if (closest) setWalls(p => p.filter(w => w.id !== closest));
     }
-  }, [placeMode, tokens, cs, wallStart, finishWall, pendLightType, walls]);
+  }, [placeMode, tokens, cs, wallStart, finishWall, pendLightType, walls, currentLayer]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     const px = getGridPt(e);
@@ -545,13 +640,13 @@ export default function BattleGrid() {
     if (e.buttons === 1 && placeMode?.startsWith("terrain_")) {
       const cell = snapCell(px);
       const type = placeMode.replace("terrain_", "") as TerrainType;
-      setTerrain(p => [...p.filter(c => !(c.col === cell.col && c.row === cell.row)), { col: cell.col, row: cell.row, type }]);
+      setTerrain(p => [...p.filter(c => !(c.col === cell.col && c.row === cell.row && (c.layer || 0) === currentLayer)), { col: cell.col, row: cell.row, type, layer: currentLayer }]);
     }
     if (e.buttons === 1 && placeMode === "erase_terrain") {
       const cell = snapCell(px);
-      setTerrain(p => p.filter(c => !(c.col === cell.col && c.row === cell.row)));
+      setTerrain(p => p.filter(c => !(c.col === cell.col && c.row === cell.row && (c.layer || 0) === currentLayer)));
     }
-  }, [dragging, wallStart, placeMode]);
+  }, [dragging, wallStart, placeMode, currentLayer]);
 
   const handleMouseUp = useCallback((e: React.MouseEvent) => {
     if (!dragging) return;
@@ -626,7 +721,7 @@ export default function BattleGrid() {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh", background: "#070b14", color: "#e2e8f0", userSelect: "none", overflow: "hidden", fontFamily: "'Courier New', monospace" }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "#070b14", color: "#e2e8f0", userSelect: "none", overflow: "hidden", fontFamily: "'Courier New', monospace" }}>
 
       {/* ── Top bar ── */}
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 14px", background: "#0f172a", borderBottom: "1px solid #1e293b", flexShrink: 0 }}>
@@ -648,6 +743,19 @@ export default function BattleGrid() {
             <button onClick={cancelPlacement} style={{ background: "transparent", border: "none", cursor: "pointer", color: "#f43f5e" }}><X size={14} /></button>
           </div>
         )}
+
+        {/* Undo button */}
+        <button onClick={doUndo} disabled={history.length === 0} style={{ ...tbBtn, opacity: history.length === 0 ? 0.3 : 1 }} title="Desfazer Ação (Undo)">
+          <Undo2 size={13} />
+        </button>
+        <div style={{ width: 1, height: 22, background: "#1e293b", margin: "0 4px" }} />
+
+        {/* Camada / Andar Switcher */}
+        <div style={{ display: "flex", alignItems: "center", gap: 6, background: "#060a12", border: "1px solid #1e293b", borderRadius: 6, padding: "2px 8px" }}>
+          <span style={{ fontSize: 10, color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>Andar</span>
+          <input type="number" step="1" value={currentLayer} onChange={e => setCurrentLayer(parseInt(e.target.value) || 0)} style={{ background: "transparent", border: "none", color: "#38bdf8", width: 35, fontSize: 13, fontWeight: 700, textAlign: "center", outline: "none" }} title="Escreva um número (-1, 0, 1...)" />
+        </div>
+        <div style={{ width: 1, height: 22, background: "#1e293b", margin: "0 4px" }} />
 
         <div style={{ flex: 1 }} />
 
@@ -721,17 +829,15 @@ export default function BattleGrid() {
               ))}
 
               {/* Terrain cells */}
-              {terrain.map((cell, i) => {
+              {terrain.filter(c => (c.layer || 0) === currentLayer).map((cell, i) => {
                 const td = TERRAIN_DEF[cell.type];
                 return <rect key={i} x={cell.col * cs} y={cell.row * cs} width={cs} height={cs}
                   fill={td.bg} stroke={td.border} strokeWidth={1} opacity={0.85} rx={1} />;
               })}
 
               {/* Light glow (colored aura under tokens, visible in daylight) */}
-              {lights.filter(l => l.isOn).map(lt => {
+              {lights.filter(l => l.isOn && (l.layer || 0) === currentLayer).map(lt => {
                 const def = LIGHT_DEF[lt.type];
-                const lx = (lt.col + 0.5) * cs, ly = (lt.row + 0.5) * cs;
-                const r = def.radius * cs;
                 return (
                   <radialGradient key={`g${lt.id}`} id={`lg-${lt.id}`} cx="50%" cy="50%" r="50%">
                     <stop offset="0%"   stopColor={def.glow} stopOpacity={0.5} />
@@ -739,15 +845,27 @@ export default function BattleGrid() {
                   </radialGradient>
                 );
               })}
-              {lights.filter(l => l.isOn).map(lt => {
+              {tokens.filter(t => t.emission && (t.layer || 0) === currentLayer).map(tok => (
+                <radialGradient key={`t-g${tok.id}`} id={`t-lg-${tok.id}`} cx="50%" cy="50%" r="50%">
+                  <stop offset="0%"   stopColor={tok.emission!.glow} stopOpacity={0.5} />
+                  <stop offset="100%" stopColor={tok.emission!.glow} stopOpacity={0} />
+                </radialGradient>
+              ))}
+
+              {lights.filter(l => l.isOn && (l.layer || 0) === currentLayer).map(lt => {
                 const def = LIGHT_DEF[lt.type];
                 const lx = (lt.col + 0.5) * cs, ly = (lt.row + 0.5) * cs;
                 const r = def.radius * cs;
                 return <circle key={`ga-${lt.id}`} cx={lx} cy={ly} r={r} fill={`url(#lg-${lt.id})`} pointerEvents="none" />;
               })}
+              {tokens.filter(tok => tok.emission && (tok.layer || 0) === currentLayer).map(tok => {
+                const lx = (tok.col + 0.5) * cs, ly = (tok.row + 0.5) * cs;
+                const r = tok.emission!.radius * cs;
+                return <circle key={`t-ga-${tok.id}`} cx={lx} cy={ly} r={r} fill={`url(#t-lg-${tok.id})`} pointerEvents="none" />;
+              })}
 
               {/* AoE markers */}
-              {aoes.map(aoe => {
+              {aoes.filter(a => (a.layer || 0) === currentLayer).map(aoe => {
                 const c = COLOR_MAP[aoe.color];
                 const x = aoe.col * cs, y = aoe.row * cs, sz = aoe.size * cs;
                 return (
@@ -761,7 +879,7 @@ export default function BattleGrid() {
               })}
 
               {/* Walls */}
-              {walls.map(w => renderWall(w))}
+              {walls.filter(w => (w.layer || 0) === currentLayer).map(w => renderWall(w))}
 
               {/* Wall preview */}
               {wallStart && wallPreview && (() => {
@@ -778,7 +896,7 @@ export default function BattleGrid() {
             </svg>
 
             {/* Tokens */}
-            {tokens.filter(t => !dragging || t.id !== dragging.id).map(token => {
+            {tokens.filter(t => (t.layer || 0) === currentLayer && (!dragging || t.id !== dragging.id)).map(token => {
               const cells = getTokenCells(token.sizeIndex);
               const px = cells * cs - 6;
               return (
@@ -791,7 +909,7 @@ export default function BattleGrid() {
             })}
 
             {/* Light source icons */}
-            {lights.map(lt => {
+            {lights.filter(l => (l.layer || 0) === currentLayer).map(lt => {
               const def = LIGHT_DEF[lt.type];
               const isSel = lt.id === selLightId;
               return (
@@ -1019,17 +1137,46 @@ export default function BattleGrid() {
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={SL}>Tokens</span>
-                  <button onClick={addToken} style={IBT}><Plus size={13} /></button>
+                  <div style={{ display: "flex", gap: 4 }}>
+                    <button onClick={addToken} style={IBT} title="Criar Token"><Plus size={13} /></button>
+                    <button onClick={addPlayerCharacter} style={{...IBT, color: "#38bdf8", borderColor: "#0284c7"}} title="Adicionar Meu Personagem"><User size={13} /></button>
+                    <button onClick={() => setShowGallery(!showGallery)} style={{...IBT, background: showGallery ? "#374151" : "transparent"}} title="Galeria Universal"><Save size={13} /></button>
+                  </div>
                 </div>
 
+                {showGallery && (
+                  <div style={{ padding: 12, borderRadius: 8, border: "1px solid #1e293b", background: "#0f172a" }}>
+                    <div style={{ fontSize: 11, color: "#94a3b8", marginBottom: 8, fontWeight: 700 }}>Galeria Universal</div>
+                    {galleryTokens.length === 0 ? (
+                      <div style={{ fontSize: 10, color: "#475569" }}>Nenhum token salvo. Edite um token abaixo e salve-o.</div>
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                        {galleryTokens.map((gt, i) => (
+                          <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 8px", background: "#1e293b", borderRadius: 6 }}>
+                             <div style={{ fontSize: 11, fontWeight: 600 }}>{gt.label} <span style={{fontSize:9, color:"#94a3b8"}}>{gt.isProp ? "(Objeto)" : ""}</span></div>
+                             <button onClick={() => loadFromGallery(gt)} style={{...IBT, background: "#0ea5e9", color: "#fff", padding: "2px 6px"}}>Invocar</button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {tokens.map(token => (
-                  <div key={token.id} onClick={() => setSelectedId(token.id === selectedId ? null : token.id)}
+                  <div key={token.id} onClick={() => { setSelectedId(token.id === selectedId ? null : token.id); setCurrentLayer(token.layer || 0); }}
                     style={{ padding: 10, borderRadius: 8, border: "1px solid", borderColor: selectedId === token.id ? "#f43f5e" : "#1e293b", background: selectedId === token.id ? "rgba(244,63,94,0.08)" : "#070b14", cursor: "pointer" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <div style={{ width: 26, height: 26, borderRadius: token.shape === "circle" ? "50%" : 5, background: COLOR_MAP[token.color].bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><TkIcon icon={token.icon} size={13} /></div>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 12, fontWeight: 600, color: "#e2e8f0" }}>{token.label}</div>
-                        <div style={{ fontSize: 10, color: "#64748b" }}>PV {token.hp}/{token.maxHp} · Init {token.initiative} · {CREATURE_SIZES[token.sizeIndex]?.name}</div>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: "#e2e8f0" }}>
+                          {token.label} {token.isProp && <span style={{fontSize:9, color:"#fbbf24"}}>(Objeto)</span>} 
+                          {(token.layer || 0) !== currentLayer && <span style={{fontSize:10, color:"#38bdf8", marginLeft: 4}}>Lv{token.layer || 0}</span>}
+                        </div>
+                        {!token.isProp ? (
+                          <div style={{ fontSize: 10, color: "#64748b" }}>PV {token.hp}/{token.maxHp} · Init {token.initiative} · {CREATURE_SIZES[token.sizeIndex]?.name}</div>
+                        ) : (
+                          <div style={{ fontSize: 10, color: "#64748b" }}>Ocupa: {CREATURE_SIZES[token.sizeIndex]?.name}</div>
+                        )}
                       </div>
                       <button onClick={e => { e.stopPropagation(); setTokens(p => p.filter(t => t.id !== token.id)); if (selectedId === token.id) setSelectedId(null); }} style={{ ...IBT, color: "#ef4444" }}><Trash2 size={12} /></button>
                     </div>
@@ -1044,23 +1191,27 @@ export default function BattleGrid() {
                     <label style={LBL}>Nome</label>
                     <input value={selected.label} onChange={e => updateToken(selected.id, { label: e.target.value })} style={INP} />
 
-                    <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
-                      <div style={{ flex: 1 }}>
-                        <label style={LBL}>PV Atual</label>
-                        <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                          <button onClick={() => updateToken(selected.id, { hp: Math.max(0, selected.hp - 1) })} style={{ ...IBT, padding: 3 }}><Minus size={10} /></button>
-                          <input type="number" value={selected.hp} onChange={e => updateToken(selected.id, { hp: parseInt(e.target.value) || 0 })} style={{ ...INP, width: 44, marginBottom: 0, textAlign: "center" }} />
-                          <button onClick={() => updateToken(selected.id, { hp: Math.min(selected.maxHp, selected.hp + 1) })} style={{ ...IBT, padding: 3 }}><Plus size={10} /></button>
+                    {!selected.isProp && (
+                      <>
+                        <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+                          <div style={{ flex: 1 }}>
+                            <label style={LBL}>PV Atual</label>
+                            <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
+                              <button onClick={() => updateToken(selected.id, { hp: Math.max(0, selected.hp - 1) })} style={{ ...IBT, padding: 3 }}><Minus size={10} /></button>
+                              <input type="number" value={selected.hp} onChange={e => updateToken(selected.id, { hp: parseInt(e.target.value) || 0 })} style={{ ...INP, width: 44, marginBottom: 0, textAlign: "center" }} />
+                              <button onClick={() => updateToken(selected.id, { hp: Math.min(selected.maxHp, selected.hp + 1) })} style={{ ...IBT, padding: 3 }}><Plus size={10} /></button>
+                            </div>
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <label style={LBL}>PV Máx</label>
+                            <input type="number" value={selected.maxHp} onChange={e => updateToken(selected.id, { maxHp: parseInt(e.target.value) || 1 })} style={INP} />
+                          </div>
                         </div>
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <label style={LBL}>PV Máx</label>
-                        <input type="number" value={selected.maxHp} onChange={e => updateToken(selected.id, { maxHp: parseInt(e.target.value) || 1 })} style={INP} />
-                      </div>
-                    </div>
 
-                    <label style={LBL}>Iniciativa</label>
-                    <input type="number" value={selected.initiative} onChange={e => updateToken(selected.id, { initiative: parseInt(e.target.value) || 0 })} style={INP} />
+                        <label style={LBL}>Iniciativa</label>
+                        <input type="number" value={selected.initiative} onChange={e => updateToken(selected.id, { initiative: parseInt(e.target.value) || 0 })} style={INP} />
+                      </>
+                    )}
 
                     <label style={LBL}>Tamanho</label>
                     <select value={selected.sizeIndex} onChange={e => updateToken(selected.id, { sizeIndex: parseInt(e.target.value) })} style={{ ...INP, appearance: "none" as any }}>
@@ -1070,7 +1221,40 @@ export default function BattleGrid() {
                     </select>
                     <div style={{ fontSize: 10, color: "#475569", marginTop: -6, marginBottom: 8 }}>Ocupa: {CREATURE_SIZES[selected.sizeIndex]?.occupies}</div>
 
-                    <label style={LBL}>Forma</label>
+                    <label style={{...LBL, display: "flex", alignItems: "center", gap: 6, cursor: "pointer", marginBottom: 8}}>
+                      <input type="checkbox" checked={selected.isProp || false} onChange={e => updateToken(selected.id, { isProp: e.target.checked })} />
+                      Isso é um Objeto / Prop (Esconde Vida/Init)
+                    </label>
+
+                    <label style={{...LBL, display: "flex", alignItems: "center", gap: 6, cursor: "pointer", marginBottom: 2}}>
+                      <input type="checkbox" checked={!!selected.emission} onChange={e => updateToken(selected.id, { emission: e.target.checked ? { lux: 1000, radius: 20, glow: "#fcd34d" } : undefined })} />
+                      Item com Emissão (Luz ou Sombra)
+                    </label>
+                    {selected.emission && (
+                      <div style={{ display: "flex", gap: 4, marginBottom: 8, padding: 8, background: "rgba(0,0,0,0.3)", borderRadius: 6, flexWrap: "wrap", border: "1px solid #1e293b" }}>
+                        <div style={{ flex: 1, minWidth: 60 }}>
+                          <label style={{...LBL, fontSize: 9}}>Lux</label>
+                          <input type="number" value={selected.emission.lux} onChange={e => updateToken(selected.id, { emission: { ...selected.emission!, lux: parseInt(e.target.value)||0 } })} style={{...INP, marginBottom:0}} title="(Ex: Sol = 1000, Escuro = -500)" />
+                        </div>
+                        <div style={{ flex: 1, minWidth: 60 }}>
+                          <label style={{...LBL, fontSize: 9}}>Raio (M)</label>
+                          <input type="number" value={selected.emission.radius} onChange={e => updateToken(selected.id, { emission: { ...selected.emission!, radius: Math.max(0, parseInt(e.target.value)||1) } })} style={{...INP, marginBottom:0}} />
+                        </div>
+                        <div style={{ flex: 1, minWidth: 60 }}>
+                          <label style={{...LBL, fontSize: 9}}>Cor Hex</label>
+                          <input type="text" value={selected.emission.glow} onChange={e => updateToken(selected.id, { emission: { ...selected.emission!, glow: e.target.value } })} style={{...INP, marginBottom:0}} />
+                        </div>
+                      </div>
+                    )}
+
+                    <label style={LBL}>Ícone & Forma</label>
+                    <div style={{ display: "flex", gap: 3, marginBottom: 4, flexWrap: "wrap" }}>
+                      {(["sword", "shield", "crown", "user", "target", "box", "sun", "moon"] as Token["icon"][]).map(ic => (
+                        <button key={ic} onClick={() => updateToken(selected.id, { icon: ic })} style={{ padding: 4, borderRadius: 4, border: selected.icon === ic ? "1px solid #38bdf8" : "1px solid transparent", background: selected.icon === ic ? "rgba(56,189,248,0.2)" : "transparent", color: "#94a3b8", cursor: "pointer" }}>
+                           <TkIcon icon={ic} size={14} />
+                        </button>
+                      ))}
+                    </div>
                     <div style={{ display: "flex", gap: 3, marginBottom: 8 }}>
                       {(["circle", "square", "diamond", "triangle"] as TokenShape[]).map(s => (
                         <button key={s} onClick={() => updateToken(selected.id, { shape: s })} style={{ ...IBT, flex: 1, borderColor: selected.shape === s ? "#f43f5e" : "#1e293b", background: selected.shape === s ? "rgba(244,63,94,0.18)" : "transparent" }}>
@@ -1093,8 +1277,8 @@ export default function BattleGrid() {
                       ))}
                     </div>
 
-                    <label style={LBL}>Runas Ativas (Poderes)</label>
-                    <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 4 }}>
+                    <label style={LBL}>Runas Ativas (Auras Menores)</label>
+                    <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 8 }}>
                       {["Alvorada", "Crepúsculo", "Conservação", "Preservação"].map(rune => {
                         const active = selected.activeRunes?.includes(rune);
                         return (
@@ -1107,6 +1291,11 @@ export default function BattleGrid() {
                         );
                       })}
                     </div>
+
+                    <div style={{ display: "flex", gap: 6, marginTop: 12 }}>
+                       <button onClick={() => cloneToken(selected)} style={{ flex: 1, padding: "6px", background: "#1e293b", color: "#e2e8f0", border: "none", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 5 }}><Copy size={12}/> Clonar</button>
+                       <button onClick={() => saveToGallery(selected)} style={{ flex: 1, padding: "6px", background: "#0ea5e9", color: "#fff", border: "none", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 5 }}><Save size={12}/> Guardar</button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -1117,20 +1306,20 @@ export default function BattleGrid() {
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={SL}>Ordem de Iniciativa</span>
-                  <button onClick={() => setTokens(p => p.map(t => ({ ...t, initiative: Math.floor(Math.random() * 20) + 1 })))} style={{ ...IBT, fontSize: 10, padding: "4px 8px", gap: 3, display: "flex", alignItems: "center" }}>
-                    <RotateCcw size={10} /> Rolar d20
-                  </button>
                 </div>
                 {sortedByInit.map((token, idx) => {
                   const c = COLOR_MAP[token.color];
                   const hp = token.hp / token.maxHp;
                   const hc = hp > 0.5 ? "#22c55e" : hp > 0.25 ? "#f59e0b" : "#ef4444";
                   return (
-                    <div key={token.id} onClick={() => setSelectedId(token.id)} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 7, border: "1px solid", borderColor: selectedId === token.id ? c.bg : "#1e293b", background: selectedId === token.id ? `${c.bg}20` : "#070b14", cursor: "pointer" }}>
+                    <div key={token.id} onClick={() => { setSelectedId(token.id); setCurrentLayer(token.layer || 0); }} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 7, border: "1px solid", borderColor: selectedId === token.id ? c.bg : "#1e293b", background: selectedId === token.id ? `${c.bg}20` : "#070b14", cursor: "pointer" }}>
                       <div style={{ width: 22, height: 22, borderRadius: "50%", background: idx === 0 ? "#f59e0b" : "#1e293b", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: idx === 0 ? "#000" : "#64748b", flexShrink: 0 }}>{idx + 1}</div>
                       <div style={{ width: 10, height: 10, borderRadius: "50%", background: c.bg, flexShrink: 0 }} />
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 12, fontWeight: 600, color: "#e2e8f0" }}>{token.label}</div>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: "#e2e8f0" }}>
+                          {token.label} 
+                          {(token.layer || 0) !== currentLayer && <span style={{fontSize:10, color:"#38bdf8", marginLeft: 4}}>Lv{token.layer || 0}</span>}
+                        </div>
                         <div style={{ fontSize: 9, color: "#475569" }}>{CREATURE_SIZES[token.sizeIndex]?.name}</div>
                         <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 3 }}>
                           <div style={{ flex: 1, height: 3, borderRadius: 2, background: "#1e293b" }}><div style={{ width: `${hp * 100}%`, height: "100%", borderRadius: 2, background: hc }} /></div>

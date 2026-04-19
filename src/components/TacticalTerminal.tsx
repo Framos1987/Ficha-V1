@@ -20,6 +20,7 @@ interface TacticalTerminalProps {
   inventory: InventoryItem[];
   tacticalState: TacticalState;
   onTacticalStateChange: (state: TacticalState) => void;
+  onStatusChange?: (key: string, val: number) => void;
   charInfo: { level?: number; physicalLevel?: number; intellectualLevel?: number; socialLevel?: number };
 }
 
@@ -59,8 +60,9 @@ const REACTIONS_SECONDARY = [
 
 // ── VITAL BAR (compact for Terminal) ──────────────────────────────────
 
-function VitalBar({ label, current, max, color, icon: Icon }: {
-  label: string; current: number; max: number; color: string; icon: React.ElementType;
+function VitalBar({ id, label, current, max, color, icon: Icon, onUpdate }: {
+  id: string; label: string; current: number; max: number; color: string; icon: React.ElementType;
+  onUpdate?: (id: string, newVal: number) => void;
 }) {
   const pct = max > 0 ? Math.min(100, (current / max) * 100) : 0;
   const critical = pct < 20 && pct > 0;
@@ -71,7 +73,23 @@ function VitalBar({ label, current, max, color, icon: Icon }: {
       <div className="flex-1">
         <div className="flex items-center justify-between mb-0.5">
           <span className="text-[9px] text-slate-500 uppercase tracking-widest font-black">{label}</span>
-          <span className={`text-[10px] font-mono font-bold ${color}`}>{current}/{max}</span>
+          <div className="flex items-center gap-1">
+            {onUpdate && (
+              <button 
+                onClick={() => onUpdate(id, Math.max(0, current - 1))} 
+                className="text-[10px] text-slate-500 hover:text-slate-200 px-1 hover:bg-slate-800 rounded transition-colors"
+                title="Consumir / Sofrer Dano"
+              ">−</button>
+            )}
+            <span className={`text-[10px] font-mono font-bold ${color}`}>{current}/{max}</span>
+            {onUpdate && (
+              <button 
+                onClick={() => onUpdate(id, Math.min(max, current + 1))} 
+                className="text-[10px] text-slate-500 hover:text-slate-200 px-1 hover:bg-slate-800 rounded transition-colors"
+                title="Recuperar"
+              >+</button>
+            )}
+          </div>
         </div>
         <div className="h-2 bg-black/60 rounded-full overflow-hidden border border-slate-800/50">
           <div
@@ -91,7 +109,7 @@ function VitalBar({ label, current, max, color, icon: Icon }: {
 
 export function TacticalTerminal({
   currentStatus, maxStatus, derived, computedAttributes,
-  equippedWeapons, inventory, tacticalState, onTacticalStateChange, charInfo,
+  equippedWeapons, inventory, tacticalState, onTacticalStateChange, onStatusChange, charInfo,
 }: TacticalTerminalProps) {
 
   const [showSecondaryReactions, setShowSecondaryReactions] = useState(false);
@@ -228,12 +246,12 @@ export function TacticalTerminal({
 
         {/* Vital Tanks */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 mb-3">
-          <VitalBar label="Vida" current={currentStatus.vida || 0} max={maxStatus.vida || 1} color="text-red-400" icon={Heart} />
-          <VitalBar label="Sanidade" current={currentStatus.sanidade || 0} max={maxStatus.sanidade || 1} color="text-violet-400" icon={Brain} />
-          <VitalBar label="Vigor" current={currentStatus.vigor || 0} max={maxStatus.vigor || 1} color="text-emerald-400" icon={Zap} />
-          <VitalBar label="Mana" current={currentStatus.mana || 0} max={maxStatus.mana || 1} color="text-blue-400" icon={Droplets} />
-          <VitalBar label="Poder" current={currentStatus.poder || 0} max={maxStatus.poder || 1} color="text-amber-400" icon={Star} />
-          <VitalBar label="Aura" current={currentStatus.aura || 0} max={maxStatus.aura || 1} color="text-cyan-400" icon={Shield} />
+          <VitalBar id="vida" label="Vida" current={currentStatus.vida || 0} max={maxStatus.vida || 1} color="text-red-400" icon={Heart} onUpdate={onStatusChange} />
+          <VitalBar id="sanidade" label="Sanidade" current={currentStatus.sanidade || 0} max={maxStatus.sanidade || 1} color="text-violet-400" icon={Brain} onUpdate={onStatusChange} />
+          <VitalBar id="vigor" label="Vigor" current={currentStatus.vigor || 0} max={maxStatus.vigor || 1} color="text-emerald-400" icon={Zap} onUpdate={onStatusChange} />
+          <VitalBar id="mana" label="Mana" current={currentStatus.mana || 0} max={maxStatus.mana || 1} color="text-blue-400" icon={Droplets} onUpdate={onStatusChange} />
+          <VitalBar id="poder" label="Poder" current={currentStatus.poder || 0} max={maxStatus.poder || 1} color="text-amber-400" icon={Star} onUpdate={onStatusChange} />
+          <VitalBar id="aura" label="Aura" current={currentStatus.aura || 0} max={maxStatus.aura || 1} color="text-cyan-400" icon={Shield} onUpdate={onStatusChange} />
         </div>
 
         {/* Symptomatology + Extrapolate */}

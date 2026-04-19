@@ -765,7 +765,7 @@ export default function App() {
 
               {activeTab === "tactical" && (
                 <TacticalTerminal
-                  currentStatus={conditions}
+                  currentStatus={currentStatus}
                   maxStatus={maxStatus}
                   derived={derived}
                   computedAttributes={computedAttributes}
@@ -773,6 +773,7 @@ export default function App() {
                   inventory={inventory}
                   tacticalState={tacticalState}
                   onTacticalStateChange={setTacticalState}
+                  onStatusChange={handleStatusChange}
                   charInfo={charInfo}
                 />
               )}

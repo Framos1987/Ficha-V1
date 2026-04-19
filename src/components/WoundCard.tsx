@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Wound, WoundRegion, WoundTissue, WoundSeverity } from '../types';
 import { AlertTriangle, Droplets, Brain, TrendingUp, Clock, Heart, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
-import { useState } from 'react';
 
 const REGIONS: WoundRegion[] = [
   'Digital','Manual','Pedal','Antebraquial','Crural','Cubital','Genicular',

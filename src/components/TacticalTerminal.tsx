@@ -1,13 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { 
   Crosshair, Heart, Brain, Zap, Droplets, Shield, Star, 
-  Swords, HandMetal, Eye, MessageCircle, Move, 
-  ShieldAlert, ShieldCheck, HandHelpingIcon, Search, Target,
+  Swords, MessageCircle, 
+  ShieldAlert, ShieldCheck, Target,
   ChevronDown, ChevronUp, Plus, AlertTriangle, Skull,
   Grab, Footprints, Wind, Accessibility, ArrowUpCircle,
-  Lock, Wrench, Hand, Sparkles, Package, EyeOff, RotateCcw
+  Wrench, Hand, Sparkles, Package, EyeOff, RotateCcw
 } from 'lucide-react';
-import { InventoryItem, Wound, TacticalState, WoundRegion } from '../types';
+import { InventoryItem, Wound, TacticalState } from '../types';
 import { WeaponCard } from './WeaponCard';
 import { WoundCard } from './WoundCard';
 

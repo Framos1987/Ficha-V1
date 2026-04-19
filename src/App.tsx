@@ -19,7 +19,7 @@ import { MasterGate } from "./components/MasterGate";
 import { MailSystem } from "./components/MailSystem";
 import { MasterDashboard } from "./components/MasterDashboard";
 import { calculateStats } from "./lib/calculations";
-import { CharacterInfo, Attributes, InventoryItem, EquippedArmor, EquippedWeapons, EquippedAccessories, AptidoesState, JournalNote, MasterState, EquippedRunes } from "./types";
+import { CharacterInfo, Attributes, InventoryItem, EquippedArmor, EquippedWeapons, EquippedAccessories, AptidoesState, JournalNote, MasterState, EquippedRunes, TacticalState } from "./types";
 import { AnimatePresence } from "motion/react";
 import { supabase } from "./lib/supabase";
 

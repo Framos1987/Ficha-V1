@@ -74,19 +74,23 @@ function VitalBar({ id, label, current, max, color, icon: Icon, onUpdate }: {
           <span className="text-[9px] text-slate-500 uppercase tracking-widest font-black">{label}</span>
           <div className="flex items-center gap-1">
             {onUpdate && (
-              <button 
-                onClick={() => onUpdate(id, Math.max(0, current - 1))} 
+              <button
+                onClick={() => onUpdate(id, Math.max(0, current - 1))}
                 className="text-[10px] text-slate-500 hover:text-slate-200 px-1 hover:bg-slate-800 rounded transition-colors"
                 title="Consumir / Sofrer Dano"
-              ">−</button>
+              >
+                -
+              </button>
             )}
             <span className={`text-[10px] font-mono font-bold ${color}`}>{current}/{max}</span>
             {onUpdate && (
-              <button 
-                onClick={() => onUpdate(id, Math.min(max, current + 1))} 
+              <button
+                onClick={() => onUpdate(id, Math.min(max, current + 1))}
                 className="text-[10px] text-slate-500 hover:text-slate-200 px-1 hover:bg-slate-800 rounded transition-colors"
                 title="Recuperar"
-              >+</button>
+              >
+                +
+              </button>
             )}
           </div>
         </div>

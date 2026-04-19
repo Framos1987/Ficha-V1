@@ -10,8 +10,8 @@ import { Calculator } from "./components/Calculator";
 import { CharacterEditor } from "./components/CharacterEditor";
 import { DerivedStats } from "./components/DerivedStats";
 import { StatusTab } from "./components/StatusTab";
-import { CombatSummary } from "./components/CombatSummary";
 import { AptidoesTab } from "./components/AptidoesTab";
+import { TacticalTerminal } from "./components/TacticalTerminal";
 import { AuthGate } from "./components/AuthGate";
 import { LobbyScreen } from "./components/LobbyScreen";
 import { JournalTab } from "./components/JournalTab";
@@ -145,8 +145,12 @@ export default function App() {
     objectRunes: [],
   });
   const [conditions, setConditions] = useLocalStorage<Record<string, number>>("rpg_conditions", {});
+  const [tacticalState, setTacticalState] = useLocalStorage<TacticalState>("rpg_tactical_state", {
+    wounds: [],
+    extrapolateChargesUsed: 0
+  });
 
-  const [activeTab, setActiveTab] = useState<"attributes" | "derived" | "status" | "inventory" | "shop" | "arsenal" | "aptidoes" | "journal" | "mail" | "master">("attributes");
+  const [activeTab, setActiveTab] = useState<"attributes" | "derived" | "status" | "inventory" | "shop" | "arsenal" | "tactical" | "aptidoes" | "journal" | "mail" | "master">("attributes");
   const [isEditing, setIsEditing] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useLocalStorage<boolean>("rpg_is_auth", false);
@@ -611,6 +615,12 @@ export default function App() {
                 <Sword size={18} /> Arsenal
               </button>
               <button
+                onClick={() => setActiveTab("tactical")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all whitespace-nowrap border ${activeTab === "tactical" ? "bg-red-900 border-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.4)]" : "border-red-900/30 text-red-400 hover:bg-red-950/40 hover:text-red-300"}`}
+              >
+                <Target size={18} className={activeTab === "tactical" ? "animate-pulse" : ""} /> Terminal Tático
+              </button>
+              <button
                 onClick={() => setActiveTab("aptidoes")}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors whitespace-nowrap ${activeTab === "aptidoes" ? "bg-purple-700 text-white" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"}`}
               >
@@ -753,6 +763,20 @@ export default function App() {
                 />
               )}
 
+              {activeTab === "tactical" && (
+                <TacticalTerminal
+                  currentStatus={conditions}
+                  maxStatus={maxStatus}
+                  derived={derived}
+                  computedAttributes={computedAttributes}
+                  equippedWeapons={equippedWeapons}
+                  inventory={inventory}
+                  tacticalState={tacticalState}
+                  onTacticalStateChange={setTacticalState}
+                  charInfo={charInfo}
+                />
+              )}
+
               {activeTab === "aptidoes" && <AptidoesTab aptidoes={aptidoes} setAptidoes={setAptidoes} />}
               {activeTab === "journal" && <JournalTab notes={journalNotes} onChange={setJournalNotes} />}
               {activeTab === "mail" && (
@@ -775,7 +799,6 @@ export default function App() {
           </div>
         </div>
 
-        <CombatSummary equippedWeapons={equippedWeapons} equippedArmor={equippedArmor} inventory={inventory} />
       </div>
 
       <Calculator />

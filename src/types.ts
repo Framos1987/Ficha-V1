@@ -179,3 +179,32 @@ export type AptidoesState = Record<string, number>;
 export type EquippedAccessories = {
   [slot in AccessorySlot]: InventoryItem | null;
 };
+
+// ── Tactical Terminal (Wounds & Combat State) ──────────────────────────────
+
+export type WoundRegion =
+  | 'Digital' | 'Manual' | 'Pedal'
+  | 'Antebraquial' | 'Crural' | 'Cubital' | 'Genicular'
+  | 'Braquial' | 'Meral' | 'Omal'
+  | 'Pélvica' | 'Abdominal' | 'Lombar' | 'Torácica' | 'Dorsal'
+  | 'Cervical' | 'Facial' | 'Cefálica' | 'Nasal' | 'Auricular' | 'Ocular' | 'Oral';
+
+export type WoundTissue = 'Tegumentar' | 'Muscular' | 'Ósseo';
+export type WoundSeverity = 'Leve' | 'Moderada' | 'Severa' | 'Extrema';
+
+export interface Wound {
+  id: string;
+  region: WoundRegion;
+  tissue: WoundTissue;
+  severity: WoundSeverity;
+  painLevel: number;       // 0-10+
+  bleedingRate: number;    // vida perdida por turno (0.00 – 1.00+)
+  debuff: string;          // descrição textual da debilitação funcional
+  healingMode: 'natural' | 'treated';
+  timestamp: number;
+}
+
+export interface TacticalState {
+  wounds: Wound[];
+  extrapolateChargesUsed: number;
+}

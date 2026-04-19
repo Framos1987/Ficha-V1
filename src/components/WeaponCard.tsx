@@ -1,10 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { InventoryItem } from '../types';
-import { Sword, Crosshair, ChevronDown, ChevronUp, Hand, Grip, AlertTriangle, BarChart3 } from 'lucide-react';
+import { Sword, ChevronDown, ChevronUp, Hand, Grip, AlertTriangle } from 'lucide-react';
 
 interface WeaponCardProps {
   weapon: InventoryItem;
-  attackBonus: number;     // From derived stats (Ataque Físico Armado, etc.)
   attributeBonus: number;  // The raw attribute/5 bonus for flat damage
   dificuldadeBase: number; // Dificuldade Armada (Destreza)
 }
@@ -54,7 +53,7 @@ const CONDITION_CHECKS = [
   { id: 'mortal', label: 'Mortal', diffMod: 0, damageMult: 3, note: 'Requer: Conhecer fraqueza.' },
 ];
 
-export function WeaponCard({ weapon, attackBonus, attributeBonus, dificuldadeBase }: WeaponCardProps) {
+export function WeaponCard({ weapon, attributeBonus, dificuldadeBase }: WeaponCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [twoHanded, setTwoHanded] = useState(false);
   const [attackType, setAttackType] = useState('simple');

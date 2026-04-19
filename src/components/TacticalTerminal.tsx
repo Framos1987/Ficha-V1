@@ -14,7 +14,6 @@ import { WoundCard } from './WoundCard';
 interface TacticalTerminalProps {
   currentStatus: Record<string, number>;
   maxStatus: Record<string, number>;
-  derived: Record<string, string | number>;
   computedAttributes: Record<string, { base: number; bonus: number }>;
   equippedWeapons: { mainHand: InventoryItem | null; offHand: InventoryItem | null };
   inventory: InventoryItem[];
@@ -108,7 +107,7 @@ function VitalBar({ id, label, current, max, color, icon: Icon, onUpdate }: {
 // ── MAIN COMPONENT ────────────────────────────────────────────────────
 
 export function TacticalTerminal({
-  currentStatus, maxStatus, derived, computedAttributes,
+  currentStatus, maxStatus, computedAttributes,
   equippedWeapons, inventory, tacticalState, onTacticalStateChange, onStatusChange, charInfo,
 }: TacticalTerminalProps) {
 
@@ -191,13 +190,10 @@ export function TacticalTerminal({
   const offWeapon = inventory.find(i => i.id === equippedWeapons.offHand?.id);
 
   const getAttackBonus = (weapon?: InventoryItem) => {
-    if (!weapon?.description) return { bonus: 0, attrFlat: 0 };
+    if (!weapon?.description) return { attrFlat: 0 };
     const match = weapon.description.match(/Ataque (Físico|Mágico|Místico) (Armado|Desarmado|Propulsivo)/);
-    if (!match) return { bonus: 0, attrFlat: 0 };
+    if (!match) return { attrFlat: 0 };
     const type = match[1];
-    const style = match[2];
-    const key = `Ataque ${type} ${style}`;
-    const bonus = Number(derived[key]) || 0;
     
     // Attribute flat bonus for damage
     let attrFlat = 0;
@@ -205,7 +201,7 @@ export function TacticalTerminal({
     else if (type === 'Mágico') attrFlat = Math.floor(inteligencia / 5);
     else if (type === 'Místico') attrFlat = Math.floor(carisma / 5);
     
-    return { bonus, attrFlat };
+    return { attrFlat };
   };
 
   return (
@@ -316,22 +312,20 @@ export function TacticalTerminal({
           <div className="space-y-3">
             <h4 className="text-[10px] font-black text-red-500 uppercase tracking-[0.2em]">Armamento Equipado</h4>
             {mainWeapon && (() => {
-              const { bonus, attrFlat } = getAttackBonus(mainWeapon);
+              const { attrFlat } = getAttackBonus(mainWeapon);
               return (
                 <WeaponCard
                   weapon={mainWeapon}
-                  attackBonus={bonus}
                   attributeBonus={attrFlat}
                   dificuldadeBase={destreza}
                 />
               );
             })()}
             {offWeapon && (() => {
-              const { bonus, attrFlat } = getAttackBonus(offWeapon);
+              const { attrFlat } = getAttackBonus(offWeapon);
               return (
                 <WeaponCard
                   weapon={offWeapon}
-                  attackBonus={bonus}
                   attributeBonus={attrFlat}
                   dificuldadeBase={destreza}
                 />

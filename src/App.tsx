@@ -380,7 +380,7 @@ export default function App() {
                 </button>
               </div>
               <div className="flex items-center gap-3 text-sm text-slate-400 mt-1 flex-wrap">
-                <span className="flex items-center gap-1"><Shield size={14} /> Nível {charInfo.level}</span>
+                <span className="flex items-center gap-1"><Shield size={14} /> Nível {(charInfo.physicalLevel || 0) + (charInfo.intellectualLevel || 0) + (charInfo.socialLevel || 0)}</span>
                 <span>•</span>
                 <span>Raça: {charInfo.race || "N/A"}</span>
                 <span>•</span>
@@ -388,29 +388,131 @@ export default function App() {
               </div>
               <div className="flex flex-col gap-3 mt-4 flex-wrap w-full">
                 {/* Physical Bar */}
-                <div className="flex items-center gap-3 w-full max-w-sm cursor-help" title={`Exp Física: ${charInfo.physicalValue || 0}/100`}>
-                  <Dumbbell size={16} className="text-emerald-400" />
-                  <div className="w-8 text-xs font-bold text-slate-400 text-right">Nv {charInfo.physicalLevel || 0}</div>
-                  <div className="flex-1 h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800/80 shadow-inner">
-                    <div className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full shadow-[0_0_10px_rgba(52,211,153,0.3)] transition-all duration-1000" style={{ width: `${Math.min(100, (charInfo.physicalValue || 0))}%` }}></div>
-                  </div>
-                </div>
+                {(() => {
+                  const physLevel = charInfo.physicalLevel || 0;
+                  const physXp = charInfo.physicalValue || 0;
+                  const physMax = physLevel === 0 ? 500 : physLevel * 1000;
+                  const physPct = Math.min(100, (physXp / physMax) * 100);
+                  return (
+                    <div className="flex items-center gap-3 w-full max-w-md">
+                      <Dumbbell size={16} className="text-emerald-400 shrink-0" />
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <span className="text-[10px] text-slate-500 uppercase font-black">Nv</span>
+                        <input
+                          type="number"
+                          value={physLevel}
+                          onChange={e => setCharInfo({ ...charInfo, physicalLevel: Math.max(0, Math.min(300, parseInt(e.target.value) || 0)) })}
+                          className="w-10 bg-slate-800 border border-slate-700 rounded px-1 py-0.5 text-xs text-emerald-400 font-bold text-center focus:border-emerald-500 outline-none"
+                        />
+                      </div>
+                      <div className="flex-1 h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800/80 shadow-inner cursor-pointer relative group" title={`Exp: ${physXp} / ${physMax}`}>
+                        <div className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full shadow-[0_0_10px_rgba(52,211,153,0.3)] transition-all duration-1000" style={{ width: `${physPct}%` }}></div>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <input
+                          type="number"
+                          value={physXp}
+                          onChange={e => {
+                            let newXp = Math.max(0, parseInt(e.target.value) || 0);
+                            let newLevel = physLevel;
+                            const getMax = (lv: number) => lv === 0 ? 500 : lv * 1000;
+                            while (newXp >= getMax(newLevel) && newLevel < 300) {
+                              newXp -= getMax(newLevel);
+                              newLevel++;
+                            }
+                            setCharInfo({ ...charInfo, physicalValue: newXp, physicalLevel: newLevel });
+                          }}
+                          className="w-16 bg-slate-800 border border-slate-700 rounded px-1 py-0.5 text-[10px] text-slate-400 font-mono text-center focus:border-emerald-500 outline-none"
+                        />
+                        <span className="text-[10px] text-slate-600 font-mono">/ {physMax}</span>
+                      </div>
+                    </div>
+                  );
+                })()}
                 {/* Intellectual Bar */}
-                <div className="flex items-center gap-3 w-full max-w-sm cursor-help" title={`Exp Intelectual: ${charInfo.intellectualValue || 0}/100`}>
-                  <Brain size={16} className="text-blue-400" />
-                  <div className="w-8 text-xs font-bold text-slate-400 text-right">Nv {charInfo.intellectualLevel || 0}</div>
-                  <div className="flex-1 h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800/80 shadow-inner">
-                    <div className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full shadow-[0_0_10px_rgba(96,165,250,0.3)] transition-all duration-1000" style={{ width: `${Math.min(100, (charInfo.intellectualValue || 0))}%` }}></div>
-                  </div>
-                </div>
+                {(() => {
+                  const intLevel = charInfo.intellectualLevel || 0;
+                  const intXp = charInfo.intellectualValue || 0;
+                  const intMax = intLevel === 0 ? 500 : intLevel * 1000;
+                  const intPct = Math.min(100, (intXp / intMax) * 100);
+                  return (
+                    <div className="flex items-center gap-3 w-full max-w-md">
+                      <Brain size={16} className="text-blue-400 shrink-0" />
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <span className="text-[10px] text-slate-500 uppercase font-black">Nv</span>
+                        <input
+                          type="number"
+                          value={intLevel}
+                          onChange={e => setCharInfo({ ...charInfo, intellectualLevel: Math.max(0, Math.min(300, parseInt(e.target.value) || 0)) })}
+                          className="w-10 bg-slate-800 border border-slate-700 rounded px-1 py-0.5 text-xs text-blue-400 font-bold text-center focus:border-blue-500 outline-none"
+                        />
+                      </div>
+                      <div className="flex-1 h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800/80 shadow-inner cursor-pointer relative group" title={`Exp: ${intXp} / ${intMax}`}>
+                        <div className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full shadow-[0_0_10px_rgba(96,165,250,0.3)] transition-all duration-1000" style={{ width: `${intPct}%` }}></div>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <input
+                          type="number"
+                          value={intXp}
+                          onChange={e => {
+                            let newXp = Math.max(0, parseInt(e.target.value) || 0);
+                            let newLevel = intLevel;
+                            const getMax = (lv: number) => lv === 0 ? 500 : lv * 1000;
+                            while (newXp >= getMax(newLevel) && newLevel < 300) {
+                              newXp -= getMax(newLevel);
+                              newLevel++;
+                            }
+                            setCharInfo({ ...charInfo, intellectualValue: newXp, intellectualLevel: newLevel });
+                          }}
+                          className="w-16 bg-slate-800 border border-slate-700 rounded px-1 py-0.5 text-[10px] text-slate-400 font-mono text-center focus:border-blue-500 outline-none"
+                        />
+                        <span className="text-[10px] text-slate-600 font-mono">/ {intMax}</span>
+                      </div>
+                    </div>
+                  );
+                })()}
                 {/* Social Bar */}
-                <div className="flex items-center gap-3 w-full max-w-sm cursor-help" title={`Exp Social: ${charInfo.socialValue || 0}/100`}>
-                  <Users size={16} className="text-amber-400" />
-                  <div className="w-8 text-xs font-bold text-slate-400 text-right">Nv {charInfo.socialLevel || 0}</div>
-                  <div className="flex-1 h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800/80 shadow-inner">
-                    <div className="h-full bg-gradient-to-r from-amber-600 to-amber-400 rounded-full shadow-[0_0_10px_rgba(251,191,36,0.3)] transition-all duration-1000" style={{ width: `${Math.min(100, (charInfo.socialValue || 0))}%` }}></div>
-                  </div>
-                </div>
+                {(() => {
+                  const socLevel = charInfo.socialLevel || 0;
+                  const socXp = charInfo.socialValue || 0;
+                  const socMax = socLevel === 0 ? 500 : socLevel * 1000;
+                  const socPct = Math.min(100, (socXp / socMax) * 100);
+                  return (
+                    <div className="flex items-center gap-3 w-full max-w-md">
+                      <Users size={16} className="text-amber-400 shrink-0" />
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <span className="text-[10px] text-slate-500 uppercase font-black">Nv</span>
+                        <input
+                          type="number"
+                          value={socLevel}
+                          onChange={e => setCharInfo({ ...charInfo, socialLevel: Math.max(0, Math.min(300, parseInt(e.target.value) || 0)) })}
+                          className="w-10 bg-slate-800 border border-slate-700 rounded px-1 py-0.5 text-xs text-amber-400 font-bold text-center focus:border-amber-500 outline-none"
+                        />
+                      </div>
+                      <div className="flex-1 h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800/80 shadow-inner cursor-pointer relative group" title={`Exp: ${socXp} / ${socMax}`}>
+                        <div className="h-full bg-gradient-to-r from-amber-600 to-amber-400 rounded-full shadow-[0_0_10px_rgba(251,191,36,0.3)] transition-all duration-1000" style={{ width: `${socPct}%` }}></div>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <input
+                          type="number"
+                          value={socXp}
+                          onChange={e => {
+                            let newXp = Math.max(0, parseInt(e.target.value) || 0);
+                            let newLevel = socLevel;
+                            const getMax = (lv: number) => lv === 0 ? 500 : lv * 1000;
+                            while (newXp >= getMax(newLevel) && newLevel < 300) {
+                              newXp -= getMax(newLevel);
+                              newLevel++;
+                            }
+                            setCharInfo({ ...charInfo, socialValue: newXp, socialLevel: newLevel });
+                          }}
+                          className="w-16 bg-slate-800 border border-slate-700 rounded px-1 py-0.5 text-[10px] text-slate-400 font-mono text-center focus:border-amber-500 outline-none"
+                        />
+                        <span className="text-[10px] text-slate-600 font-mono">/ {socMax}</span>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             </div>
           </div>
@@ -540,16 +642,67 @@ export default function App() {
               {activeTab === "attributes" && (
                 <div className="bg-slate-800 rounded-3xl border border-slate-700 p-6 shadow-xl">
                   <h2 className="text-xl font-bold text-white mb-6">Atributos</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {Object.entries(computedAttributes).map(([name, data]) => (
-                      <AttributeRow 
-                        key={name}
-                        name={name}
-                        base={data.base}
-                        bonus={data.bonus}
-                        gemBonus={gemBonuses.attributes[name] || 0}
-                      />
-                    ))}
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Corporais (Physical) */}
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 mb-4 pb-2 border-b border-emerald-800/40">
+                        <Dumbbell size={16} className="text-emerald-400" />
+                        <h3 className="text-sm font-black text-emerald-400 uppercase tracking-widest">Corporais</h3>
+                      </div>
+                      {["Constituição", "Destreza", "Força"].map(name => {
+                        const data = computedAttributes[name];
+                        if (!data) return null;
+                        return (
+                          <AttributeRow
+                            key={name}
+                            name={name}
+                            base={data.base}
+                            bonus={data.bonus}
+                            gemBonus={gemBonuses.attributes[name] || 0}
+                          />
+                        );
+                      })}
+                    </div>
+                    {/* Intelectuais */}
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 mb-4 pb-2 border-b border-blue-800/40">
+                        <Brain size={16} className="text-blue-400" />
+                        <h3 className="text-sm font-black text-blue-400 uppercase tracking-widest">Intelectuais</h3>
+                      </div>
+                      {["Inteligência", "Intuição", "Consciência"].map(name => {
+                        const data = computedAttributes[name];
+                        if (!data) return null;
+                        return (
+                          <AttributeRow
+                            key={name}
+                            name={name}
+                            base={data.base}
+                            bonus={data.bonus}
+                            gemBonus={gemBonuses.attributes[name] || 0}
+                          />
+                        );
+                      })}
+                    </div>
+                    {/* Sociais */}
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 mb-4 pb-2 border-b border-amber-800/40">
+                        <Users size={16} className="text-amber-400" />
+                        <h3 className="text-sm font-black text-amber-400 uppercase tracking-widest">Sociais</h3>
+                      </div>
+                      {["Carisma", "Vontade", "Sorte"].map(name => {
+                        const data = computedAttributes[name];
+                        if (!data) return null;
+                        return (
+                          <AttributeRow
+                            key={name}
+                            name={name}
+                            base={data.base}
+                            bonus={data.bonus}
+                            gemBonus={gemBonuses.attributes[name] || 0}
+                          />
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               )}

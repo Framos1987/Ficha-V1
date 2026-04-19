@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, ChangeEvent, useEffect } from "react";
-import { Save, Shield, User, Edit3, Download, Upload, LayoutDashboard, Activity, List, Target, Brain, Dumbbell, Users, Package, Sword, Swords, BookOpen, Crown, Mail, ShieldCheck, Cloud, CloudOff, RefreshCw, LogOut, ShoppingCart } from "lucide-react";
+import { Save, Shield, User, Edit3, Download, Upload, LayoutDashboard, Activity, List, Target, Brain, Dumbbell, Users, Package, Sword, Swords, BookOpen, Crown, Mail, ShieldCheck, Cloud, CloudOff, RefreshCw, LogOut, ShoppingCart, Map } from "lucide-react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { AttributeRow } from "./components/AttributeRow";
 import { Inventory } from "./components/Inventory";
@@ -12,6 +12,7 @@ import { DerivedStats } from "./components/DerivedStats";
 import { StatusTab } from "./components/StatusTab";
 import { AptidoesTab } from "./components/AptidoesTab";
 import { TacticalTerminal } from "./components/TacticalTerminal";
+import BattleGrid from "./components/BattleGrid";
 import { AuthGate } from "./components/AuthGate";
 import { LobbyScreen } from "./components/LobbyScreen";
 import { JournalTab } from "./components/JournalTab";
@@ -150,7 +151,7 @@ export default function App() {
     extrapolateChargesUsed: 0
   });
 
-  const [activeTab, setActiveTab] = useState<"attributes" | "derived" | "status" | "inventory" | "shop" | "arsenal" | "tactical" | "aptidoes" | "journal" | "mail" | "master">("attributes");
+  const [activeTab, setActiveTab] = useState<"attributes" | "derived" | "status" | "inventory" | "shop" | "arsenal" | "tactical" | "aptidoes" | "journal" | "mail" | "master" | "battlegrid">("attributes");
   const [isEditing, setIsEditing] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useLocalStorage<boolean>("rpg_is_auth", false);
@@ -621,6 +622,12 @@ export default function App() {
                 <Target size={18} className={activeTab === "tactical" ? "animate-pulse" : ""} /> Terminal Tático
               </button>
               <button
+                onClick={() => setActiveTab("battlegrid")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors whitespace-nowrap ${activeTab === "battlegrid" ? "bg-red-600 text-white" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"}`}
+              >
+                <Map size={18} /> Battle Grid
+              </button>
+              <button
                 onClick={() => setActiveTab("aptidoes")}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors whitespace-nowrap ${activeTab === "aptidoes" ? "bg-purple-700 text-white" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"}`}
               >
@@ -776,6 +783,12 @@ export default function App() {
                   onStatusChange={handleStatusChange}
                   charInfo={charInfo}
                 />
+              )}
+
+              {activeTab === "battlegrid" && (
+                <div className="h-[85vh] rounded-3xl overflow-hidden border border-slate-700 shadow-2xl">
+                  <BattleGrid />
+                </div>
               )}
 
               {activeTab === "aptidoes" && <AptidoesTab aptidoes={aptidoes} setAptidoes={setAptidoes} />}

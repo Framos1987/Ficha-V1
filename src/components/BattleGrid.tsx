@@ -10,7 +10,7 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import {
   ZoomIn, ZoomOut, RotateCcw, Grid3x3, Eye, EyeOff, Lightbulb,
-  Plus, Minus, Trash2, ChevronUp, ChevronDown, Move, Sword, User,
+  Plus, Minus, Trash2, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Move, Sword, User,
   Shield, Crown, Target, CircleDot, Triangle, Square, Layers,
   Map, X, Check, Lock, Unlock, Download, Upload, Copy, Save, Sunrise, Moon, Undo2, Box, Droplet, ArrowUp, ArrowDown, Mountain
 } from "lucide-react";
@@ -182,7 +182,7 @@ const ARENA_PRESETS = [
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const genId = () => Math.random().toString(36).slice(2, 9);
-const getTokenCells = (si: number) => Math.max(1, Math.ceil(CREATURE_SIZES[si]?.gridCells ?? 1));
+const getTokenCells = (si: number) => CREATURE_SIZES[si]?.gridCells ?? 1;
 const snap = (px: number, cs: number) => Math.round(px / cs);
 
 /** Raycasting: compute visibility polygon from a light source */
@@ -1271,10 +1271,20 @@ export default function BattleGrid({ charInfo, currentStatus }: { charInfo?: any
                     </div>
 
                     <label style={LBL}>Tipo</label>
-                    <div style={{ display: "flex", gap: 4, marginBottom: 8 }}>
+                    <div style={{ display: "flex", gap: 4, marginBottom: 12 }}>
                       {[{ val: true, label: "Jogador" }, { val: false, label: "NPC" }].map(opt => (
                         <button key={String(opt.val)} onClick={() => updateToken(selected.id, { isPlayer: opt.val })} style={{ flex: 1, padding: "4px", borderRadius: 5, fontSize: 10, border: "1px solid", borderColor: selected.isPlayer === opt.val ? "#38bdf8" : "#1e293b", background: selected.isPlayer === opt.val ? "rgba(56,189,248,0.14)" : "transparent", color: selected.isPlayer === opt.val ? "#38bdf8" : "#64748b", cursor: "pointer", fontFamily: "inherit" }}>{opt.label}</button>
                       ))}
+                    </div>
+
+                    <label style={LBL}>Controle Tático (Joystick)</label>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 40px)", gap: 4, justifyContent: "center", marginBottom: 12, background: "rgba(0,0,0,0.2)", padding: 8, borderRadius: 8, border: "1px solid #1e293b" }}>
+                      <div />
+                      <button onClick={() => updateToken(selected.id, { row: Math.max(0, selected.row - 1) })} style={{...IBT, background: "#1e293b", height: 35}}><ChevronUp size={16} /></button>
+                      <div />
+                      <button onClick={() => updateToken(selected.id, { col: Math.max(0, selected.col - 1) })} style={{...IBT, background: "#1e293b", height: 35}}><ChevronLeft size={16} /></button>
+                      <button onClick={() => updateToken(selected.id, { row: Math.min(gridRows - 1, selected.row + 1) })} style={{...IBT, background: "#1e293b", height: 35}}><ChevronDown size={16} /></button>
+                      <button onClick={() => updateToken(selected.id, { col: Math.min(gridCols - 1, selected.col + 1) })} style={{...IBT, background: "#1e293b", height: 35}}><ChevronRight size={16} /></button>
                     </div>
 
                     <label style={LBL}>Runas Ativas (Auras Menores)</label>
